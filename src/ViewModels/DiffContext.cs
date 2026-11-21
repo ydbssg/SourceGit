@@ -54,7 +54,19 @@ namespace SourceGit.ViewModels
             _repo = repo;
             _option = option;
 
-            if (previous != null)
+            if (string.IsNullOrEmpty(_option.OrgPath) || _option.OrgPath == "/dev/null")
+                Title = _option.Path;
+            else
+                Title = $"{_option.OrgPath} → {_option.Path}";
+
+            if (_option.Path.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+            {
+                _isIgnoreWhitespaceVisible = false;
+                _content = new SpreadsheetDiff(_repo, _option);
+                return;
+            }
+
+            if (previous != null && previous._content is not SpreadsheetDiff)
             {
                 _isTextDiff = previous._isTextDiff;
                 _isIgnoreWhitespaceVisible = previous._isIgnoreWhitespaceVisible;
@@ -64,11 +76,6 @@ namespace SourceGit.ViewModels
                 _unifiedLines = previous._unifiedLines;
                 _info = previous._info;
             }
-
-            if (string.IsNullOrEmpty(_option.OrgPath) || _option.OrgPath == "/dev/null")
-                Title = _option.Path;
-            else
-                Title = $"{_option.OrgPath} → {_option.Path}";
 
             LoadContent();
         }

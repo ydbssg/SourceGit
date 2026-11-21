@@ -89,7 +89,7 @@ namespace SourceGit.ViewModels
 
             IsLoading = true;
 
-            var log = _repo.CreateLog("Unlock LFS Locks");
+            var log = _repo.CreateLog(App.Text("Operation.LFSUnlock"));
             var succ = await new Commands.LFS(_repo.FullPath).Use(log).UnlockMultipleAsync(_remote, locks, true);
             if (succ)
             {

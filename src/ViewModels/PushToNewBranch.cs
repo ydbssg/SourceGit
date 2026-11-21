@@ -11,7 +11,7 @@ namespace SourceGit.ViewModels
             get;
         }
 
-        [Required(ErrorMessage = "Branch name is required!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.BranchNameRequired))]
         [CustomValidation(typeof(PushToNewBranch), nameof(ValidateBranchName))]
         public string BranchName
         {
@@ -27,7 +27,7 @@ namespace SourceGit.ViewModels
         public static ValidationResult ValidateBranchName(string name, ValidationContext ctx)
         {
             if (!Models.RefName.IsValidBranchName(name))
-                return new ValidationResult("Bad branch name format!");
+                return new ValidationResult(App.Text("Validation.BranchNameFormat"));
 
             return ValidationResult.Success;
         }

@@ -27,9 +27,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Deleting multiple branches...";
+            ProgressDescription = App.Text("Progress.DeleteBranches");
 
-            var log = _repo.CreateLog("Delete Multiple Branches");
+            var log = _repo.CreateLog(App.Text("Operation.DeleteBranches"));
             Use(log);
 
             if (_isLocal)

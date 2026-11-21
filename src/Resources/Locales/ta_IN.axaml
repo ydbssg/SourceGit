@@ -498,6 +498,10 @@
   <x:String x:Key="Text.Repository.CustomActions.Empty" xml:space="preserve">தனிப்பயன் செயல்கள் இல்லை</x:String>
   <x:String x:Key="Text.Repository.DiscardAll" xml:space="preserve">எல்லா மாற்றங்களையும் நிராகரி</x:String>
   <x:String x:Key="Text.Repository.Explore" xml:space="preserve">கோப்பு உலாவியில் திற</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Browse" xml:space="preserve">உலாவு</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.More" xml:space="preserve">மேலும்</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Remote" xml:space="preserve">தொலை</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.NoWebRemote" xml:space="preserve">உலாவியில் திறக்கக்கூடிய தொலைக் களஞ்சியம் இல்லை.</x:String>
   <x:String x:Key="Text.Repository.Filter" xml:space="preserve">கிளைகள்/குறிச்சொற்கள்/துணைத் தொகுதிகளைத் தேடு</x:String>
   <x:String x:Key="Text.Repository.FilterCommits" xml:space="preserve">வரைபடத்தில் தெரிவுநிலை</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Default" xml:space="preserve">அமைவை நீக்கு</x:String>

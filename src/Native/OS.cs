@@ -277,7 +277,7 @@ namespace SourceGit.Native
         {
             if (!IsSafeBrowserTarget(url))
             {
-                Models.Notification.Send(null, $"Blocked unsafe URL: {url}", true);
+                Models.Notification.Send(null, App.Text("Diagnostics.BlockedUrl", url), true);
                 return;
             }
 
@@ -299,7 +299,7 @@ namespace SourceGit.Native
         {
             if (string.IsNullOrEmpty(ShellOrTerminal))
             {
-                Models.Notification.Send(workdir, "Terminal is not specified! Please confirm that the correct shell/terminal has been configured.", true);
+                Models.Notification.Send(workdir, App.Text("Diagnostics.MissingTerminal"), true);
                 return;
             }
 

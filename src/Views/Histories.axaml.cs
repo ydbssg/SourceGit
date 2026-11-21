@@ -975,7 +975,7 @@ namespace SourceGit.Views
                 }
                 catch (Exception exception)
                 {
-                    repo.SendNotification($"Failed to save as patch: {exception.Message}", true);
+                    repo.SendNotification(App.Text("Diagnostics.SavePatch", exception.Message), true);
                 }
 
                 e.Handled = true;
@@ -1405,7 +1405,7 @@ namespace SourceGit.Views
                 }
                 catch (Exception exception)
                 {
-                    repo.SendNotification($"Failed to save as patch: {exception.Message}", true);
+                    repo.SendNotification(App.Text("Diagnostics.SavePatch", exception.Message), true);
                 }
 
                 e.Handled = true;
@@ -1959,7 +1959,7 @@ namespace SourceGit.Views
 
             var on = await new Commands.QuerySingleCommit(repo.FullPath, start).GetResultAsync();
             if (on == null)
-                repo.SendNotification($"Commit '{start}' is not a valid revision for `git rebase -i`!", true);
+                repo.SendNotification(App.Text("Diagnostics.InvalidRebaseCommit", start), true);
             else
                 await this.ShowDialogAsync(new ViewModels.InteractiveRebase(repo, on, prefill));
         }

@@ -816,6 +816,10 @@
   <x:String x:Key="Text.Repository.CustomActions.Empty" xml:space="preserve">No hi ha accions personalitzades</x:String>
   <x:String x:Key="Text.Repository.DiscardAll" xml:space="preserve">Descarta tots els canvis</x:String>
   <x:String x:Key="Text.Repository.Explore" xml:space="preserve">Obre al navegador de fitxers</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Browse" xml:space="preserve">Explora</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.More" xml:space="preserve">Més</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Remote" xml:space="preserve">Remot</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.NoWebRemote" xml:space="preserve">No hi ha cap repositori remot amb una adreça web disponible.</x:String>
   <x:String x:Key="Text.Repository.Filter" xml:space="preserve">Filtra branques/etiquetes/submòduls</x:String>
   <x:String x:Key="Text.Repository.FilterCommits" xml:space="preserve">Visibilitat al graf</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Collapse" xml:space="preserve">Replega els filtres</x:String>

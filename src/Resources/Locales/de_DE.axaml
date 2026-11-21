@@ -787,6 +787,10 @@ $1, $2, … Werte der Eingabe-Steuerelemente</x:String>
   <x:String x:Key="Text.Repository.CustomActions.Empty" xml:space="preserve">Keine benutzerdefinierten Aktionen</x:String>
   <x:String x:Key="Text.Repository.DiscardAll" xml:space="preserve">Alle Änderungen verwerfen</x:String>
   <x:String x:Key="Text.Repository.Explore" xml:space="preserve">Öffne im Datei-Browser</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Browse" xml:space="preserve">Durchsuchen</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.More" xml:space="preserve">Mehr</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Remote" xml:space="preserve">Remote</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.NoWebRemote" xml:space="preserve">Kein Remote-Repository mit einer verfügbaren Webadresse vorhanden.</x:String>
   <x:String x:Key="Text.Repository.Filter" xml:space="preserve">Suche Branches / Tags / Submodule</x:String>
   <x:String x:Key="Text.Repository.FilterCommits" xml:space="preserve">Sichtbarkeit im Verlauf</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Collapse" xml:space="preserve">Filter einklappen</x:String>

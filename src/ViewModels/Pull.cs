@@ -33,7 +33,7 @@ namespace SourceGit.ViewModels
             private set => SetProperty(ref _remoteBranches, value);
         }
 
-        [Required(ErrorMessage = "Remote branch to pull is required!!!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.PullBranchRequired))]
         public Models.Branch SelectedBranch
         {
             get => _selectedBranch;
@@ -116,7 +116,7 @@ namespace SourceGit.ViewModels
         {
             using var lockWatcher = _repo.LockWatcher();
 
-            var log = _repo.CreateLog("Pull");
+            var log = _repo.CreateLog(App.Text("Operation.Pull"));
             Use(log);
 
             _cancellation = new CancellationTokenSource();
@@ -150,8 +150,10 @@ namespace SourceGit.ViewModels
             }
 
             bool rs = false;
+            var abortedBySpreadsheetDialog = false;
             if (!token.IsCancellationRequested)
             {
+                var alreadyInProgress = SpreadsheetPullConflict.HasPendingOperation(_repo);
                 var target = _selectedBranch;
                 if (!string.IsNullOrEmpty(Current.Upstream) && target.FullName.Equals(Current.Upstream, StringComparison.Ordinal))
                     target = null;
@@ -162,13 +164,17 @@ namespace SourceGit.ViewModels
                     target,
                     UseRebase).WithCancellation(token).Use(log).ExecAsync();
 
-                if (rs)
+                if (!rs && !token.IsCancellationRequested && !alreadyInProgress)
                 {
-                    await _repo.AutoUpdateSubmodulesAsync(log);
-
-                    if (needPopStash)
-                        await new Commands.Stash(_repo.FullPath).Use(log).PopAsync("stash@{0}");
+                    var resolution = await SpreadsheetPullConflict.ResolveAsync(_repo, log, token);
+                    rs = resolution == SpreadsheetPullResult.Completed;
+                    abortedBySpreadsheetDialog = resolution == SpreadsheetPullResult.Aborted;
                 }
+
+                if (rs)
+                    await _repo.AutoUpdateSubmodulesAsync(log);
+                if (needPopStash && (rs || abortedBySpreadsheetDialog))
+                    await new Commands.Stash(_repo.FullPath).Use(log).PopAsync("stash@{0}");
             }
 
             log.Complete();
@@ -180,7 +186,7 @@ namespace SourceGit.ViewModels
             }
 
             _cancellation = null;
-            return rs;
+            return rs || abortedBySpreadsheetDialog;
         }
 
         public override void Terminate()

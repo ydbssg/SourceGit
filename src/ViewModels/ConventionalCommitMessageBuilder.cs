@@ -16,7 +16,7 @@ namespace SourceGit.ViewModels
             private set;
         } = [];
 
-        [Required(ErrorMessage = "Type of changes can not be null")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.ChangeTypeRequired))]
         public Models.ConventionalCommitType SelectedType
         {
             get => _selectedType;
@@ -33,7 +33,7 @@ namespace SourceGit.ViewModels
             set => SetProperty(ref _scope, value);
         }
 
-        [Required(ErrorMessage = "Short description can not be empty")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.ShortDescriptionRequired))]
         public string Description
         {
             get => _description;

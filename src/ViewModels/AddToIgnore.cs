@@ -12,14 +12,14 @@ namespace SourceGit.ViewModels
             get;
         }
 
-        [Required(ErrorMessage = "Ignore pattern is required!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.IgnorePatternRequired))]
         public string Pattern
         {
             get => _pattern;
             set => SetProperty(ref _pattern, value, true);
         }
 
-        [Required(ErrorMessage = "Storage file is required!!!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.StorageFileRequired))]
         public Models.GitIgnoreFile SelectedStorageFile
         {
             get => _selectedStorageFile;
@@ -42,7 +42,7 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Adding Ignored File(s) ...";
+            ProgressDescription = App.Text("Progress.AddToIgnore");
 
             var file = _selectedStorageFile.FullPath;
             if (!File.Exists(file))

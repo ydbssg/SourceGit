@@ -80,7 +80,7 @@ namespace SourceGit.Commands
             }
             catch (Exception e)
             {
-                Models.Notification.Send(_repo, "Failed to update index: " + e.Message, true);
+                Models.Notification.Send(_repo, App.Text("Diagnostics.UpdateIndex", e.Message), true);
                 return false;
             }
         }

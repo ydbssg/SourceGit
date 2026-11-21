@@ -154,7 +154,7 @@ namespace SourceGit.ViewModels
         public async Task ResetToLeftAsync(Models.Change change)
         {
             var sha = GetSHA(_startPoint);
-            var log = _repo.CreateLog($"Reset File to '{GetDesc(_startPoint)}'");
+            var log = _repo.CreateLog(App.Text("Operation.ResetFile", GetDesc(_startPoint)));
 
             if (change.Index == Models.ChangeState.Added)
             {
@@ -189,7 +189,7 @@ namespace SourceGit.ViewModels
         public async Task ResetToRightAsync(Models.Change change)
         {
             var sha = GetSHA(_endPoint);
-            var log = _repo.CreateLog($"Reset File to '{GetDesc(_endPoint)}'");
+            var log = _repo.CreateLog(App.Text("Operation.ResetFile", GetDesc(_endPoint)));
 
             if (change.Index == Models.ChangeState.Deleted)
             {
@@ -249,7 +249,7 @@ namespace SourceGit.ViewModels
                 }
             }
 
-            var log = _repo.CreateLog($"Reset Files to '{GetDesc(_startPoint)}'");
+            var log = _repo.CreateLog(App.Text("Operation.ResetFiles", GetDesc(_startPoint)));
 
             if (removes.Count > 0)
                 await new Commands.Remove(_repo.FullPath, removes)
@@ -292,7 +292,7 @@ namespace SourceGit.ViewModels
                 }
             }
 
-            var log = _repo.CreateLog($"Reset Files to '{GetDesc(_endPoint)}'");
+            var log = _repo.CreateLog(App.Text("Operation.ResetFiles", GetDesc(_endPoint)));
 
             if (removes.Count > 0)
                 await new Commands.Remove(_repo.FullPath, removes)

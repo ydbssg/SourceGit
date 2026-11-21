@@ -31,7 +31,7 @@ namespace SourceGit.ViewModels
             private set;
         }
 
-        [Required(ErrorMessage = "Name is required!!!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.NameRequired))]
         [CustomValidation(typeof(GitFlowStart), nameof(ValidateBranchName))]
         public string Name
         {
@@ -67,13 +67,13 @@ namespace SourceGit.ViewModels
             if (ctx.ObjectInstance is GitFlowStart starter)
             {
                 if (!Models.RefName.IsValidBranchName($"{starter.Prefix}{name}"))
-                    return new ValidationResult("Bad branch name format!");
+                    return new ValidationResult(App.Text("Validation.BranchNameFormat"));
 
                 var check = $"{starter.Prefix}{name}";
                 foreach (var b in starter._repo.Branches)
                 {
                     if (b.FriendlyName == check)
-                        return new ValidationResult("A branch with same name already exists!");
+                        return new ValidationResult(App.Text("Validation.ExistingBranch"));
                 }
             }
 
@@ -83,9 +83,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = $"Git Flow - Start {Prefix}{_name} ...";
+            ProgressDescription = App.Text("Progress.GitFlowStart", Prefix, _name);
 
-            var log = _repo.CreateLog("GitFlow - Start");
+            var log = _repo.CreateLog(App.Text("Operation.GitFlowStart"));
             Use(log);
 
             var succ = await new Commands.GitFlow(_repo.FullPath)

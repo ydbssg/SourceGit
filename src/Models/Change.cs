@@ -5,6 +5,7 @@
         List,
         Grid,
         Tree,
+        FileType,
     }
 
     public enum ChangeState

@@ -45,9 +45,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = $"Checkout Commit '{_revision}' ...";
+            ProgressDescription = App.Text("Progress.CheckoutCommit", _revision);
 
-            var log = _repo.CreateLog("Checkout Commit");
+            var log = _repo.CreateLog(App.Text("Operation.CheckoutCommit"));
             Use(log);
 
             if (_repo.CurrentBranch is { IsDetachedHead: true })

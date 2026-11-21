@@ -750,6 +750,10 @@
   <x:String x:Key="Text.Repository.CustomActions.Empty" xml:space="preserve">אין פעולות מותאמות אישית</x:String>
   <x:String x:Key="Text.Repository.DiscardAll" xml:space="preserve">השלך כל השינויים</x:String>
   <x:String x:Key="Text.Repository.Explore" xml:space="preserve">פתח בסייר הקבצים</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Browse" xml:space="preserve">עיון</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.More" xml:space="preserve">עוד</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Remote" xml:space="preserve">מרוחק</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.NoWebRemote" xml:space="preserve">אין מאגר מרוחק עם כתובת אינטרנט זמינה.</x:String>
   <x:String x:Key="Text.Repository.Filter" xml:space="preserve">חיפוש Branches/Tags/Submodules</x:String>
   <x:String x:Key="Text.Repository.FilterCommits" xml:space="preserve">נראות בגרף</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Default" xml:space="preserve">לא מוגדר</x:String>

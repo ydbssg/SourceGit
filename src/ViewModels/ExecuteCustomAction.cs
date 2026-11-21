@@ -212,7 +212,7 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Run custom action ...";
+            ProgressDescription = App.Text("Progress.RunCustomAction");
 
             var cmdline = PrepareStringByTarget(CustomAction.Arguments);
             for (var i = ControlParameters.Count - 1; i >= 0; i--)

@@ -12,9 +12,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "LFS prune ...";
+            ProgressDescription = App.Text("Progress.LFSPrune");
 
-            var log = _repo.CreateLog("LFS Prune");
+            var log = _repo.CreateLog(App.Text("Operation.LFSPrune"));
             Use(log);
 
             await new Commands.LFS(_repo.FullPath)

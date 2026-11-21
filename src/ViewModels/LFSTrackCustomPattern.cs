@@ -5,7 +5,7 @@ namespace SourceGit.ViewModels
 {
     public class LFSTrackCustomPattern : Popup
     {
-        [Required(ErrorMessage = "LFS track pattern is required!!!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.LFSPatternRequired))]
         public string Pattern
         {
             get => _pattern;
@@ -26,9 +26,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Adding custom LFS tracking pattern ...";
+            ProgressDescription = App.Text("Progress.LFSTrackCustom");
 
-            var log = _repo.CreateLog("LFS Add Custom Pattern");
+            var log = _repo.CreateLog(App.Text("Operation.LFSTrackCustom"));
             Use(log);
 
             var succ = await new Commands.LFS(_repo.FullPath)

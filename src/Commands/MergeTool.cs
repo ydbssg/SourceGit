@@ -17,7 +17,7 @@ namespace SourceGit.Commands
             var tool = Native.OS.GetDiffMergeTool(false);
             if (tool == null)
             {
-                RaiseException("Invalid diff/merge tool in preference setting!");
+                RaiseException(App.Text("Diagnostics.InvalidDiffTool"));
                 return false;
             }
 

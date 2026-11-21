@@ -25,7 +25,7 @@ namespace SourceGit.ViewModels
         {
             var added = new Models.CustomActionControl()
             {
-                Label = "Unnamed",
+                Label = App.Text("Unnamed"),
                 Type = Models.CustomActionControlType.TextBox
             };
 

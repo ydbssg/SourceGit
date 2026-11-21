@@ -12,9 +12,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Prune worktrees ...";
+            ProgressDescription = App.Text("Progress.PruneWorktrees");
 
-            var log = _repo.CreateLog("Prune Worktrees");
+            var log = _repo.CreateLog(App.Text("Operation.PruneWorktrees"));
             Use(log);
 
             await new Commands.Worktree(_repo.FullPath)

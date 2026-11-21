@@ -54,7 +54,7 @@ namespace SourceGit.ViewModels
 
         public CherryPickInProgress(Repository repo)
         {
-            Name = "Cherry-Pick";
+            Name = App.Text("Operation.CherryPick");
 
             _continueCmd = new Commands.Command
             {
@@ -109,7 +109,7 @@ namespace SourceGit.ViewModels
         public RebaseInProgress(Repository repo)
         {
             _gitDir = repo.GitDir;
-            Name = "Rebase";
+            Name = App.Text("Operation.Rebase");
 
             _continueCmd = new Commands.Command
             {
@@ -186,7 +186,7 @@ namespace SourceGit.ViewModels
         public AmInProgress(Repository repo)
         {
             _repo = repo;
-            Name = "Apply Patch";
+            Name = App.Text("Operation.ApplyPatch");
 
             _continueCmd = new Commands.Command
             {
@@ -250,7 +250,7 @@ namespace SourceGit.ViewModels
 
         public RevertInProgress(Repository repo)
         {
-            Name = "Revert";
+            Name = App.Text("Operation.Revert");
 
             _continueCmd = new Commands.Command
             {
@@ -298,7 +298,7 @@ namespace SourceGit.ViewModels
 
         public MergeInProgress(Repository repo)
         {
-            Name = "Merge";
+            Name = App.Text("Operation.MergeName");
 
             _continueCmd = new Commands.Command
             {

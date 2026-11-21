@@ -44,10 +44,10 @@ namespace SourceGit.ViewModels
         public static ValidationResult ValidateWorktreePath(string path, ValidationContext ctx)
         {
             if (ctx.ObjectInstance is not CheckoutRemoteBranchAsWorktree creator)
-                return new ValidationResult("Missing runtime context to checkout branch as worktree!");
+                return new ValidationResult(App.Text("Validation.CheckoutWorktreeContext"));
 
             if (string.IsNullOrEmpty(path))
-                return new ValidationResult("Worktree path is required!");
+                return new ValidationResult(App.Text("Validation.WorktreePath"));
 
             var fullPath = Path.IsPathRooted(path) ? path : Path.Combine(creator._repo.FullPath, path);
             var info = new DirectoryInfo(fullPath);
@@ -55,11 +55,11 @@ namespace SourceGit.ViewModels
             {
                 var files = info.GetFiles();
                 if (files.Length > 0)
-                    return new ValidationResult("Given path is not empty!!!");
+                    return new ValidationResult(App.Text("Validation.NonEmptyPath"));
 
                 var folders = info.GetDirectories();
                 if (folders.Length > 0)
-                    return new ValidationResult("Given path is not empty!!!");
+                    return new ValidationResult(App.Text("Validation.NonEmptyPath"));
             }
 
             return ValidationResult.Success;
@@ -68,16 +68,16 @@ namespace SourceGit.ViewModels
         public static ValidationResult ValidateBranchName(string name, ValidationContext ctx)
         {
             if (ctx.ObjectInstance is not CheckoutRemoteBranchAsWorktree creator)
-                return new ValidationResult("Missing runtime context to checkout branch as worktree!");
+                return new ValidationResult(App.Text("Validation.CheckoutWorktreeContext"));
 
             var test = !string.IsNullOrEmpty(name) ? name : Path.GetFileName(creator._worktreePath.TrimEnd('/').TrimEnd('\\'));
             if (!Models.RefName.IsValidBranchName(test))
-                return new ValidationResult($"{test} is not a valid branch name!");
+                return new ValidationResult(App.Text("Validation.InvalidBranchName", test));
 
             foreach (var b in creator._repo.Branches)
             {
                 if (b.IsLocal && b.Name.Equals(test, StringComparison.Ordinal))
-                    return new ValidationResult($"A branch with name '{test}' already exists!");
+                    return new ValidationResult(App.Text("Validation.ExistingBranchNamed", test));
             }
 
             return ValidationResult.Success;
@@ -86,9 +86,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = $"Checkout branch '{_remoteBranch.FriendlyName}' as worktree ...";
+            ProgressDescription = App.Text("Progress.CheckoutRemoteWorktree", _remoteBranch.FriendlyName);
 
-            var log = _repo.CreateLog("Add Worktree");
+            var log = _repo.CreateLog(App.Text("Operation.AddWorktree"));
             Use(log);
 
             var succ = await new Commands.Worktree(_repo.FullPath)

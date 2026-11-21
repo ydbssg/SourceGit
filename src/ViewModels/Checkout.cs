@@ -34,9 +34,9 @@ namespace SourceGit.ViewModels
         {
             using var lockWatcher = _repo.LockWatcher();
             var branchName = BranchName;
-            ProgressDescription = $"Checkout '{branchName}' ...";
+            ProgressDescription = App.Text("Progress.Checkout", branchName);
 
-            var log = _repo.CreateLog($"Checkout '{branchName}'");
+            var log = _repo.CreateLog(App.Text("Operation.CheckoutRef", branchName));
             Use(log);
 
             if (_repo.CurrentBranch is { IsDetachedHead: true })

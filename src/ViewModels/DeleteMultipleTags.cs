@@ -25,9 +25,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Deleting multiple tags...";
+            ProgressDescription = App.Text("Progress.DeleteTags");
 
-            var log = _repo.CreateLog("Delete Multiple Tags");
+            var log = _repo.CreateLog(App.Text("Operation.DeleteTags"));
             Use(log);
 
             foreach (var tag in Tags)

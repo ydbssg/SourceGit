@@ -156,7 +156,7 @@ namespace SourceGit.Native
             }
             catch (Exception e)
             {
-                Models.Notification.Send(workdir, $"Failed to start '{OS.ShellOrTerminal}'. Reason: {e.Message}", true);
+                Models.Notification.Send(workdir, App.Text("Diagnostics.StartTerminal", OS.ShellOrTerminal, e.Message), true);
             }
         }
 
@@ -168,7 +168,7 @@ namespace SourceGit.Native
                 proc.WaitForExit();
 
                 if (proc.ExitCode != 0)
-                    Models.Notification.Send("", $"Failed to open: {file}", true);
+                    Models.Notification.Send("", App.Text("Diagnostics.OpenFile", file), true);
 
                 proc.Close();
             }
@@ -270,7 +270,7 @@ namespace SourceGit.Native
             using (var proc = Process.Start(psi))
             {
                 if (proc == null)
-                    throw new Exception($"Failed to start credential helper: {_toolPath}");
+                    throw new Exception(App.Text("Diagnostics.CredentialHelperStart", _toolPath));
 
                 proc.StandardInput.WriteLine(password);
                 proc.StandardInput.Close();
@@ -279,7 +279,7 @@ namespace SourceGit.Native
                 proc.WaitForExit();
 
                 if (proc.ExitCode != 0)
-                    throw new Exception($"Credential helper exited with code {proc.ExitCode}: {err}");
+                    throw new Exception(App.Text("Diagnostics.CredentialHelperExit", proc.ExitCode, err));
             }
         }
 
@@ -298,14 +298,14 @@ namespace SourceGit.Native
             using (var proc = Process.Start(psi))
             {
                 if (proc == null)
-                    throw new Exception($"Failed to start credential helper: {_toolPath}");
+                    throw new Exception(App.Text("Diagnostics.CredentialHelperStart", _toolPath));
 
                 var output = proc.StandardOutput.ReadToEnd();
                 var err = proc.StandardError.ReadToEnd();
                 proc.WaitForExit();
 
                 if (proc.ExitCode != 0)
-                    throw new Exception($"Credential helper exited with code {proc.ExitCode}: {err}");
+                    throw new Exception(App.Text("Diagnostics.CredentialHelperExit", proc.ExitCode, err));
 
                 return output.TrimEnd('\r', '\n');
             }
@@ -326,13 +326,13 @@ namespace SourceGit.Native
             using (var proc = Process.Start(psi))
             {
                 if (proc == null)
-                    throw new Exception($"Failed to start credential helper: {_toolPath}");
+                    throw new Exception(App.Text("Diagnostics.CredentialHelperStart", _toolPath));
 
                 var err = proc.StandardError.ReadToEnd();
                 proc.WaitForExit();
 
                 if (proc.ExitCode != 0)
-                    throw new Exception($"Credential helper exited with code {proc.ExitCode}: {err}");
+                    throw new Exception(App.Text("Diagnostics.CredentialHelperExit", proc.ExitCode, err));
             }
         }
 

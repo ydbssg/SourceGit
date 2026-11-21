@@ -182,7 +182,7 @@ namespace SourceGit.Native
             }
             catch (Exception e)
             {
-                Models.Notification.Send(workdir, $"Failed to start '{OS.ShellOrTerminal}'. Reason: {e.Message}", true);
+                Models.Notification.Send(workdir, App.Text("Diagnostics.StartTerminal", OS.ShellOrTerminal, e.Message), true);
             }
         }
 
@@ -523,7 +523,7 @@ namespace SourceGit.Native
         {
             var secretBytes = Encoding.Unicode.GetBytes(password);
             if (secretBytes.Length > CRED_MAX_CREDENTIAL_BLOB_SIZE)
-                throw new Exception("Password is too long. Maximum length is 2560 bytes.");
+                throw new Exception(App.Text("Diagnostics.CredentialTooLong"));
 
             var blobPtr = Marshal.AllocCoTaskMem(secretBytes.Length);
             Marshal.Copy(secretBytes, 0, blobPtr, secretBytes.Length);
@@ -553,7 +553,7 @@ namespace SourceGit.Native
                 if (!CredWriteW(ref credential, 0))
                 {
                     var error = Marshal.GetLastWin32Error();
-                    throw new Exception($"Failed to store credential. Error code: {error}");
+                    throw new Exception(App.Text("Diagnostics.CredentialStore", error));
                 }
             }
             finally
@@ -571,9 +571,9 @@ namespace SourceGit.Native
             {
                 var error = Marshal.GetLastWin32Error();
                 if (error == ERROR_NOT_FOUND)
-                    throw new Exception("Credential not found.");
+                    throw new Exception(App.Text("Diagnostics.CredentialMissing"));
 
-                throw new Exception($"Failed to read credential. Error code: {error}");
+                throw new Exception(App.Text("Diagnostics.CredentialRead", error));
             }
 
             try
@@ -599,7 +599,7 @@ namespace SourceGit.Native
                 if (error == ERROR_NOT_FOUND)
                     return;
 
-                throw new Exception($"Failed to delete credential. Error code: {error}");
+                    throw new Exception(App.Text("Diagnostics.CredentialDelete", error));
             }
         }
 

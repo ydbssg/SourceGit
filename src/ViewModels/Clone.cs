@@ -11,7 +11,7 @@ namespace SourceGit.ViewModels
 
     public class Clone : Popup
     {
-        [Required(ErrorMessage = "Remote URL is required")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.RemoteUrlRequired))]
         [CustomValidation(typeof(Clone), nameof(ValidateRemote))]
         public string Remote
         {
@@ -35,7 +35,7 @@ namespace SourceGit.ViewModels
             set => SetProperty(ref _sshKey, value);
         }
 
-        [Required(ErrorMessage = "Parent folder is required")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.ParentFolderRequired))]
         [CustomValidation(typeof(Clone), nameof(ValidateParentFolder))]
         public string ParentFolder
         {
@@ -105,22 +105,22 @@ namespace SourceGit.ViewModels
         public static ValidationResult ValidateRemote(string remote, ValidationContext _)
         {
             if (!Models.Remote.IsValidURL(remote))
-                return new ValidationResult("Invalid remote repository URL format");
+                return new ValidationResult(App.Text("Validation.InvalidRemoteRepoUrl"));
             return ValidationResult.Success;
         }
 
         public static ValidationResult ValidateParentFolder(string folder, ValidationContext _)
         {
             if (!Directory.Exists(folder))
-                return new ValidationResult("Given path can NOT be found");
+                return new ValidationResult(App.Text("Validation.PathMissing"));
             return ValidationResult.Success;
         }
 
         public override async Task<bool> Sure()
         {
-            ProgressDescription = "Clone ...";
+            ProgressDescription = App.Text("Progress.Clone");
 
-            var log = new CommandLog("Clone");
+            var log = new CommandLog(App.Text("Operation.Clone"));
             Use(log);
 
             _cancellation = new CancellationTokenSource();
@@ -151,7 +151,7 @@ namespace SourceGit.ViewModels
 
             if (!Directory.Exists(path))
             {
-                Models.Notification.Send(_pageId, $"Folder '{path}' can NOT be found", true);
+                Models.Notification.Send(_pageId, App.Text("Diagnostics.CloneFolderMissing", path), true);
                 return false;
             }
 

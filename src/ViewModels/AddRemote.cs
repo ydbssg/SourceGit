@@ -6,8 +6,8 @@ namespace SourceGit.ViewModels
 {
     public class AddRemote : Popup
     {
-        [Required(ErrorMessage = "Remote name is required!!!")]
-        [RegularExpression(@"^[\w\-\.]+$", ErrorMessage = "Bad remote name format!!!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.RemoteNameRequired))]
+        [RegularExpression(@"^[\w\-\.]+$", ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.RemoteNameFormat))]
         [CustomValidation(typeof(AddRemote), nameof(ValidateRemoteName))]
         public string Name
         {
@@ -15,7 +15,7 @@ namespace SourceGit.ViewModels
             set => SetProperty(ref _name, value, true);
         }
 
-        [Required(ErrorMessage = "Remote URL is required!!!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.RemoteUrlRequired))]
         [CustomValidation(typeof(AddRemote), nameof(ValidateRemoteURL))]
         public string Url
         {
@@ -61,7 +61,7 @@ namespace SourceGit.ViewModels
             {
                 var exists = add._repo.Remotes.Find(x => x.Name == name);
                 if (exists != null)
-                    return new ValidationResult("A remote with given name already exists!!!");
+                    return new ValidationResult(App.Text("Validation.ExistingRemote"));
             }
 
             return ValidationResult.Success;
@@ -72,11 +72,11 @@ namespace SourceGit.ViewModels
             if (ctx.ObjectInstance is AddRemote add)
             {
                 if (!Models.Remote.IsValidURL(url))
-                    return new ValidationResult("Bad remote URL format!!!");
+                    return new ValidationResult(App.Text("Validation.InvalidRemoteUrl"));
 
                 var exists = add._repo.Remotes.Find(x => x.URL == url);
                 if (exists != null)
-                    return new ValidationResult("A remote with the same url already exists!!!");
+                    return new ValidationResult(App.Text("Validation.DuplicateRemoteUrl"));
             }
 
             return ValidationResult.Success;
@@ -87,7 +87,7 @@ namespace SourceGit.ViewModels
             if (ctx.ObjectInstance is AddRemote { _useSSH: true } && !string.IsNullOrEmpty(sshkey))
             {
                 if (!File.Exists(sshkey))
-                    return new ValidationResult("Given SSH private key can NOT be found!");
+                    return new ValidationResult(App.Text("Validation.SSHKeyMissing"));
             }
 
             return ValidationResult.Success;
@@ -96,9 +96,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Adding remote ...";
+            ProgressDescription = App.Text("Progress.AddRemote");
 
-            var log = _repo.CreateLog("Add Remote");
+            var log = _repo.CreateLog(App.Text("Operation.AddRemote"));
             Use(log);
 
             var succ = await new Commands.Remote(_repo.FullPath)

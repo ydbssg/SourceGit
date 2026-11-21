@@ -103,9 +103,9 @@ namespace SourceGit.Converters
                 var page = values[0] as string;
                 var workspace = values[1] as string;
                 if (string.IsNullOrEmpty(page))
-                    page = "Repositories";
+                    page = App.Text("Repositories");
                 if (string.IsNullOrEmpty(workspace))
-                    workspace = "Unnamed";
+                    workspace = App.Text("Unnamed");
 
                 return $"{page} - {workspace}";
             }

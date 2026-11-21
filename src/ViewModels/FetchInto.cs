@@ -29,9 +29,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Fast-Forward ...";
+            ProgressDescription = App.Text("Progress.FastForward");
 
-            var log = _repo.CreateLog($"Fetch Into '{Local.FriendlyName}'");
+            var log = _repo.CreateLog(App.Text("Operation.FetchInto", Local.FriendlyName));
             Use(log);
 
             _cancellation = new CancellationTokenSource();

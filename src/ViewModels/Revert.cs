@@ -26,9 +26,9 @@ namespace SourceGit.ViewModels
         {
             using var lockWatcher = _repo.LockWatcher();
             _repo.ClearCommitMessage();
-            ProgressDescription = $"Revert commit '{Target.SHA}' ...";
+            ProgressDescription = App.Text("Progress.Revert", Target.SHA);
 
-            var log = _repo.CreateLog($"Revert '{Target.SHA}'");
+            var log = _repo.CreateLog(App.Text("Operation.RevertCommit", Target.SHA));
             Use(log);
 
             await new Commands.Revert(_repo.FullPath, Target.SHA, AutoCommit)

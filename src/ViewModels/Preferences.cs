@@ -25,7 +25,6 @@ namespace SourceGit.ViewModels
                 _instance.PrepareGit();
                 _instance.PrepareShellOrTerminal();
                 _instance.PrepareExternalDiffMergeTool();
-                _instance.PrepareWorkspaces();
 
                 return _instance;
             }
@@ -678,11 +677,11 @@ namespace SourceGit.ViewModels
             }
         }
 
-        private void PrepareWorkspaces()
+        internal void PrepareWorkspaces()
         {
             if (Workspaces.Count == 0)
             {
-                Workspaces.Add(new Workspace() { Name = "Default" });
+                Workspaces.Add(new Workspace() { Name = App.Text("ConfigureWorkspace.DefaultName") });
                 return;
             }
 
@@ -789,7 +788,7 @@ namespace SourceGit.ViewModels
 
         private bool _isLoading = true;
         private bool _isReadonly = true;
-        private string _locale = "en_US";
+        private string _locale = "zh_CN";
         private string _theme = "Default";
         private string _themeOverrides = string.Empty;
         private string _defaultFontFamily = string.Empty;

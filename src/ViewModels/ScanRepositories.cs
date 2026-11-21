@@ -57,7 +57,7 @@ namespace SourceGit.ViewModels
             {
                 if (string.IsNullOrEmpty(_customDir))
                 {
-                    Models.Notification.Send(null, "Missing root directory to scan!", true);
+                    Models.Notification.Send(null, App.Text("Diagnostics.ScanRootMissing"), true);
                     return false;
                 }
 
@@ -67,7 +67,7 @@ namespace SourceGit.ViewModels
             {
                 if (_selected == null || string.IsNullOrEmpty(_selected.Path))
                 {
-                    Models.Notification.Send(null, "Missing root directory to scan!", true);
+                    Models.Notification.Send(null, App.Text("Diagnostics.ScanRootMissing"), true);
                     return false;
                 }
 
@@ -77,7 +77,7 @@ namespace SourceGit.ViewModels
             if (!Directory.Exists(selectedDir))
                 return true;
 
-            ProgressDescription = $"Scan repositories under '{selectedDir}' ...";
+            ProgressDescription = App.Text("Progress.ScanRepositories", selectedDir);
 
             var minDelay = Task.Delay(500);
             var rootDir = new DirectoryInfo(selectedDir);
@@ -96,7 +96,7 @@ namespace SourceGit.ViewModels
             for (var i = 0; i < found.Count; i++)
             {
                 var f = found[i];
-                ProgressDescription = $"Registering ({i + 1}/{found.Count}) {f}...";
+                ProgressDescription = App.Text("Progress.RegisterRepository", i + 1, found.Count, f);
                 var parent = new DirectoryInfo(f).Parent!.FullName.Replace('\\', '/').TrimEnd('/');
                 if (parent.Equals(normalizedRoot, StringComparison.OrdinalIgnoreCase))
                 {
@@ -142,7 +142,7 @@ namespace SourceGit.ViewModels
                     subdir.Name.Equals("node_modules", StringComparison.Ordinal))
                     continue;
 
-                ProgressDescription = $"Scanning {subdir.FullName}...";
+                ProgressDescription = App.Text("Progress.ScanDirectory", subdir.FullName);
 
                 var normalizedSelf = subdir.FullName.Replace('\\', '/').TrimEnd('/');
                 if (IsManaged(normalizedSelf))

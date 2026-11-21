@@ -106,7 +106,7 @@
                        IsHitTestVisible="False"
                        Text="{Binding Name, Mode=OneWay}"/>
             <Border Grid.Column="2" Margin="4,0,0,0" Height="16" Background="Green" CornerRadius="8" VerticalAlignment="Center" IsVisible="{Binding IsGlobal}">
-              <TextBlock Text="GLOBAL" Margin="8,0" FontSize="10" Foreground="White"/>
+              <TextBlock Text="{DynamicResource Text.ExecuteCustomAction.Global}" Margin="8,0" FontSize="10" Foreground="White"/>
             </Border>
           </Grid>
         </DataTemplate>

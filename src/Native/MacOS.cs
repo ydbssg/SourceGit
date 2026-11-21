@@ -420,14 +420,14 @@ namespace SourceGit.Native
                     return;
 
                 if (status != errSecDuplicateItem)
-                    throw new Exception($"Failed to store credential to keychain: {status}");
+                    throw new Exception(App.Text("Diagnostics.CredentialStore", status));
 
                 attrsToUpdate = CFDictionaryCreateMutable(IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
                 CFDictionarySetValue(attrsToUpdate, kSecValueData.Value, dataCf);
                 status = SecItemUpdate(query, attrsToUpdate);
 
                 if (status != errSecSuccess)
-                    throw new Exception($"Failed to update credential in keychain: {status}");
+                    throw new Exception(App.Text("Diagnostics.CredentialUpdate", status));
             }
             finally
             {
@@ -465,9 +465,9 @@ namespace SourceGit.Native
 
                 int status = SecItemCopyMatching(query, out dataCf);
                 if (status == errSecItemNotFound)
-                    throw new Exception("Credential not found in keychain");
+                    throw new Exception(App.Text("Diagnostics.CredentialMissing"));
                 if (status != errSecSuccess)
-                    throw new Exception($"Failed to read credential from keychain: {status}");
+                    throw new Exception(App.Text("Diagnostics.CredentialRead", status));
 
                 var len = CFDataGetLength(dataCf);
                 if (len <= 0)
@@ -511,7 +511,7 @@ namespace SourceGit.Native
                 if (status == errSecSuccess || status == errSecItemNotFound)
                     return;
 
-                throw new Exception($"Failed to delete credential from keychain: {status}");
+                    throw new Exception(App.Text("Diagnostics.CredentialDelete", status));
             }
             finally
             {

@@ -55,5 +55,12 @@ namespace SourceGit.Views
 
             e.Handled = true;
         }
+
+        private async void OnMergeSpreadsheet(object _, RoutedEventArgs e)
+        {
+            if (DataContext is ViewModels.Conflict vm)
+                await vm.MergeSpreadsheetAsync();
+            e.Handled = true;
+        }
     }
 }

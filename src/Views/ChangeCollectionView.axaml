@@ -57,7 +57,13 @@
                             Margin="1,1,1,0"
                             Foreground="Goldenrod"
                             IsChecked="{Binding IsExpanded}"
-                            IsVisible="{Binding IsFolder}"/>
+                            IsVisible="{Binding IsDirectory}"/>
+
+              <Path Width="14" Height="14"
+                    Margin="1,0"
+                    Data="{StaticResource Icons.Tag}"
+                    Fill="{DynamicResource Brush.FG2}"
+                    IsVisible="{Binding IsFileTypeGroup}"/>
 
               <v:ChangeStatusIcon Width="14" Height="14"
                                   Margin="1,0"
@@ -72,7 +78,17 @@
                          IsVisible="{Binding ShowConflictMarker}"/>
 
               <TextBlock Text="{Binding DisplayName, Mode=OneWay}"
-                         Margin="4,0,0,0"/>
+                         Margin="4,0,0,0"
+                         IsVisible="{Binding !IsExtensionlessGroup}"/>
+
+              <TextBlock Text="{DynamicResource Text.ChangeDisplayMode.NoExtension}"
+                         Margin="4,0,0,0"
+                         IsVisible="{Binding IsExtensionlessGroup}"/>
+
+              <TextBlock Text="{Binding Children.Count, StringFormat='({0})'}"
+                         Foreground="{DynamicResource Brush.FG2}"
+                         Margin="4,0,0,0"
+                         IsVisible="{Binding IsFileTypeGroup}"/>
             </StackPanel>
           </DataTemplate>
         </ListBox.ItemTemplate>

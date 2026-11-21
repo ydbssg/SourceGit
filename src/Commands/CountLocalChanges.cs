@@ -24,5 +24,11 @@ namespace SourceGit.Commands
 
             return 0;
         }
+
+        public async Task<bool> IsCleanAsync()
+        {
+            var rs = await ReadToEndAsync().ConfigureAwait(false);
+            return rs.IsSuccess && string.IsNullOrWhiteSpace(rs.StdOut);
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace SourceGit.ViewModels
         [GeneratedRegex(@"^[\w\-/\.]+$")]
         private static partial Regex REG_TAG_PREFIX();
 
-        [Required(ErrorMessage = "Production branch name is required!!!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.ProductionBranchRequired))]
         [CustomValidation(typeof(InitGitFlow), nameof(ValidateBaseBranch))]
         public string Production
         {
@@ -19,7 +19,7 @@ namespace SourceGit.ViewModels
             set => SetProperty(ref _production, value, true);
         }
 
-        [Required(ErrorMessage = "Development branch name is required!!!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.DevelopmentBranchRequired))]
         [CustomValidation(typeof(InitGitFlow), nameof(ValidateBaseBranch))]
         public string Develop
         {
@@ -27,24 +27,24 @@ namespace SourceGit.ViewModels
             set => SetProperty(ref _develop, value, true);
         }
 
-        [Required(ErrorMessage = "Feature prefix is required!!!")]
-        [RegularExpression(@"^[\w\-\.]+/$", ErrorMessage = "Bad feature prefix format!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.FeaturePrefixRequired))]
+        [RegularExpression(@"^[\w\-\.]+/$", ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.FeaturePrefixFormat))]
         public string FeaturePrefix
         {
             get => _featurePrefix;
             set => SetProperty(ref _featurePrefix, value, true);
         }
 
-        [Required(ErrorMessage = "Release prefix is required!!!")]
-        [RegularExpression(@"^[\w\-\.]+/$", ErrorMessage = "Bad release prefix format!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.ReleasePrefixRequired))]
+        [RegularExpression(@"^[\w\-\.]+/$", ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.ReleasePrefixFormat))]
         public string ReleasePrefix
         {
             get => _releasePrefix;
             set => SetProperty(ref _releasePrefix, value, true);
         }
 
-        [Required(ErrorMessage = "Hotfix prefix is required!!!")]
-        [RegularExpression(@"^[\w\-\.]+/$", ErrorMessage = "Bad hotfix prefix format!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.HotfixPrefixRequired))]
+        [RegularExpression(@"^[\w\-\.]+/$", ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.HotfixPrefixFormat))]
         public string HotfixPrefix
         {
             get => _hotfixPrefix;
@@ -84,10 +84,10 @@ namespace SourceGit.ViewModels
             if (ctx.ObjectInstance is InitGitFlow initializer)
             {
                 if (!Models.RefName.IsValidBranchName(name))
-                    return new ValidationResult("Bad branch name format!");
+                    return new ValidationResult(App.Text("Validation.BranchNameFormat"));
 
                 if (initializer._production == initializer._develop)
-                    return new ValidationResult("Develop branch has the same name with production branch!");
+                    return new ValidationResult(App.Text("Validation.SameGitFlowBranch"));
             }
 
             return ValidationResult.Success;
@@ -96,7 +96,7 @@ namespace SourceGit.ViewModels
         public static ValidationResult ValidateTagPrefix(string tagPrefix, ValidationContext ctx)
         {
             if (!string.IsNullOrWhiteSpace(tagPrefix) && !REG_TAG_PREFIX().IsMatch(tagPrefix))
-                return new ValidationResult("Bad tag prefix format!");
+                return new ValidationResult(App.Text("Validation.TagPrefixFormat"));
 
             return ValidationResult.Success;
         }
@@ -104,9 +104,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Init git-flow ...";
+            ProgressDescription = App.Text("Progress.GitFlowInit");
 
-            var log = _repo.CreateLog("Gitflow - Init");
+            var log = _repo.CreateLog(App.Text("Operation.GitFlowInit"));
             Use(log);
 
             bool succ;

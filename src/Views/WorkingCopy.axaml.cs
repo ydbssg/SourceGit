@@ -262,7 +262,7 @@ namespace SourceGit.Views
                 return;
 
             if (DataContext is ViewModels.WorkingCopy vm)
-                await vm.CommitAsync(false, false);
+                await vm.CommitAsync(false);
 
             e.Handled = true;
         }
@@ -273,7 +273,7 @@ namespace SourceGit.Views
                 return;
 
             if (DataContext is ViewModels.WorkingCopy vm)
-                await vm.CommitAsync(true, false);
+                await vm.CommitAsync(true);
 
             e.Handled = true;
         }
@@ -284,7 +284,18 @@ namespace SourceGit.Views
                 return;
 
             if (DataContext is ViewModels.WorkingCopy vm)
-                await vm.CommitAsync(false, true);
+                await vm.CommitAsync(false, ViewModels.WorkingCopy.AfterCommit.Push);
+
+            e.Handled = true;
+        }
+
+        private async void OnCommitWithPullAndPush(object _, RoutedEventArgs e)
+        {
+            if (App.GetLauncher() is { CommandPalette: { } })
+                return;
+
+            if (DataContext is ViewModels.WorkingCopy vm)
+                await vm.CommitAsync(false, ViewModels.WorkingCopy.AfterCommit.PullAndPush);
 
             e.Handled = true;
         }
@@ -463,7 +474,7 @@ namespace SourceGit.Views
                         }
                         catch (Exception exception)
                         {
-                            repo.SendNotification($"Failed to save as patch: {exception.Message}", true);
+                            repo.SendNotification(App.Text("Diagnostics.SavePatch", exception.Message), true);
                         }
 
                         e.Handled = true;
@@ -475,7 +486,7 @@ namespace SourceGit.Views
                     assumeUnchanged.IsVisible = change.WorkTree != Models.ChangeState.Untracked;
                     assumeUnchanged.Click += async (_, e) =>
                     {
-                        var log = repo.CreateLog("Assume File Unchanged");
+                        var log = repo.CreateLog(App.Text("Operation.AssumeUnchanged"));
                         await new Commands.AssumeUnchanged(repo.FullPath, change.Path, true).Use(log).ExecAsync();
                         log.Complete();
                         e.Handled = true;
@@ -750,7 +761,7 @@ namespace SourceGit.Views
                 {
                     if (hasNonConflicts)
                     {
-                        repo.SendNotification("Selection contains both conflict and non-conflict changes!", true);
+                        repo.SendNotification(App.Text("Diagnostics.MixedConflictSelection"), true);
                         return null;
                     }
 
@@ -870,7 +881,7 @@ namespace SourceGit.Views
                     }
                     catch (Exception exception)
                     {
-                        repo.SendNotification($"Failed to save as patch: {exception.Message}", true);
+                        repo.SendNotification(App.Text("Diagnostics.SavePatch", exception.Message), true);
                     }
 
                     e.Handled = true;
@@ -1064,7 +1075,7 @@ namespace SourceGit.Views
                     }
                     catch (Exception exception)
                     {
-                        repo.SendNotification($"Failed to save as patch: {exception.Message}", true);
+                        repo.SendNotification(App.Text("Diagnostics.SavePatch", exception.Message), true);
                     }
 
                     e.Handled = true;
@@ -1279,7 +1290,7 @@ namespace SourceGit.Views
                     }
                     catch (Exception exception)
                     {
-                        repo.SendNotification($"Failed to save as patch: {exception.Message}", true);
+                        repo.SendNotification(App.Text("Diagnostics.SavePatch", exception.Message), true);
                     }
 
                     e.Handled = true;

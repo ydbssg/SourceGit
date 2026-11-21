@@ -695,6 +695,10 @@ ${pure_files:N} Come ${files:N}, ma senza cartelle</x:String>
   <x:String x:Key="Text.Repository.CustomActions.Empty" xml:space="preserve">Nessuna Azione Personalizzata</x:String>
   <x:String x:Key="Text.Repository.DiscardAll" xml:space="preserve">Scarta tutte le modifiche</x:String>
   <x:String x:Key="Text.Repository.Explore" xml:space="preserve">Apri nell'Esplora File</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Browse" xml:space="preserve">Sfoglia</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.More" xml:space="preserve">Altro</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Remote" xml:space="preserve">Remoto</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.NoWebRemote" xml:space="preserve">Nessun repository remoto ha un indirizzo web disponibile.</x:String>
   <x:String x:Key="Text.Repository.Filter" xml:space="preserve">Cerca Branch/Tag/Sottomodulo</x:String>
   <x:String x:Key="Text.Repository.FilterCommits" xml:space="preserve">Visibilità nel grafico</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Default" xml:space="preserve">Non impostato</x:String>

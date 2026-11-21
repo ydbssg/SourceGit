@@ -17,6 +17,8 @@ namespace SourceGit.ViewModels
             get => _change.ConflictDesc;
         }
 
+        public bool CanMergeSpreadsheet => Models.SpreadsheetMergePlan.Supports(_change.Path);
+
         public Models.ConflictFileState State
         {
             get => _state;
@@ -56,7 +58,9 @@ namespace SourceGit.ViewModels
                 };
 
                 var state = Models.ConflictFileState.Unknown;
-                if ((_change.ConflictReason is Models.ConflictReason.BothAdded or Models.ConflictReason.BothModified) && !Directory.Exists(Path.Combine(_repo.FullPath, _change.Path)))
+                if (CanMergeSpreadsheet)
+                    state = Models.ConflictFileState.UnmergedBinary;
+                else if ((_change.ConflictReason is Models.ConflictReason.BothAdded or Models.ConflictReason.BothModified) && !Directory.Exists(Path.Combine(_repo.FullPath, _change.Path)))
                     state = await new Commands.QueryConflictFileState(repo.FullPath, change)
                         .GetResultAsync()
                         .ConfigureAwait(false);
@@ -90,6 +94,8 @@ namespace SourceGit.ViewModels
             if (_state == Models.ConflictFileState.UnmergedText)
                 await _wc.UseExternalMergeToolAsync(_change);
         }
+
+        public Task MergeSpreadsheetAsync() => _wc.ResolveSpreadsheetAsync(_change.Path);
 
         private Repository _repo = null;
         private WorkingCopy _wc = null;

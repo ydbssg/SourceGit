@@ -227,6 +227,10 @@
       <!-- Diff Contents -->
       <ContentControl Grid.Row="1" Content="{Binding Content}">
         <ContentControl.DataTemplates>
+          <DataTemplate DataType="vm:SpreadsheetDiff">
+            <v:SpreadsheetDiffView/>
+          </DataTemplate>
+
           <!-- Binary Diff -->
           <DataTemplate DataType="m:BinaryDiff">
             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
@@ -384,7 +388,7 @@
 
               <TabItem>
                 <TabItem.Header>
-                  <TextBlock Text="IMAGE" FontWeight="Bold"/>
+                  <TextBlock Text="{DynamicResource Text.File.Image}" FontWeight="Bold"/>
                 </TabItem.Header>
 
                 <ContentControl Content="{Binding Image}"/>

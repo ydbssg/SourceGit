@@ -7,7 +7,7 @@ namespace SourceGit.ViewModels
 {
     public class Archive : Popup
     {
-        [Required(ErrorMessage = "Output file name is required")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.OutputFileRequired))]
         public string SaveFile
         {
             get => _saveFile;
@@ -47,9 +47,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Archiving ...";
+            ProgressDescription = App.Text("Progress.Archive");
 
-            var log = _repo.CreateLog("Archive");
+            var log = _repo.CreateLog(App.Text("Operation.Archive"));
             Use(log);
 
             var succ = await new Commands.Archive(_repo.FullPath, _revision, _saveFile)
@@ -59,7 +59,7 @@ namespace SourceGit.ViewModels
             log.Complete();
 
             if (succ)
-                _repo.SendNotification($"Save archive to : {_saveFile}");
+                _repo.SendNotification(App.Text("Diagnostics.ArchiveSaved", _saveFile));
             return succ;
         }
 

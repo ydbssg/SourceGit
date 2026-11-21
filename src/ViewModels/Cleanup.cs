@@ -12,9 +12,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Cleanup (GC & prune) ...";
+            ProgressDescription = App.Text("Progress.Cleanup");
 
-            var log = _repo.CreateLog("Cleanup (GC & prune)");
+            var log = _repo.CreateLog(App.Text("Operation.Cleanup"));
             Use(log);
 
             await new Commands.GC(_repo.FullPath)

@@ -69,9 +69,9 @@ namespace SourceGit.ViewModels
         {
             using var lockWatcher = _repo.LockWatcher();
             _repo.ClearCommitMessage();
-            ProgressDescription = "Cherry-Pick commit(s) ...";
+            ProgressDescription = App.Text("Progress.CherryPick");
 
-            var log = _repo.CreateLog("Cherry-Pick");
+            var log = _repo.CreateLog(App.Text("Operation.CherryPick"));
             Use(log);
 
             if (IsMergeCommit)

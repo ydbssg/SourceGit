@@ -23,15 +23,14 @@ namespace SourceGit.ViewModels
             _parentNode = parent;
             _bookmark = bookmark;
 
-            Reason = string.IsNullOrEmpty(reason) ? "unknown error" : reason;
-            Reason = Reason.Trim();
+            Reason = string.IsNullOrWhiteSpace(reason) ? App.Text("Diagnostics.UnknownError") : Models.GitOutputText.TranslateMessage(reason.Trim());
         }
 
         public override async Task<bool> Sure()
         {
-            ProgressDescription = $"Initialize git repository at: '{_targetPath}'";
+            ProgressDescription = App.Text("Progress.Init", _targetPath);
 
-            var log = new CommandLog("Initialize");
+            var log = new CommandLog(App.Text("Operation.Init"));
             Use(log);
 
             var succ = await new Commands.Init(_pageId, _targetPath)

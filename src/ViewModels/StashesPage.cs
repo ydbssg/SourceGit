@@ -213,7 +213,7 @@ namespace SourceGit.ViewModels
                     modified.Add(c.Path);
             }
 
-            var log = _repo.CreateLog($"Reset File to '{_selectedStash.Name}'");
+            var log = _repo.CreateLog(App.Text("Operation.ResetFile", _selectedStash.Name));
 
             if (untracked.Count > 0)
                 await new Commands.Checkout(_repo.FullPath)
@@ -252,7 +252,7 @@ namespace SourceGit.ViewModels
             if (!succ)
                 return;
 
-            var log = _repo.CreateLog($"Apply changes from '{_selectedStash.Name}'");
+            var log = _repo.CreateLog(App.Text("Operation.ApplyStashChanges", _selectedStash.Name));
             await new Commands.Apply(_repo.FullPath, saveTo, true, string.Empty, string.Empty)
                 .Use(log)
                 .ExecAsync();

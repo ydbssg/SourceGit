@@ -88,7 +88,7 @@ namespace SourceGit.ViewModels
                     if (_service.CachedAvailableModels.Count == 0)
                     {
                         _isFetchingModels = true;
-                        builder.AppendLine("Fetching available models...");
+                        builder.AppendLine(App.Text("AI.Diagnostics.AvailableModels"));
                         Text = builder.ToString();
 
                         var models = await _service.GetOpenAIClient().GetOpenAIModelClient().GetModelsAsync();
@@ -97,7 +97,7 @@ namespace SourceGit.ViewModels
                             availableModels.Add(m.Id);
 
                         if (availableModels.Count == 0)
-                            throw new Exception("No available models found. Please check your OpenAI API key and network connection.");
+                            throw new Exception(App.Text("AI.Diagnostics.NoModels"));
 
                         var lastUsedModel = _selectedModel;
                         _service.CachedAvailableModels = availableModels;
@@ -106,7 +106,7 @@ namespace SourceGit.ViewModels
                         if (!availableModels.Contains(lastUsedModel))
                         {
                             SelectedModel = availableModels[0];
-                            builder.AppendLine($"The model({lastUsedModel}) last used is not available. Auto change to the first available model.");
+                            builder.AppendLine(App.Text("AI.Diagnostics.ModelSwitched", lastUsedModel));
                             Text = builder.ToString();
                         }
                         else
@@ -119,10 +119,10 @@ namespace SourceGit.ViewModels
                 }
                 else if (string.IsNullOrEmpty(_selectedModel))
                 {
-                    throw new Exception("No model is selected and auto-fetching is disabled. Please select a model or enable auto-fetching.");
+                    throw new Exception(App.Text("AI.Diagnostics.NoModelSelected"));
                 }
 
-                builder.AppendLine("Asking AI to generate commit message...").AppendLine();
+                builder.AppendLine(App.Text("AI.Diagnostics.GeneratingCommit")).AppendLine();
                 Text = builder.ToString();
 
                 await new AI.Agent(_service).GenerateCommitMessageAsync(_repo.FullPath, currentBranchName, _changeList, _amendParent, message =>
@@ -155,7 +155,7 @@ namespace SourceGit.ViewModels
             {
                 builder
                     .AppendLine()
-                    .AppendLine("[ERROR]")
+                    .AppendLine(App.Text("AI.Diagnostics.Error"))
                     .Append(e.Message);
 
                 Text = builder.ToString();

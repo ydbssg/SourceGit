@@ -171,34 +171,34 @@ namespace SourceGit.Views
         public void ToggleNodeIsExpanded(ViewModels.ChangeTreeNode node)
         {
             if (Content is ViewModels.ChangeCollectionAsTree tree && node.IsFolder)
+                ToggleNodeIsExpanded(tree, node);
+        }
+
+        private static void ToggleNodeIsExpanded(ViewModels.ChangeCollectionAsTree tree, ViewModels.ChangeTreeNode node)
+        {
+            var idx = tree.Rows.IndexOf(node);
+            if (idx == -1)
+                return;
+
+            node.IsExpanded = !node.IsExpanded;
+            if (node.IsExpanded)
             {
-                node.IsExpanded = !node.IsExpanded;
-
-                var depth = node.Depth;
-                var idx = tree.Rows.IndexOf(node);
-                if (idx == -1)
-                    return;
-
-                if (node.IsExpanded)
+                var subrows = new List<ViewModels.ChangeTreeNode>();
+                MakeTreeRows(subrows, node.Children);
+                tree.Rows.InsertRange(idx + 1, subrows);
+            }
+            else
+            {
+                var removeCount = 0;
+                for (int i = idx + 1; i < tree.Rows.Count; i++)
                 {
-                    var subrows = new List<ViewModels.ChangeTreeNode>();
-                    MakeTreeRows(subrows, node.Children);
-                    tree.Rows.InsertRange(idx + 1, subrows);
-                }
-                else
-                {
-                    var removeCount = 0;
-                    for (int i = idx + 1; i < tree.Rows.Count; i++)
-                    {
-                        var row = tree.Rows[i];
-                        if (row.Depth <= depth)
-                            break;
+                    if (tree.Rows[i].Depth <= node.Depth)
+                        break;
 
-                        removeCount++;
-                    }
-
-                    tree.Rows.RemoveRange(idx + 1, removeCount);
+                    removeCount++;
                 }
+
+                tree.Rows.RemoveRange(idx + 1, removeCount);
             }
         }
 
@@ -295,6 +295,8 @@ namespace SourceGit.Views
             {
                 if (node.Change is { } c)
                     UpdateRowTips(control, c);
+                else if (node.IsExtensionlessGroup)
+                    ToolTip.SetTip(control, App.Text("ChangeDisplayMode.NoExtension"));
                 else
                     ToolTip.SetTip(control, node.FullPath);
             }
@@ -348,7 +350,7 @@ namespace SourceGit.Views
             _disableSelectionChangingEvent = false;
         }
 
-        private void MakeTreeRows(List<ViewModels.ChangeTreeNode> rows, List<ViewModels.ChangeTreeNode> nodes)
+        private static void MakeTreeRows(List<ViewModels.ChangeTreeNode> rows, List<ViewModels.ChangeTreeNode> nodes)
         {
             foreach (var node in nodes)
             {
@@ -374,38 +376,29 @@ namespace SourceGit.Views
             }
 
             var selected = _selection?.Changes ?? [];
-            if (ViewMode == Models.ChangeViewMode.Tree)
+            var groupByFileType = ViewMode == Models.ChangeViewMode.FileType;
+            if (ViewMode == Models.ChangeViewMode.Tree || groupByFileType)
             {
                 var oldFolded = new HashSet<string>();
                 if (Content is ViewModels.ChangeCollectionAsTree oldTree)
                 {
                     foreach (var row in oldTree.Rows)
                     {
-                        if (row.IsFolder && !row.IsExpanded)
+                        if (row.IsFolder && !row.IsExpanded && row.IsFileTypeGroup == groupByFileType)
                             oldFolded.Add(row.FullPath);
                     }
                 }
 
                 var tree = new ViewModels.ChangeCollectionAsTree();
-                tree.Tree = ViewModels.ChangeTreeNode.Build(changes, oldFolded, EnableCompactFolders);
+                tree.Tree = groupByFileType
+                    ? ViewModels.ChangeTreeNode.BuildByFileType(changes, oldFolded)
+                    : ViewModels.ChangeTreeNode.Build(changes, oldFolded, EnableCompactFolders);
 
                 var rows = new List<ViewModels.ChangeTreeNode>();
                 MakeTreeRows(rows, tree.Tree);
                 tree.Rows.AddRange(rows);
 
-                if (selected.Count > 0)
-                {
-                    var sets = new HashSet<Models.Change>(selected);
-                    var nodes = new List<ViewModels.ChangeTreeNode>();
-                    foreach (var row in tree.Rows)
-                    {
-                        if (row.Change != null && sets.Contains(row.Change))
-                            nodes.Add(row);
-                    }
-
-                    tree.SelectedRows.AddRange(nodes);
-                }
-
+                UpdateTreeSelection(tree, selected);
                 Content = tree;
             }
             else if (ViewMode == Models.ChangeViewMode.Grid)
@@ -440,20 +433,7 @@ namespace SourceGit.Views
             var selected = _selection?.Changes ?? [];
             if (Content is ViewModels.ChangeCollectionAsTree tree)
             {
-                tree.SelectedRows.Clear();
-
-                if (selected.Count > 0)
-                {
-                    var sets = new HashSet<Models.Change>(selected);
-                    var nodes = new List<ViewModels.ChangeTreeNode>();
-                    foreach (var row in tree.Rows)
-                    {
-                        if (row.Change != null && sets.Contains(row.Change))
-                            nodes.Add(row);
-                    }
-
-                    tree.SelectedRows.AddRange(nodes);
-                }
+                UpdateTreeSelection(tree, selected);
             }
             else if (Content is ViewModels.ChangeCollectionAsGrid grid)
             {
@@ -469,6 +449,33 @@ namespace SourceGit.Views
             }
 
             _disableSelectionChangingEvent = false;
+        }
+
+        private static void UpdateTreeSelection(ViewModels.ChangeCollectionAsTree tree, List<Models.Change> selected)
+        {
+            tree.SelectedRows.Clear();
+            if (selected.Count == 0)
+                return;
+
+            var selectedChanges = new HashSet<Models.Change>(selected);
+            var nodes = new List<ViewModels.ChangeTreeNode>();
+            for (var i = 0; i < tree.Rows.Count; i++)
+            {
+                var row = tree.Rows[i];
+                if (row.Change is { } change && selectedChanges.Contains(change))
+                {
+                    nodes.Add(row);
+                }
+                else if (row is { IsFileTypeGroup: true, IsExpanded: false })
+                {
+                    if (row.Children.TrueForAll(child => selectedChanges.Contains(child.Change)))
+                        nodes.Add(row);
+                    else if (row.Children.Exists(child => selectedChanges.Contains(child.Change)))
+                        ToggleNodeIsExpanded(tree, row);
+                }
+            }
+
+            tree.SelectedRows.AddRange(nodes);
         }
 
         private void UpdateRowTips(Control control, Models.Change change)

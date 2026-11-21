@@ -68,7 +68,7 @@ namespace SourceGit.ViewModels
         public static ValidationResult ValidatePatchFile(string file, ValidationContext ctx)
         {
             if (ctx.ObjectInstance is not Apply apply)
-                return new ValidationResult("Invalid object instance!!!");
+                return new ValidationResult(App.Text("Validation.InvalidContext"));
 
             if (apply.FromClipboard)
             {
@@ -79,13 +79,13 @@ namespace SourceGit.ViewModels
             if (string.IsNullOrEmpty(file))
             {
                 apply.CanCreateCommit = false;
-                return new ValidationResult("Please select a patch file!!!");
+                return new ValidationResult(App.Text("Validation.SelectPatch"));
             }
 
             if (!File.Exists(file))
             {
                 apply.CanCreateCommit = false;
-                return new ValidationResult($"File '{file}' can NOT be found!!!");
+                return new ValidationResult(App.Text("Validation.FileMissing", file));
             }
 
             apply.CheckPatchFileFormat(file);
@@ -95,21 +95,21 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Apply patch...";
+            ProgressDescription = App.Text("Progress.ApplyPatch");
 
             var finalPatchFile = _patchFile;
             if (_fromClipboard)
             {
                 if (Clipboard == null)
                 {
-                    _repo.SendNotification("Clipboard service is not available!!!", true);
+                    _repo.SendNotification(App.Text("Diagnostics.NoClipboard"), true);
                     return false;
                 }
 
                 var content = await Clipboard.TryGetTextAsync();
                 if (string.IsNullOrEmpty(content) || !content.StartsWith("diff --git ", StringComparison.Ordinal))
                 {
-                    _repo.SendNotification("There's no valid patch content in clipboard!!!", true);
+                    _repo.SendNotification(App.Text("Diagnostics.NoClipboardPatch"), true);
                     return false;
                 }
 
@@ -117,7 +117,7 @@ namespace SourceGit.ViewModels
                 File.WriteAllText(finalPatchFile, content);
             }
 
-            var log = _repo.CreateLog("Apply Patch");
+            var log = _repo.CreateLog(App.Text("Operation.ApplyPatch"));
             Use(log);
 
             var extra = ThreeWayMerge ? "--3way" : string.Empty;

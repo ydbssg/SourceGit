@@ -38,7 +38,7 @@ namespace SourceGit.ViewModels
                 return true;
             }
 
-            var log = _repo.CreateLog("Edit Branch Description");
+            var log = _repo.CreateLog(App.Text("Operation.EditBranchDescription"));
             Use(log);
 
             await new Commands.Config(_repo.FullPath)

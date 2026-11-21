@@ -45,7 +45,7 @@ namespace SourceGit.Views
                     }
                     catch (Exception exception)
                     {
-                        Models.Notification.Send(null, $"Failed to save as patch: {exception.Message}", true);
+                        Models.Notification.Send(null, App.Text("Diagnostics.SavePatch", exception.Message), true);
                     }
 
                     e.Handled = true;
@@ -267,7 +267,7 @@ namespace SourceGit.Views
             }
             catch (Exception exception)
             {
-                Models.Notification.Send(null, $"Failed to save as patch: {exception.Message}", true);
+                Models.Notification.Send(null, App.Text("Diagnostics.SavePatch", exception.Message), true);
             }
 
             e.Handled = true;

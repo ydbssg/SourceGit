@@ -241,14 +241,14 @@ namespace SourceGit.ViewModels
                 return;
             }
 
-            var log = _repo.CreateLog($"Reset File to '{_commit.SHA}'");
+            var log = _repo.CreateLog(App.Text("Operation.ResetFile", _commit.SHA));
             await new Commands.Checkout(_repo.FullPath).Use(log).FileWithRevisionAsync(path, _commit.SHA);
             log.Complete();
         }
 
         public async Task ResetToThisRevisionAsync(Models.Change change)
         {
-            var log = _repo.CreateLog($"Reset File to '{_commit.SHA}'");
+            var log = _repo.CreateLog(App.Text("Operation.ResetFile", _commit.SHA));
 
             if (change.Index == Models.ChangeState.Deleted)
             {
@@ -282,7 +282,7 @@ namespace SourceGit.ViewModels
 
         public async Task ResetToParentRevisionAsync(Models.Change change)
         {
-            var log = _repo.CreateLog($"Reset File to '{_commit.SHA}~1'");
+            var log = _repo.CreateLog(App.Text("Operation.ResetFile", $"{_commit.SHA}~1"));
 
             if (change.Index == Models.ChangeState.Added)
             {
@@ -341,7 +341,7 @@ namespace SourceGit.ViewModels
                 }
             }
 
-            var log = _repo.CreateLog($"Reset Files to '{_commit.SHA}'");
+            var log = _repo.CreateLog(App.Text("Operation.ResetFiles", _commit.SHA));
 
             if (removes.Count > 0)
                 await new Commands.Remove(_repo.FullPath, removes)
@@ -383,7 +383,7 @@ namespace SourceGit.ViewModels
                 }
             }
 
-            var log = _repo.CreateLog($"Reset Files to '{_commit.SHA}~1'");
+            var log = _repo.CreateLog(App.Text("Operation.ResetFiles", $"{_commit.SHA}~1"));
 
             if (removes.Count > 0)
                 await new Commands.Remove(_repo.FullPath, removes)

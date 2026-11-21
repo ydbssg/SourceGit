@@ -40,10 +40,10 @@ namespace SourceGit.ViewModels
 
         public override async Task<bool> Sure()
         {
-            var log = new CommandLog("Trust Repository");
+            var log = new CommandLog(App.Text("Operation.TrustRepository"));
             Use(log);
 
-            ProgressDescription = $"Adding '{SafeDirectory}' into git global `safe.directory` ...";
+            ProgressDescription = App.Text("Progress.TrustRepository", SafeDirectory);
             var added = await new Commands.AddSafeDirectory(_pageId, SafeDirectory).Use(log).ExecAsync();
             if (!added)
             {
@@ -51,7 +51,7 @@ namespace SourceGit.ViewModels
                 return false;
             }
 
-            ProgressDescription = $"Opening '{TargetPath}' ...";
+            ProgressDescription = App.Text("Progress.OpenRepository", TargetPath);
 
             var root = TargetPath;
             var isBare = await new Commands.IsBareRepository(TargetPath).GetResultAsync();
@@ -61,7 +61,10 @@ namespace SourceGit.ViewModels
                 if (!test.IsSuccess || string.IsNullOrWhiteSpace(test.StdOut))
                 {
                     log.Complete();
-                    Models.Notification.Send(_pageId, string.IsNullOrWhiteSpace(test.StdErr) ? "Failed to open the repository after trusting it." : test.StdErr, true);
+                    var error = string.IsNullOrWhiteSpace(test.StdErr)
+                        ? App.Text("Diagnostics.TrustedOpenFailed")
+                        : Models.GitOutputText.TranslateMessage(test.StdErr);
+                    Models.Notification.Send(_pageId, error, true);
                     return false;
                 }
 
@@ -93,7 +96,7 @@ namespace SourceGit.ViewModels
             if (idx >= 0)
                 line = line.Substring(0, idx);
 
-            return line.Trim();
+            return Models.GitOutputText.TranslateLine(line.Trim());
         }
 
         private readonly string _pageId;

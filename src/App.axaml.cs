@@ -115,7 +115,10 @@ namespace SourceGit
 
             app.Resources.MergedDictionaries.Add(targetLocale);
             app._activeLocale = targetLocale;
+            LocaleKey = finalLocaleKey;
         }
+
+        internal static string LocaleKey { get; private set; } = "en_US";
 
         public static void SetTheme(string theme, string themeOverridesFile)
         {
@@ -243,6 +246,7 @@ namespace SourceGit
 
             var pref = ViewModels.Preferences.Instance;
             SetLocale(pref.Locale);
+            pref.PrepareWorkspaces();
             SetTheme(pref.Theme, pref.ThemeOverrides);
             SetFonts(pref.DefaultFontFamily, pref.MonospaceFontFamily);
         }
@@ -350,7 +354,9 @@ namespace SourceGit
             var test = new Commands.QueryRepositoryRootPath(dir).GetResult();
             if (!test.IsSuccess || string.IsNullOrEmpty(test.StdOut))
             {
-                Console.Out.WriteLine(string.IsNullOrWhiteSpace(test.StdErr) ? $"'{args[1]}' is not in a valid git repository" : test.StdErr.Trim());
+                Console.Out.WriteLine(string.IsNullOrWhiteSpace(test.StdErr)
+                    ? Text("Diagnostics.InvalidRepositoryFile", args[1])
+                    : Models.GitOutputText.TranslateMessage(test.StdErr.Trim()));
                 desktop.Shutdown(-1);
                 return true;
             }
@@ -376,7 +382,7 @@ namespace SourceGit
             }
             else
             {
-                Console.Out.WriteLine($"'{args[1]}' does not exist in repository: '{repo}'");
+                Console.Out.WriteLine(Text("Diagnostics.RepositoryFileMissing", args[1], repo));
                 desktop.Shutdown(-1);
             }
 
@@ -395,7 +401,9 @@ namespace SourceGit
             var test = new Commands.QueryRepositoryRootPath(dir).GetResult();
             if (!test.IsSuccess || string.IsNullOrEmpty(test.StdOut))
             {
-                Console.Out.WriteLine(string.IsNullOrWhiteSpace(test.StdErr) ? $"'{args[1]}' is not in a valid git repository" : test.StdErr.Trim());
+                Console.Out.WriteLine(string.IsNullOrWhiteSpace(test.StdErr)
+                    ? Text("Diagnostics.InvalidRepositoryFile", args[1])
+                    : Models.GitOutputText.TranslateMessage(test.StdErr.Trim()));
                 desktop.Shutdown(-1);
                 return true;
             }
@@ -404,7 +412,7 @@ namespace SourceGit
             var head = new Commands.QuerySingleCommit(repo, "HEAD").GetResult();
             if (head == null)
             {
-                Console.Out.WriteLine($"{repo} has no commits!");
+                Console.Out.WriteLine(Text("Diagnostics.NoRepositoryCommits", repo));
                 desktop.Shutdown(-1);
                 return true;
             }
@@ -497,8 +505,12 @@ namespace SourceGit
             pref.SetCanModify();
 
             _launcher = new ViewModels.Launcher(startupRepo);
-            desktop.MainWindow = new Views.Launcher() { DataContext = _launcher };
+            var main = new Views.Launcher() { DataContext = _launcher };
+            desktop.MainWindow = main;
             desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+            if (OperatingSystem.IsWindows())
+                SetupTrayIcon(desktop, main);
 
             // Fix macOS crash when quiting from Dock
             if (OperatingSystem.IsMacOS())
@@ -521,8 +533,7 @@ namespace SourceGit
                 Dispatcher.UIThread.Invoke(() =>
                 {
                     _launcher.TryOpenRepositoryFromPath(repo);
-                    if (desktop.MainWindow is Views.Launcher main)
-                        main.BringToTop();
+                    main.BringToTop();
                 });
             };
 
@@ -530,6 +541,41 @@ namespace SourceGit
             if (pref.ShouldCheck4UpdateOnStartup())
                 Check4Update();
 #endif
+        }
+
+        private void SetupTrayIcon(IClassicDesktopStyleApplicationLifetime desktop, Views.Launcher main)
+        {
+            var preferences = new NativeMenuItem() { Command = OpenPreferencesCommand };
+            preferences.Bind(NativeMenuItem.HeaderProperty, this.GetResourceObservable("Text.Preferences"));
+            var quit = new NativeMenuItem() { Command = QuitCommand };
+            quit.Bind(NativeMenuItem.HeaderProperty, this.GetResourceObservable("Text.Quit"));
+
+            var menu = new NativeMenu();
+            menu.Items.Add(preferences);
+            menu.Items.Add(quit);
+
+            var icon = new TrayIcon() { Icon = main.Icon, ToolTipText = "SourceGit", Menu = menu };
+            icon.Clicked += (_, _) => main.BringToTop();
+            TrayIcon.SetIcons(this, new TrayIcons { icon });
+
+            main.Closing += (_, e) =>
+            {
+                if (e.Cancel || e.CloseReason != WindowCloseReason.WindowClosing)
+                    return;
+
+                e.Cancel = true;
+                // Hiding an Avalonia window also hides and detaches its owned windows.
+                foreach (var window in desktop.Windows)
+                {
+                    if (window.Owner == main && window.IsVisible)
+                    {
+                        window.Activate();
+                        return;
+                    }
+                }
+
+                main.Hide();
+            };
         }
         #endregion
 

@@ -18,6 +18,8 @@ namespace SourceGit.Models
             set;
         } = string.Empty;
 
+        public bool CreateMergeRequestOnGitLab { get; set; } = true;
+
         public int PreferredMergeMode
         {
             get;

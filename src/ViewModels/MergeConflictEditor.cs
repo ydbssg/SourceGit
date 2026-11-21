@@ -145,7 +145,7 @@ namespace SourceGit.ViewModels
 
             if (_unsolvedCount > 0)
             {
-                Error = "Cannot save: there are still unresolved conflicts.";
+                Error = App.Text("Diagnostics.SaveUnresolvedMerge");
                 return false;
             }
 
@@ -211,7 +211,7 @@ namespace SourceGit.ViewModels
             }
             catch (Exception ex)
             {
-                Error = $"Failed to save and stage: {ex.Message}";
+                Error = App.Text("Diagnostics.SaveAndStage", ex.Message);
                 return false;
             }
         }

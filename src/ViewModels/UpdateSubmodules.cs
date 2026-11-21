@@ -89,7 +89,7 @@ namespace SourceGit.ViewModels
             if (targets.Count == 0)
                 return true;
 
-            var log = _repo.CreateLog("Update Submodule");
+            var log = _repo.CreateLog(App.Text("Operation.UpdateSubmodule"));
             using var lockWatcher = _repo.LockWatcher();
             Use(log);
 

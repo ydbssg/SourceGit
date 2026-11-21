@@ -71,9 +71,9 @@ namespace SourceGit.ViewModels
         {
             using var lockWatcher = _repo.LockWatcher();
             _repo.ClearCommitMessage();
-            ProgressDescription = "Rebasing ...";
+            ProgressDescription = App.Text("Progress.Rebase");
 
-            var log = _repo.CreateLog("Rebase");
+            var log = _repo.CreateLog(App.Text("Operation.Rebase"));
             Use(log);
 
             await new Commands.Rebase(_repo.FullPath, _revision, AutoStash, NoVerify)
