@@ -389,7 +389,7 @@ namespace SourceGit.ViewModels
                 await JsonSerializer.SerializeAsync(stream, collection, JsonCodeGen.Default.InteractiveRebaseJobCollection);
             }
 
-            var log = _repo.CreateLog("Interactive Rebase");
+            var log = _repo.CreateLog(App.Text("Operation.InteractiveRebase"));
             var succ = await new Commands.InteractiveRebase(_repo.FullPath, On.SHA, AutoStash, NoVerify)
                 .Use(log)
                 .ExecAsync();

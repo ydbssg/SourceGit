@@ -18,8 +18,11 @@ namespace SourceGit.Views
 
         private void OnRevisionsPropertyChanged(object sender, AvaloniaPropertyChangedEventArgs e)
         {
-            if (e.Property == ListBox.ItemsSourceProperty &&
-                sender is ListBox { Items: { Count: > 0 } } listBox)
+            if (e.Property != ListBox.ItemsSourceProperty || sender is not ListBox listBox)
+                return;
+
+            listBox.SelectedIndex = -1;
+            if (listBox.Items.Count > 0)
                 listBox.SelectedIndex = 0;
         }
 

@@ -9,7 +9,7 @@
     <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
     <InvariantGlobalization>false</InvariantGlobalization>
 
-    <Product>SourceGit</Product>
+    <Product>SparkSourceGit</Product>
     <Description>OpenSource GIT client</Description>
     <Company>sourcegit-scm</Company>
     <Copyright>Copyright © $([System.DateTime]::Now.Year) sourcegit-scm.</Copyright>

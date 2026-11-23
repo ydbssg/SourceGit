@@ -1,0 +1,128 @@
+<v:ChromelessWindow xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:m="using:SourceGit.Models"
+                    xmlns:vm="using:SourceGit.ViewModels"
+                    xmlns:v="using:SourceGit.Views"
+                    xmlns:c="using:SourceGit.Converters"
+                    x:Class="SourceGit.Views.CreateMergeRequest"
+                    x:DataType="vm:CreateMergeRequest"
+                    x:Name="ThisControl"
+                    Title="{DynamicResource Text.CreateMergeRequest.Title}"
+                    Icon="/App.ico"
+                    Width="840" MinWidth="640" SizeToContent="Height"
+                    WindowStartupLocation="CenterOwner">
+  <v:ChromelessWindow.Resources>
+    <DataTemplate x:Key="CommitRow" x:DataType="m:Commit">
+      <Grid ColumnDefinitions="86,*" MinHeight="30" Margin="10,0">
+        <TextBlock VerticalAlignment="Center" FontFamily="{DynamicResource Fonts.Monospace}"
+                   Foreground="{DynamicResource Brush.FG2}" ToolTip.Tip="{Binding SHA}"
+                   Text="{Binding SHA, Converter={x:Static c:StringConverters.ToShortSHA}}"/>
+        <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding Subject}"
+                   TextTrimming="CharacterEllipsis" ToolTip.Tip="{Binding Subject}"/>
+      </Grid>
+    </DataTemplate>
+  </v:ChromelessWindow.Resources>
+  <v:ChromelessWindow.Styles>
+    <Style Selector="Border.mr_readonly_field">
+      <Setter Property="Padding" Value="10,0"/>
+      <Setter Property="CornerRadius" Value="4"/>
+      <Setter Property="Background" Value="{DynamicResource Brush.Contents}"/>
+      <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border1}"/>
+      <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+    <Style Selector="TextBlock.mr_field_label">
+      <Setter Property="Foreground" Value="{DynamicResource Brush.FG2}"/>
+      <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+  </v:ChromelessWindow.Styles>
+  <Grid RowDefinitions="Auto,*,Auto">
+    <Grid Height="28" IsVisible="{Binding !#ThisControl.UseSystemWindowFrame}">
+      <Border Background="{DynamicResource Brush.TitleBar}"
+              BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Brush.Border0}"
+              PointerPressed="BeginMoveWindow"/>
+      <Path Width="14" Height="14" Margin="10,0,0,0" HorizontalAlignment="Left"
+            Data="{StaticResource Icons.CreatePR}" IsVisible="{OnPlatform True, macOS=False}"/>
+      <TextBlock Classes="bold" Text="{DynamicResource Text.CreateMergeRequest.Title}"
+                 HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"/>
+      <v:CaptionButtons HorizontalAlignment="Right" IsCloseButtonOnly="True" IsVisible="{OnPlatform True, macOS=False}"/>
+    </Grid>
+
+    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+      <Grid Margin="20,16,20,14" RowDefinitions="Auto,14,Auto">
+        <Grid ColumnDefinitions="160,14,*,14,*" RowDefinitions="Auto,Auto,10,Auto,Auto">
+          <TextBlock Classes="mr_field_label" Text="{DynamicResource Text.CreateMergeRequest.Remote}"/>
+          <TextBlock Grid.Column="2" Grid.ColumnSpan="3" Classes="mr_field_label" Text="{DynamicResource Text.CreateMergeRequest.Target}"/>
+          <Grid Grid.Row="1" Grid.ColumnSpan="5" ColumnDefinitions="160,14,*,Auto">
+            <ComboBox MinHeight="30" HorizontalAlignment="Stretch"
+                      ItemsSource="{Binding Remotes}" SelectedItem="{Binding SelectedRemote, Mode=TwoWay}"
+                      IsVisible="{Binding CanChooseTarget}" SelectionChanged="OnRemoteChanged">
+              <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="m:Remote">
+                  <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
+                </DataTemplate>
+              </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Border Classes="mr_readonly_field" MinHeight="30" IsVisible="{Binding !CanChooseTarget}">
+              <TextBlock VerticalAlignment="Center" Text="{Binding SelectedRemote?.Name}" TextTrimming="CharacterEllipsis"/>
+            </Border>
+            <ComboBox Grid.Column="2" MinHeight="30" HorizontalAlignment="Stretch"
+                      ItemsSource="{Binding TargetBranches}" SelectedItem="{Binding TargetBranch, Mode=TwoWay}"
+                      IsVisible="{Binding CanChooseTarget}"/>
+            <Border Grid.Column="2" Grid.ColumnSpan="2" Classes="mr_readonly_field" MinHeight="30"
+                    IsVisible="{Binding !CanChooseTarget}">
+              <TextBlock VerticalAlignment="Center" Text="{Binding TargetBranch}" TextTrimming="CharacterEllipsis"/>
+            </Border>
+            <Button Grid.Column="3" Classes="icon_button" Width="30" Margin="6,0,0,0"
+                    Click="OnRefreshTargets" IsVisible="{Binding CanChooseTarget}"
+                    ToolTip.Tip="{DynamicResource Text.CreateMergeRequest.Refresh}">
+              <Path Width="13" Height="13" Data="{StaticResource Icons.Fetch}"/>
+            </Button>
+          </Grid>
+
+          <StackPanel Grid.Row="3" Grid.ColumnSpan="3">
+            <TextBlock Classes="mr_field_label" Text="{DynamicResource Text.CreateMergeRequest.Source}"/>
+            <TextBox MinHeight="30" VerticalContentAlignment="Center" Text="{Binding SourceBranch, Mode=TwoWay}"
+                     IsReadOnly="{Binding !CanEditRequest}"/>
+          </StackPanel>
+          <StackPanel Grid.Row="3" Grid.Column="4">
+            <TextBlock Classes="mr_field_label" Text="{DynamicResource Text.CreateMergeRequest.RequestTitle}"/>
+            <TextBox MinHeight="30" VerticalContentAlignment="Center" Text="{Binding RequestTitle, Mode=TwoWay}"
+                     IsReadOnly="{Binding !CanEditRequest}"/>
+          </StackPanel>
+          <CheckBox Grid.Row="4" Grid.ColumnSpan="5" Margin="0,6,0,0"
+                    Content="{DynamicResource Text.CreateMergeRequest.GitLab}"
+                    IsChecked="{Binding CreateOnGitLab, Mode=TwoWay}" IsEnabled="{Binding CanEditRequest}"/>
+        </Grid>
+
+        <StackPanel Grid.Row="2" Spacing="6">
+          <TextBlock Classes="bold" Text="{Binding SelectedCommitsLabel}"/>
+          <Border CornerRadius="4" BorderThickness="1" BorderBrush="{DynamicResource Brush.Border1}"
+                  Background="{DynamicResource Brush.Contents}">
+            <ScrollViewer MaxHeight="152" HorizontalScrollBarVisibility="Disabled">
+              <ItemsControl ItemsSource="{Binding SelectedCommits}" ItemTemplate="{StaticResource CommitRow}"/>
+            </ScrollViewer>
+          </Border>
+        </StackPanel>
+
+      </Grid>
+    </ScrollViewer>
+
+    <Border Grid.Row="2" Padding="20,10" Background="{DynamicResource Brush.ToolBar}"
+            BorderBrush="{DynamicResource Brush.Border1}" BorderThickness="0,1,0,0">
+      <StackPanel Spacing="6">
+        <ProgressBar Height="3" IsIndeterminate="True" IsVisible="{Binding IsBusy}"/>
+        <TextBlock Text="{Binding Status}" TextWrapping="Wrap"/>
+        <TextBox Text="{Binding Details, Mode=OneWay}" IsReadOnly="True" AcceptsReturn="True"
+                 VerticalContentAlignment="Top" TextWrapping="Wrap" MaxHeight="84" IsVisible="{Binding HasDetails}"/>
+
+        <WrapPanel HorizontalAlignment="Right">
+          <Button Classes="flat" Margin="0,2,6,2" Click="OnClose" IsEnabled="{Binding !IsBusy}" Content="{DynamicResource Text.Close}"/>
+          <Button Classes="flat primary" Margin="0,2,0,2" Click="OnPublish" IsVisible="{Binding ShowPublish}"
+                  IsEnabled="{Binding CanPublish}" Content="{Binding PublishLabel}"/>
+          <Button Classes="flat primary" Margin="0,2,0,2" Click="OnOpenRequest" IsVisible="{Binding HasBrowserLink}"
+                  IsEnabled="{Binding !IsBusy}" Content="{Binding BrowserLinkLabel}"/>
+        </WrapPanel>
+      </StackPanel>
+    </Border>
+  </Grid>
+</v:ChromelessWindow>

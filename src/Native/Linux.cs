@@ -159,7 +159,7 @@ namespace SourceGit.Native
             }
             catch (Exception e)
             {
-                Models.Notification.Send(workdir, $"Failed to start '{OS.ShellOrTerminal}'. Reason: {e.Message}", true);
+                Models.Notification.Send(workdir, App.Text("Diagnostics.StartTerminal", OS.ShellOrTerminal, e.Message), true);
             }
         }
 
@@ -171,7 +171,7 @@ namespace SourceGit.Native
                 proc.WaitForExit();
 
                 if (proc.ExitCode != 0)
-                    Models.Notification.Send("", $"Failed to open: {file}", true);
+                    Models.Notification.Send("", App.Text("Diagnostics.OpenFile", file), true);
 
                 proc.Close();
             }

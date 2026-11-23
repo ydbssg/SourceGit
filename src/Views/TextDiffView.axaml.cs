@@ -553,7 +553,7 @@ namespace SourceGit.Views
 
             var extentHeight = ExtentHeight;
             var width = extentHeight > Bounds.Height ? Bounds.Width - 12 : Bounds.Width;
-            var color = (Color)this.FindResource("SystemAccentColor")!;
+            var color = (Color)this.FindResource(ActualThemeVariant, "SystemAccentColor")!;
             var brush = new SolidColorBrush(color, 0.1);
             var pen = new Pen(color.ToUInt32());
             var rect = new Rect(0, chunk.Y, width, chunk.Height);
@@ -950,7 +950,7 @@ namespace SourceGit.Views
             var patch = new Models.PatchGenerator(option, diff, startIdx, endIdx, isCombined, IsOld);
             if (!patch.IsValid)
             {
-                Models.Notification.Send(null, "You should select at lease one changed line!", true);
+                Models.Notification.Send(null, App.Text("Diagnostics.SelectChangedLine"), true);
                 return;
             }
 

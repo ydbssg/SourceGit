@@ -615,7 +615,7 @@ namespace SourceGit.Views
 
             var startY = range.Start * unitHeight;
             var endY = range.End * unitHeight;
-            var color = (Color)this.FindResource("SystemAccentColor")!;
+            var color = (Color)this.FindResource(ActualThemeVariant, "SystemAccentColor")!;
             var brush = new SolidColorBrush(color, 0.2);
             var pen = new Pen(color.ToUInt32());
             var rect = new Rect(0, startY, Bounds.Width, endY - startY);

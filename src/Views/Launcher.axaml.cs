@@ -71,10 +71,13 @@ namespace SourceGit.Views
 
         public void BringToTop()
         {
+            if (!IsVisible)
+                Show();
+
             if (WindowState == WindowState.Minimized)
                 WindowState = _lastWindowState;
-            else
-                Activate();
+
+            Activate();
         }
 
         protected override void OnOpened(EventArgs e)
@@ -335,7 +338,7 @@ namespace SourceGit.Views
         {
             base.OnClosing(e);
 
-            if (!Design.IsDesignMode && DataContext is ViewModels.Launcher launcher)
+            if (!e.Cancel && !Design.IsDesignMode && DataContext is ViewModels.Launcher launcher)
                 launcher.CloseAll();
         }
 

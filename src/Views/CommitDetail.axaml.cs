@@ -137,7 +137,7 @@ namespace SourceGit.Views
                 }
                 catch (Exception exception)
                 {
-                    repo.SendNotification($"Failed to save as patch: {exception.Message}", true);
+                    repo.SendNotification(App.Text("Diagnostics.SavePatch", exception.Message), true);
                 }
 
                 e.Handled = true;

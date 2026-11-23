@@ -502,6 +502,10 @@
   <x:String x:Key="Text.Repository.CustomActions.Empty" xml:space="preserve">Немає спеціальних дій</x:String>
   <x:String x:Key="Text.Repository.DiscardAll" xml:space="preserve">Скасувати всі зміни</x:String>
   <x:String x:Key="Text.Repository.Explore" xml:space="preserve">Відкрити у файловому менеджері</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Browse" xml:space="preserve">Огляд</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.More" xml:space="preserve">Ще</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Remote" xml:space="preserve">Віддалений</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.NoWebRemote" xml:space="preserve">Немає віддаленого сховища з доступною вебадресою.</x:String>
   <x:String x:Key="Text.Repository.Filter" xml:space="preserve">Пошук гілок/тегів/підмодулів</x:String>
   <x:String x:Key="Text.Repository.FilterCommits" xml:space="preserve">Видимість у графі</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Default" xml:space="preserve">Не встановлено</x:String>

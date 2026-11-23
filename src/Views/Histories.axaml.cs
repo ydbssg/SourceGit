@@ -793,8 +793,71 @@ namespace SourceGit.Views
                 CommitListContainer.ScrollIntoView(histories.Commits[0], null);
         }
 
+        private void OnAuthorCellContextRequested(object sender, ContextRequestedEventArgs e)
+        {
+            if (sender is not Control control || control.DataContext is not Models.Commit commit)
+                return;
+
+            var name = commit.Author?.Name;
+            if (string.IsNullOrEmpty(name))
+                return;
+
+            AuthorNameBox.ShowMenu(control, name);
+            e.Handled = true;
+        }
+
+        private bool TryOpenAuthorBoxMenu(ContextRequestedEventArgs e)
+        {
+            if (e.Source is Control source)
+            {
+                var fromSource = FindAuthorCell(source);
+                if (fromSource != null && fromSource.DataContext is Models.Commit sourceCommit && !string.IsNullOrEmpty(sourceCommit.Author?.Name))
+                {
+                    AuthorNameBox.ShowMenu(fromSource, sourceCommit.Author.Name);
+                    e.Handled = true;
+                    return true;
+                }
+            }
+
+            if (!e.TryGetPosition(CommitListContainer, out var point))
+                return false;
+
+            if (CommitListContainer.InputHitTest(point) is not Visual hit)
+                return false;
+
+            var cell = FindAuthorCell(hit);
+            if (cell?.DataContext is not Models.Commit commit || string.IsNullOrEmpty(commit.Author?.Name))
+                return false;
+
+            AuthorNameBox.ShowMenu(cell, commit.Author.Name);
+            e.Handled = true;
+            return true;
+        }
+
+        private static Control FindAuthorCell(Visual visual)
+        {
+            while (visual != null)
+            {
+                if (visual is Grid grid)
+                {
+                    foreach (var child in grid.GetVisualChildren())
+                    {
+                        if (child is AuthorNameBox)
+                            return grid;
+                    }
+                }
+
+                visual = visual.GetVisualParent();
+            }
+
+            return null;
+        }
+
         private void OnCommitListContextRequested(object sender, ContextRequestedEventArgs e)
         {
+            if (TryOpenAuthorBoxMenu(e))
+                return;
+
             var repoView = this.FindAncestorOfType<Repository>();
             if (repoView is not { DataContext: ViewModels.Repository repo })
                 return;
@@ -974,7 +1037,7 @@ namespace SourceGit.Views
                 }
                 catch (Exception exception)
                 {
-                    repo.SendNotification($"Failed to save as patch: {exception.Message}", true);
+                    repo.SendNotification(App.Text("Diagnostics.SavePatch", exception.Message), true);
                 }
 
                 e.Handled = true;
@@ -1404,7 +1467,7 @@ namespace SourceGit.Views
                 }
                 catch (Exception exception)
                 {
-                    repo.SendNotification($"Failed to save as patch: {exception.Message}", true);
+                    repo.SendNotification(App.Text("Diagnostics.SavePatch", exception.Message), true);
                 }
 
                 e.Handled = true;
@@ -1958,7 +2021,7 @@ namespace SourceGit.Views
 
             var on = await new Commands.QuerySingleCommit(repo.FullPath, start).GetResultAsync();
             if (on == null)
-                repo.SendNotification($"Commit '{start}' is not a valid revision for `git rebase -i`!", true);
+                repo.SendNotification(App.Text("Diagnostics.InvalidRebaseCommit", start), true);
             else
                 await this.ShowDialogAsync(new ViewModels.InteractiveRebase(repo, on, prefill));
         }

@@ -1,0 +1,61 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:m="using:SourceGit.Models"
+        x:Class="SourceGit.Views.SpreadsheetMergeDialog"
+        Title="{DynamicResource Text.SpreadsheetMerge.Title}"
+        WindowStartupLocation="CenterOwner"
+        Width="1040" Height="640" MinWidth="720" MinHeight="430">
+  <Grid RowDefinitions="Auto,*,Auto" Margin="16">
+    <Grid ColumnDefinitions="*,Auto" Margin="0,0,0,10">
+      <ComboBox x:Name="Rows" HorizontalAlignment="Stretch" SelectionChanged="OnRowSelected">
+        <ComboBox.ItemTemplate>
+          <DataTemplate DataType="m:SpreadsheetMergeRow">
+            <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis"/>
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+      <TextBlock x:Name="Remaining" Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center"/>
+    </Grid>
+    <DataGrid x:Name="Fields" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True"
+              CanUserSortColumns="False" HeadersVisibility="Column" GridLinesVisibility="Horizontal" RowHeight="34">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="{DynamicResource Text.SpreadsheetMerge.Field}" Width="*" MinWidth="100"
+                            Binding="{CompiledBinding Name, DataType=m:SpreadsheetMergeField}"/>
+        <DataGridTextColumn Header="{DynamicResource Text.SpreadsheetMerge.Base}" Width="*" MinWidth="95"
+                            Binding="{CompiledBinding BaseValue, DataType=m:SpreadsheetMergeField}"/>
+        <DataGridTextColumn Header="{DynamicResource Text.SpreadsheetMerge.Local}" Width="*" MinWidth="95"
+                            Binding="{CompiledBinding LocalValue, DataType=m:SpreadsheetMergeField}"/>
+        <DataGridTextColumn Header="{DynamicResource Text.SpreadsheetMerge.Remote}" Width="*" MinWidth="95"
+                            Binding="{CompiledBinding RemoteValue, DataType=m:SpreadsheetMergeField}"/>
+        <DataGridTemplateColumn Header="{DynamicResource Text.SpreadsheetMerge.Result}" Width="1.6*" MinWidth="145">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate DataType="m:SpreadsheetMergeField">
+              <ComboBox Margin="2" Height="28" HorizontalAlignment="Stretch"
+                        ItemsSource="{Binding Choices}"
+                        SelectedItem="{Binding SelectedChoice, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate DataType="m:SpreadsheetMergeChoice">
+                    <TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis"/>
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+    <Grid Grid.Row="2" ColumnDefinitions="*,Auto" Margin="0,12,0,0">
+      <WrapPanel Orientation="Horizontal">
+        <Button x:Name="UseLocal" Classes="flat" Margin="0,0,8,0" Click="OnUseLocal"/>
+        <Button x:Name="UseRemote" Classes="flat" Margin="0,0,8,0" Click="OnUseRemote"/>
+        <Button x:Name="ConfirmFields" Classes="flat" Click="OnConfirmFields"
+                Content="{DynamicResource Text.SpreadsheetMerge.ConfirmFields}"/>
+      </WrapPanel>
+      <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+        <Button x:Name="CancelMerge" Classes="flat" Click="OnAbort" Content="{DynamicResource Text.SpreadsheetMerge.Abort}"/>
+        <Button x:Name="Apply" Classes="flat primary" Click="OnApply"
+                Content="{DynamicResource Text.SpreadsheetMerge.Apply}"/>
+      </StackPanel>
+    </Grid>
+  </Grid>
+</Window>

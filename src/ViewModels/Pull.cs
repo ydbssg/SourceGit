@@ -33,7 +33,7 @@ namespace SourceGit.ViewModels
             private set => SetProperty(ref _remoteBranches, value);
         }
 
-        [Required(ErrorMessage = "Remote branch to pull is required!!!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.PullBranchRequired))]
         public Models.Branch SelectedBranch
         {
             get => _selectedBranch;
@@ -49,6 +49,12 @@ namespace SourceGit.ViewModels
         {
             get;
             set;
+        }
+
+        public bool OnlySelectedRemoteBranch
+        {
+            get => _repo.UIStates.PullOnlySelectedRemoteBranch;
+            set => _repo.UIStates.PullOnlySelectedRemoteBranch = value;
         }
 
         public bool UseRebase
@@ -114,13 +120,38 @@ namespace SourceGit.ViewModels
 
         public override async Task<bool> Sure()
         {
+            if (SelectedRemote is not { } remote || SelectedBranch is not { } branch)
+                return false;
+
+            var onlySelectedRemoteBranch = OnlySelectedRemoteBranch;
+            var pull = new Commands.Pull(
+                _repo.FullPath,
+                remote,
+                branch,
+                Current.Upstream,
+                UseRebase,
+                onlySelectedRemoteBranch);
+
             using var lockWatcher = _repo.LockWatcher();
 
-            var log = _repo.CreateLog("Pull");
+            var log = _repo.CreateLog(App.Text("Operation.Pull"));
             Use(log);
 
             _cancellation = new CancellationTokenSource();
             var token = _cancellation.Token;
+
+            // With an explicit branch, Git only fetches that ref during pull. Refresh the
+            // remote list first so the subsequent pull still integrates the chosen branch.
+            if (!onlySelectedRemoteBranch && branch.FullName != Current.Upstream)
+            {
+                var fetch = new Commands.Fetch(_repo.FullPath, remote, prune: true) { RaiseError = true };
+                if (!await fetch.WithCancellation(token).Use(log).ExecAsync() || token.IsCancellationRequested)
+                {
+                    log.Complete();
+                    _cancellation = null;
+                    return false;
+                }
+            }
 
             var changes = await new Commands.CountLocalChanges(_repo.FullPath, false).GetResultAsync();
             var needPopStash = false;
@@ -150,25 +181,23 @@ namespace SourceGit.ViewModels
             }
 
             bool rs = false;
+            var abortedBySpreadsheetDialog = false;
             if (!token.IsCancellationRequested)
             {
-                var target = _selectedBranch;
-                if (!string.IsNullOrEmpty(Current.Upstream) && target.FullName.Equals(Current.Upstream, StringComparison.Ordinal))
-                    target = null;
+                var alreadyInProgress = SpreadsheetPullConflict.HasPendingOperation(_repo);
+                rs = await pull.WithCancellation(token).Use(log).ExecAsync();
 
-                rs = await new Commands.Pull(
-                    _repo.FullPath,
-                    _selectedRemote,
-                    target,
-                    UseRebase).WithCancellation(token).Use(log).ExecAsync();
+                if (!rs && !token.IsCancellationRequested && !alreadyInProgress)
+                {
+                    var resolution = await SpreadsheetPullConflict.ResolveAsync(_repo, log, token);
+                    rs = resolution == SpreadsheetPullResult.Completed;
+                    abortedBySpreadsheetDialog = resolution == SpreadsheetPullResult.Aborted;
+                }
 
                 if (rs)
-                {
                     await _repo.AutoUpdateSubmodulesAsync(log);
-
-                    if (needPopStash)
-                        await new Commands.Stash(_repo.FullPath).Use(log).PopAsync("stash@{0}");
-                }
+                if (needPopStash && (rs || abortedBySpreadsheetDialog))
+                    await new Commands.Stash(_repo.FullPath).Use(log).PopAsync("stash@{0}");
             }
 
             log.Complete();
@@ -180,7 +209,7 @@ namespace SourceGit.ViewModels
             }
 
             _cancellation = null;
-            return rs;
+            return rs || abortedBySpreadsheetDialog;
         }
 
         public override void Terminate()

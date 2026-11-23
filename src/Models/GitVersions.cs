@@ -23,6 +23,11 @@
         public static readonly System.Version TESTING_MERGE = new(2, 38, 0);
 
         /// <summary>
+        ///     The minimal version that supports explicitly selecting the merge base for merge-tree.
+        /// </summary>
+        public static readonly System.Version MERGE_TREE_EXPLICIT_BASE = new(2, 40, 0);
+
+        /// <summary>
         ///     The minimal version of Git that supports the `git replay` command.
         /// </summary>
         public static readonly System.Version REPLAY = new(2, 44, 0);

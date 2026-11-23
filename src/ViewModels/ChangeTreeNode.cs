@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -11,6 +12,9 @@ namespace SourceGit.ViewModels
         public int Depth { get; private set; } = 0;
         public Models.Change Change { get; set; } = null;
         public List<ChangeTreeNode> Children { get; set; } = new List<ChangeTreeNode>();
+        public bool IsFileTypeGroup { get; private set; }
+        public bool IsDirectory => IsFolder && !IsFileTypeGroup;
+        public bool IsExtensionlessGroup => IsFileTypeGroup && FullPath.Length == 0;
 
         public bool IsFolder
         {
@@ -101,6 +105,38 @@ namespace SourceGit.ViewModels
             SortAndSetDepth(nodes, 0);
 
             folders.Clear();
+            return nodes;
+        }
+
+        public static List<ChangeTreeNode> BuildByFileType(IList<Models.Change> changes, HashSet<string> folded)
+        {
+            var groups = new SortedDictionary<string, ChangeTreeNode>(StringComparer.Ordinal);
+
+            foreach (var change in changes)
+            {
+                var path = change.Path;
+                var extensionStart = path.LastIndexOf('.');
+                var extension = extensionStart > path.LastIndexOf('/') + 1 && extensionStart < path.Length - 1
+                    ? path[extensionStart..].ToLowerInvariant()
+                    : string.Empty;
+
+                if (!groups.TryGetValue(extension, out var group))
+                {
+                    group = new ChangeTreeNode(extension, !folded.Contains(extension))
+                    {
+                        IsFileTypeGroup = true,
+                    };
+                    groups.Add(extension, group);
+                }
+
+                group.Children.Add(new ChangeTreeNode(change) { Depth = 1, DisplayName = path });
+            }
+
+            groups.Remove(string.Empty, out var noExtension);
+            var nodes = new List<ChangeTreeNode>(groups.Values);
+            if (noExtension != null)
+                nodes.Add(noExtension);
+
             return nodes;
         }
 

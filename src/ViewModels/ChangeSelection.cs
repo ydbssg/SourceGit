@@ -22,22 +22,24 @@ namespace SourceGit.ViewModels
 
             if (selected is { Count: > 0 })
             {
+                var seen = new HashSet<Models.Change>();
                 foreach (var item in selected)
                 {
                     if (item is Models.Change c)
                     {
-                        changes.Add(c);
+                        if (seen.Add(c))
+                            changes.Add(c);
                     }
                     else if (item is ChangeTreeNode node)
                     {
-                        CollectChangesInNode(changes, node);
+                        CollectChangesInNode(changes, seen, node);
 
-                        if (node.IsFolder && !HasFolder)
+                        if (node.IsDirectory)
                             HasFolder = true;
                     }
                 }
 
-                if (selected.Count == 1 && selected[0] is ChangeTreeNode { IsFolder: true } folder)
+                if (selected.Count == 1 && selected[0] is ChangeTreeNode { IsDirectory: true } folder)
                 {
                     IsSingleFolder = true;
                     SingleFolderPath = folder.FullPath;
@@ -65,16 +67,16 @@ namespace SourceGit.ViewModels
             return false;
         }
 
-        private static void CollectChangesInNode(List<Models.Change> outs, ChangeTreeNode node)
+        private static void CollectChangesInNode(List<Models.Change> outs, HashSet<Models.Change> seen, ChangeTreeNode node)
         {
             if (node.IsFolder)
             {
                 foreach (var child in node.Children)
-                    CollectChangesInNode(outs, child);
+                    CollectChangesInNode(outs, seen, child);
             }
             else
             {
-                if (!outs.Contains(node.Change))
+                if (seen.Add(node.Change))
                     outs.Add(node.Change);
             }
         }

@@ -1,0 +1,40 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:String x:Key="Text.CreateMergeRequest.Toolbar" xml:space="preserve">Merge Request</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.Title" xml:space="preserve">Create Merge Request</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.Remote" xml:space="preserve">Remote</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.Target" xml:space="preserve">Target branch</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.Source" xml:space="preserve">Temporary source branch</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.RequestTitle" xml:space="preserve">Merge request title</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.Refresh" xml:space="preserve">Reload remote branches</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.GitLab" xml:space="preserve">Create the merge request when pushing to GitLab</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.Selected" xml:space="preserve">Selected commits ({0}, in application order)</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.Publish" xml:space="preserve">Push and Create Request</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.PushSource" xml:space="preserve">Push Source Branch</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.OpenRequest" xml:space="preserve">Open merge request</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.OpenWebForm" xml:space="preserve">Review or create on GitLab</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.SelectCommits" xml:space="preserve">Select one or more commits in the history first.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.NoRemotes" xml:space="preserve">Add a remote repository first.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.MergeCommit" xml:space="preserve">This workflow requires commits with at most one parent. Select the individual commits from the merged branch.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.LoadingBranches" xml:space="preserve">Loading remote branches…</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.ChooseTarget" xml:space="preserve">Select a target branch, then confirm the push.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.NoTargets" xml:space="preserve">The remote has no branches.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.Preparing" xml:space="preserve">Checking the remote target branch…</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.FetchingTarget" xml:space="preserve">Fetching the target branch {0}/{1}…</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.Applying" xml:space="preserve">Applying {0}/{1} · {2}</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.NoChanges" xml:space="preserve">The selected commits produce no changes on the target branch.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.InvalidSource" xml:space="preserve">Enter a valid temporary branch name that differs from the target branch.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.InvalidTitle" xml:space="preserve">Enter a merge request title on one line.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.Publishing" xml:space="preserve">Checking the remote and pushing the source branch…</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.MultiplePushUrls" xml:space="preserve">Select a remote with a single push URL.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.SourceExists" xml:space="preserve">The source branch {0} already exists on the remote. Choose a different name.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.TargetChanged" xml:space="preserve">The target branch changed or is missing at the push destination. Try again with the current target.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.Created" xml:space="preserve">Pushed {0} and received the merge request link from GitLab.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.Pushed" xml:space="preserve">Source branch {0} was pushed. Confirm or create its merge request on GitLab.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.Failed" xml:space="preserve">The operation stopped. See the details below.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.GitFailed" xml:space="preserve">Git could not complete the operation.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.PublishedLocalFailure" xml:space="preserve">The source branch was pushed. See the local error below.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.ConflictStopped" xml:space="preserve">Stopped before push. Commit {0} ({1}) conflicts with the target.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.GitVersionRequired" xml:space="preserve">This merge request workflow requires Git 2.40 or newer.</x:String>
+  <x:String x:Key="Text.CreateMergeRequest.InvalidCommitMetadata" xml:space="preserve">Could not read the metadata of commit {0}.</x:String>
+</ResourceDictionary>

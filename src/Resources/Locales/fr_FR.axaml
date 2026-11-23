@@ -752,6 +752,10 @@
   <x:String x:Key="Text.Repository.CustomActions.Empty" xml:space="preserve">Pas d'actions personnalisées</x:String>
   <x:String x:Key="Text.Repository.DiscardAll" xml:space="preserve">Rejeter tous les changements</x:String>
   <x:String x:Key="Text.Repository.Explore" xml:space="preserve">Ouvrir dans l'explorateur de fichiers</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Browse" xml:space="preserve">Parcourir</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.More" xml:space="preserve">Plus</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Remote" xml:space="preserve">Distant</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.NoWebRemote" xml:space="preserve">Aucun dépôt distant ne dispose d’une adresse web accessible.</x:String>
   <x:String x:Key="Text.Repository.Filter" xml:space="preserve">Rechercher Branches/Tags/Submodules</x:String>
   <x:String x:Key="Text.Repository.FilterCommits" xml:space="preserve">Visibilité dans le graphique</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Default" xml:space="preserve">Réinitialiser</x:String>

@@ -11,7 +11,7 @@ namespace SourceGit.ViewModels
             get;
         }
 
-        [Required(ErrorMessage = "Branch name is required!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.BranchNameRequired))]
         [CustomValidation(typeof(CheckoutBranchFromStash), nameof(ValidateBranchName))]
         public string BranchName
         {
@@ -30,26 +30,26 @@ namespace SourceGit.ViewModels
             if (ctx.ObjectInstance is CheckoutBranchFromStash caller)
             {
                 if (!Models.RefName.IsValidBranchName(name))
-                    return new ValidationResult("Bad branch name format!");
+                    return new ValidationResult(App.Text("Validation.BranchNameFormat"));
 
                 foreach (var b in caller._repo.Branches)
                 {
                     if (b.FriendlyName.Equals(name, StringComparison.Ordinal))
-                        return new ValidationResult("A branch with same name already exists!");
+                        return new ValidationResult(App.Text("Validation.ExistingBranch"));
                 }
 
                 return ValidationResult.Success;
             }
 
-            return new ValidationResult("Missing runtime context to create branch!");
+            return new ValidationResult(App.Text("Validation.CreateBranchContext"));
         }
 
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Checkout branch from stash...";
+            ProgressDescription = App.Text("Progress.CheckoutBranchFromStash");
 
-            var log = _repo.CreateLog($"Checkout Branch '{_branchName}'");
+            var log = _repo.CreateLog(App.Text("Operation.CheckoutBranch", _branchName));
             Use(log);
 
             var succ = await new Commands.Stash(_repo.FullPath)

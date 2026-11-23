@@ -499,6 +499,10 @@
   <x:String x:Key="Text.Repository.CustomActions.Empty" xml:space="preserve">Nenhuma ação customizada</x:String>
   <x:String x:Key="Text.Repository.DiscardAll" xml:space="preserve">Descartar todas as alterações</x:String>
   <x:String x:Key="Text.Repository.Explore" xml:space="preserve">Abrir no Navegador de Arquivos</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Browse" xml:space="preserve">Explorar</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.More" xml:space="preserve">Mais</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Remote" xml:space="preserve">Remoto</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.NoWebRemote" xml:space="preserve">Nenhum repositório remoto possui um endereço web disponível.</x:String>
   <x:String x:Key="Text.Repository.Filter" xml:space="preserve">Pesquisar Branches/Tags/Submódulos</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Default" xml:space="preserve">Desfazer</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Exclude" xml:space="preserve">Esconder no gráfico de commit</x:String>

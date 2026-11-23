@@ -42,9 +42,9 @@ namespace SourceGit.ViewModels
         {
             using var lockWatcher = _repo.LockWatcher();
             _repo.ClearCommitMessage();
-            ProgressDescription = "Merge head(s) ...";
+            ProgressDescription = App.Text("Progress.MergeMultiple");
 
-            var log = _repo.CreateLog("Merge Multiple Heads");
+            var log = _repo.CreateLog(App.Text("Operation.MergeMultiple"));
             Use(log);
 
             await new Commands.Merge(

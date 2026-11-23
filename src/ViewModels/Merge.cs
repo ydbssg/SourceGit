@@ -94,9 +94,9 @@ namespace SourceGit.ViewModels
         {
             using var lockWatcher = _repo.LockWatcher();
             _repo.ClearCommitMessage();
-            ProgressDescription = $"Merging '{_sourceName}' into '{Into}' ...";
+            ProgressDescription = App.Text("Progress.Merge", _sourceName, Into);
 
-            var log = _repo.CreateLog($"Merging '{_sourceName}' into '{Into}'");
+            var log = _repo.CreateLog(App.Text("Operation.Merge", _sourceName, Into));
             Use(log);
 
             var succ = await new Commands.Merge(_repo.FullPath, _sourceName, Mode.Arg, _canEditMessage && Edit)

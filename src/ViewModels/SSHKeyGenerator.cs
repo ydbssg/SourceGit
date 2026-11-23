@@ -16,16 +16,16 @@ namespace SourceGit.ViewModels
             set => SetProperty(ref _type, value);
         }
 
-        [Required(ErrorMessage = "Name is required.")]
-        [RegularExpression(@"^[a-zA-Z0-9_\-]+$", ErrorMessage = "Name can only contain letters, numbers, underscores, and hyphens.")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.NameRequired))]
+        [RegularExpression(@"^[a-zA-Z0-9_\-]+$", ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.SSHNameFormat))]
         public string Name
         {
             get => _name;
             set => SetProperty(ref _name, value, true);
         }
 
-        [Required(ErrorMessage = "Email is required.")]
-        [EmailAddress(ErrorMessage = "Invalid email address.")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.EmailRequired))]
+        [EmailAddress(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.EmailFormat))]
         public string Email
         {
             get => _email;
@@ -76,10 +76,10 @@ namespace SourceGit.ViewModels
                 return ValidationResult.Success;
 
             if (string.IsNullOrEmpty(password))
-                return new ValidationResult("Passphrase is required!");
+                return new ValidationResult(App.Text("Validation.PassphraseRequired"));
 
             if (!REG_PSWD_FORMAT().IsMatch(password))
-                return new ValidationResult("Passphrase can only contain letters, numbers, and special characters: _ + - = @ # $ % ! &");
+                return new ValidationResult(App.Text("Validation.PassphraseCharacters"));
 
             return ValidationResult.Success;
         }
@@ -91,7 +91,7 @@ namespace SourceGit.ViewModels
                 return ValidationResult.Success;
 
             if (confirmedPassword != instance.Passphrase)
-                return new ValidationResult("Passphrase and confirmation do not match!");
+                return new ValidationResult(App.Text("Validation.PassphraseMismatch"));
 
             return ValidationResult.Success;
         }
@@ -113,7 +113,7 @@ namespace SourceGit.ViewModels
                 }
                 catch (Exception e)
                 {
-                    ErrorMessage = $"Failed to create .ssh directory: {e.Message}";
+                    ErrorMessage = App.Text("Diagnostics.CreateSSHDirectory", e.Message);
                     return null;
                 }
             }
@@ -135,7 +135,7 @@ namespace SourceGit.ViewModels
             }
             catch (Exception e)
             {
-                ErrorMessage = $"Failed to generate SSH key: {e.Message}";
+                ErrorMessage = App.Text("Diagnostics.GenerateSSHKey", e.Message);
                 return null;
             }
 
@@ -143,7 +143,7 @@ namespace SourceGit.ViewModels
             if (File.Exists(keyFile) && File.Exists(publicKeyFile))
                 return new Models.SSHKeyPair(keyFile, publicKeyFile);
 
-            ErrorMessage = "Failed to generate SSH key: Key files not found.";
+            ErrorMessage = App.Text("Diagnostics.SSHKeyFilesMissing");
             return null;
         }
 

@@ -26,9 +26,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "De-initialize Submodule";
+            ProgressDescription = App.Text("Progress.DeinitSubmodule");
 
-            var log = _repo.CreateLog("De-initialize Submodule");
+            var log = _repo.CreateLog(App.Text("Operation.DeinitSubmodule"));
             Use(log);
 
             var succ = await new Commands.Submodule(_repo.FullPath)

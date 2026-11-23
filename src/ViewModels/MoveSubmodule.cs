@@ -11,7 +11,7 @@ namespace SourceGit.ViewModels
             get;
         }
 
-        [Required(ErrorMessage = "Path is required!!!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.PathRequired))]
         public string MoveTo
         {
             get => _moveTo;
@@ -27,7 +27,7 @@ namespace SourceGit.ViewModels
 
         public override async Task<bool> Sure()
         {
-            ProgressDescription = "Moving submodule ...";
+            ProgressDescription = App.Text("Progress.MoveSubmodule");
 
             var oldPath = Native.OS.GetAbsPath(_repo.FullPath, Submodule.Path);
             var newPath = Native.OS.GetAbsPath(_repo.FullPath, _moveTo);
@@ -35,7 +35,7 @@ namespace SourceGit.ViewModels
                 return true;
 
             using var lockWatcher = _repo.LockWatcher();
-            var log = _repo.CreateLog("Move Submodule");
+            var log = _repo.CreateLog(App.Text("Operation.MoveSubmodule"));
             Use(log);
 
             var succ = await new Commands.Move(_repo.FullPath, oldPath, newPath, false)

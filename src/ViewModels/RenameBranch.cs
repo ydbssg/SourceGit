@@ -11,7 +11,7 @@ namespace SourceGit.ViewModels
             get;
         }
 
-        [Required(ErrorMessage = "Branch name is required!!!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.BranchNameRequired))]
         [CustomValidation(typeof(RenameBranch), nameof(ValidateBranchName))]
         public string Name
         {
@@ -31,12 +31,12 @@ namespace SourceGit.ViewModels
             if (ctx.ObjectInstance is RenameBranch rename)
             {
                 if (!Models.RefName.IsValidBranchName(name))
-                    return new ValidationResult("Bad branch name format!");
+                    return new ValidationResult(App.Text("Validation.BranchNameFormat"));
 
                 foreach (var b in rename._repo.Branches)
                 {
                     if (b.IsLocal && b != rename.Target && b.Name.Equals(name, StringComparison.Ordinal))
-                        return new ValidationResult("A branch with same name already exists!!!");
+                        return new ValidationResult(App.Text("Validation.ExistingBranch"));
                 }
             }
 
@@ -49,9 +49,9 @@ namespace SourceGit.ViewModels
                 return true;
 
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = $"Rename '{Target.Name}'";
+            ProgressDescription = App.Text("Progress.RenameBranch", Target.Name);
 
-            var log = _repo.CreateLog($"Rename Branch '{Target.Name}'");
+            var log = _repo.CreateLog(App.Text("Operation.RenameBranch", Target.Name));
             Use(log);
 
             var isCurrent = Target.IsCurrent;

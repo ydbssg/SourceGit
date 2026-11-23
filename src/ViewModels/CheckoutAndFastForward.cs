@@ -39,9 +39,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = $"Checkout and Fast-Forward '{LocalBranch.Name}' ...";
+            ProgressDescription = App.Text("Progress.CheckoutFastForward", LocalBranch.Name);
 
-            var log = _repo.CreateLog($"Checkout and Fast-Forward '{LocalBranch.Name}' ...");
+            var log = _repo.CreateLog(App.Text("Operation.CheckoutFastForward", LocalBranch.Name));
             Use(log);
 
             if (_repo.CurrentBranch is { IsDetachedHead: true })

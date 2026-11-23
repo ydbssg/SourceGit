@@ -13,6 +13,7 @@ namespace SourceGit.Commands
         public class Result
         {
             public bool IsSuccess { get; set; } = false;
+            public int ExitCode { get; set; } = -1;
             public string StdOut { get; set; } = string.Empty;
             public string StdErr { get; set; } = string.Empty;
 
@@ -130,13 +131,24 @@ namespace SourceGit.Commands
             proc.WaitForExit();
 
             rs.IsSuccess = proc.ExitCode == 0;
+            rs.ExitCode = proc.ExitCode;
             return rs;
         }
 
-        protected async Task<Result> ReadToEndAsync()
+        protected Task<Result> ReadToEndAsync()
+        {
+            return ReadToEndAsync(CreateGitStartInfo(true));
+        }
+
+        protected async Task<Result> ReadToEndAsync(ProcessStartInfo start, string standardInput = null)
         {
             using var proc = new Process();
-            proc.StartInfo = CreateGitStartInfo(true);
+            proc.StartInfo = start;
+            if (standardInput != null)
+            {
+                start.RedirectStandardInput = true;
+                start.StandardInputEncoding = new UTF8Encoding(false);
+            }
 
             try
             {
@@ -147,13 +159,33 @@ namespace SourceGit.Commands
                 return Result.Failed(e.Message);
             }
 
-            var rs = new Result() { IsSuccess = true };
-            rs.StdOut = await proc.StandardOutput.ReadToEndAsync(CancellationToken).ConfigureAwait(false);
-            rs.StdErr = await proc.StandardError.ReadToEndAsync(CancellationToken).ConfigureAwait(false);
-            await proc.WaitForExitAsync(CancellationToken).ConfigureAwait(false);
+            var stdOutTask = proc.StandardOutput.ReadToEndAsync(CancellationToken);
+            var stdErrTask = proc.StandardError.ReadToEndAsync(CancellationToken);
+            var waitForExitTask = proc.WaitForExitAsync(CancellationToken);
+            var writeTask = standardInput == null ? Task.CompletedTask : WriteInputAsync(proc, standardInput);
 
-            rs.IsSuccess = proc.ExitCode == 0;
-            return rs;
+            try
+            {
+                await Task.WhenAll(stdOutTask, stdErrTask, waitForExitTask, writeTask).ConfigureAwait(false);
+            }
+            catch (System.IO.IOException) when (proc.HasExited && proc.ExitCode != 0)
+            {
+                // Git may close stdin early. Report its error output instead of the broken pipe.
+            }
+
+            return new Result
+            {
+                IsSuccess = proc.ExitCode == 0,
+                ExitCode = proc.ExitCode,
+                StdOut = await stdOutTask.ConfigureAwait(false),
+                StdErr = await stdErrTask.ConfigureAwait(false)
+            };
+        }
+
+        private static async Task WriteInputAsync(Process proc, string input)
+        {
+            await using var writer = proc.StandardInput;
+            await writer.WriteAsync(input).ConfigureAwait(false);
         }
 
         protected ProcessStartInfo CreateGitStartInfo(bool redirect)
@@ -226,7 +258,7 @@ namespace SourceGit.Commands
 
         protected void RaiseException(string error)
         {
-            Models.Notification.Send(Context, error, true);
+            Models.Notification.Send(Context, Models.GitOutputText.TranslateMessage(error), true);
         }
 
         private void HandleOutput(string line, List<string> errs)
@@ -234,7 +266,7 @@ namespace SourceGit.Commands
             if (line == null)
                 return;
 
-            Log?.AppendLine(line);
+            Log?.AppendLine(Models.GitOutputText.TranslateLine(line));
 
             // Lines to hide in error message.
             if (line.Length > 0)

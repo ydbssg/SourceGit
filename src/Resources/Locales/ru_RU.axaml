@@ -817,6 +817,10 @@
   <x:String x:Key="Text.Repository.CustomActions.Empty" xml:space="preserve">Не изменять действия</x:String>
   <x:String x:Key="Text.Repository.DiscardAll" xml:space="preserve">Отклонить все изменения.</x:String>
   <x:String x:Key="Text.Repository.Explore" xml:space="preserve">Открыть в файловом менеджере</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Browse" xml:space="preserve">Обзор</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.More" xml:space="preserve">Ещё</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Remote" xml:space="preserve">Удалённый</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.NoWebRemote" xml:space="preserve">Нет удалённого репозитория с доступным веб-адресом.</x:String>
   <x:String x:Key="Text.Repository.Filter" xml:space="preserve">Поиск веток, меток и подмодулей</x:String>
   <x:String x:Key="Text.Repository.FilterCommits" xml:space="preserve">Видимость на графике</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Collapse" xml:space="preserve">Свернуть фильтры</x:String>

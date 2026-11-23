@@ -62,7 +62,7 @@ namespace SourceGit.ViewModels
 
             var agent = new AI.Agent(_service);
             var builder = new StringBuilder();
-            builder.AppendLine("Asking AI to generate commit message...").AppendLine();
+                builder.AppendLine(App.Text("AI.Diagnostics.GeneratingCommit")).AppendLine();
 
             var responseBuilder = new StringBuilder();
             var foundResponse = false;
@@ -104,7 +104,7 @@ namespace SourceGit.ViewModels
             {
                 builder
                     .AppendLine()
-                    .AppendLine("[ERROR]")
+                    .AppendLine(App.Text("AI.Diagnostics.Error"))
                     .Append(e.Message);
 
                 Text = builder.ToString();

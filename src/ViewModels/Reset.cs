@@ -31,9 +31,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = $"Reset current branch to {To.SHA} ...";
+            ProgressDescription = App.Text("Progress.Reset", To.SHA);
 
-            var log = _repo.CreateLog($"Reset HEAD to '{To.SHA}'");
+            var log = _repo.CreateLog(App.Text("Operation.ResetHead", To.SHA));
             Use(log);
 
             var succ = await new Commands.Reset(_repo.FullPath, To.SHA, SelectedMode.Arg)

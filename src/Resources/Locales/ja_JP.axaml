@@ -807,6 +807,10 @@
   <x:String x:Key="Text.Repository.CustomActions.Empty" xml:space="preserve">カスタムアクションがありません</x:String>
   <x:String x:Key="Text.Repository.DiscardAll" xml:space="preserve">すべての変更を破棄</x:String>
   <x:String x:Key="Text.Repository.Explore" xml:space="preserve">ファイルブラウザーで開く</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Browse" xml:space="preserve">参照</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.More" xml:space="preserve">その他</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Remote" xml:space="preserve">リモート</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.NoWebRemote" xml:space="preserve">ブラウザーで開けるリモートリポジトリがありません。</x:String>
   <x:String x:Key="Text.Repository.Filter" xml:space="preserve">ブランチ/タグ/サブモジュールを絞り込み</x:String>
   <x:String x:Key="Text.Repository.FilterCommits" xml:space="preserve">グラフでの可視性</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Collapse" xml:space="preserve">絞り込み条件を折りたたむ</x:String>

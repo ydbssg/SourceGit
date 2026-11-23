@@ -13,14 +13,16 @@ namespace SourceGit.Commands
         [GeneratedRegex(@"^([CR])[0-9]{0,4}\s+(.+)$")]
         private static partial Regex REG_RENAME_FORMAT();
 
-        public QueryFileHistory(string repo, string path, string head)
+        public QueryFileHistory(string repo, string path, string head, DateTime? startDate)
         {
             WorkingDirectory = repo;
             Context = repo;
             RaiseError = false;
 
             var builder = new StringBuilder();
-            builder.Append("log --no-show-signature --date-order -n 10000 --decorate=no --format=\"@%H%x00%P%x00%aN±%aE%x00%at%x00%s\" --follow --name-status ");
+            builder.Append("log --no-show-signature --date-order -n 10000 --decorate=no --format=\"@%H%x00%P%x00%aN±%aE%x00%ct%x00%s\" --follow --name-status ");
+            if (startDate is { } date && date > DateTime.UnixEpoch.ToLocalTime().Date)
+                builder.Append("--since=@").Append(new DateTimeOffset(date).ToUnixTimeSeconds()).Append(' ');
             if (!string.IsNullOrEmpty(head))
                 builder.Append(head).Append(" ");
             builder.Append("-- ").Append(path.Quoted());
@@ -52,7 +54,7 @@ namespace SourceGit.Commands
                     last.SHA = parts[0].Substring(1);
                     last.HasParent = !string.IsNullOrEmpty(parts[1]);
                     last.Author = Models.User.FindOrAdd(parts[2]);
-                    last.AuthorTime = ulong.Parse(parts[3]);
+                    last.CommitterTime = ulong.Parse(parts[3]);
                     last.Subject = parts[4];
                     versions.Add(last);
                 }

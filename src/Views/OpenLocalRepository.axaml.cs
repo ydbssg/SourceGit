@@ -47,7 +47,7 @@ namespace SourceGit.Views
             }
             catch (Exception exception)
             {
-                Models.Notification.Send(null, $"Failed to open repository: {exception.Message}", true);
+                Models.Notification.Send(null, App.Text("Diagnostics.OpenRepository", exception.Message), true);
             }
 
             e.Handled = true;

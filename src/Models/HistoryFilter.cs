@@ -17,6 +17,7 @@ namespace SourceGit.Models
         None = 0,
         Included,
         Excluded,
+        VisibleInHiddenFolder,
     }
 
     public class HistoryFilter : ObservableObject

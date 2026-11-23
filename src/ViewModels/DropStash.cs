@@ -15,9 +15,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = $"Dropping stash: {Stash.Name}";
+            ProgressDescription = App.Text("Progress.DropStash", Stash.Name);
 
-            var log = _repo.CreateLog("Drop Stash");
+            var log = _repo.CreateLog(App.Text("Operation.DropStash"));
             Use(log);
 
             await new Commands.Stash(_repo.FullPath)

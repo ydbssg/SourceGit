@@ -18,7 +18,7 @@ namespace SourceGit.AI
         {
             var chatClient = _service.GetChatClient();
             if (chatClient == null)
-                throw new Exception("Failed to fetch available models from this service. Please check your configuration and try again.");
+                throw new Exception(App.Text("AI.Diagnostics.ModelFetchFailed"));
 
             var options = new ChatCompletionOptions() { Tools = { ChatTools.GetDetailChangesInFile } };
 #pragma warning disable OPENAI001
@@ -82,7 +82,7 @@ namespace SourceGit.AI
                         }
                         break;
                     case ChatFinishReason.Length:
-                        throw new Exception("The response was cut off because it reached the maximum length. Consider increasing the max tokens limit.");
+                        throw new Exception(App.Text("AI.Diagnostics.ResponseTruncated"));
                     case ChatFinishReason.ToolCalls:
                         {
                             var message = new AssistantChatMessage(completion);
@@ -108,7 +108,7 @@ namespace SourceGit.AI
                             break;
                         }
                     case ChatFinishReason.ContentFilter:
-                        throw new Exception("Omitted content due to a content filter flag");
+                        throw new Exception(App.Text("AI.Diagnostics.ResponseFiltered"));
                     default:
                         break;
                 }

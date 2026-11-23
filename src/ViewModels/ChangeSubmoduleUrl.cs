@@ -11,7 +11,7 @@ namespace SourceGit.ViewModels
             get;
         }
 
-        [Required(ErrorMessage = "Url is required!!!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.UrlRequired))]
         [CustomValidation(typeof(ChangeSubmoduleUrl), nameof(ValidateUrl))]
         public string Url
         {
@@ -29,7 +29,7 @@ namespace SourceGit.ViewModels
         public static ValidationResult ValidateUrl(string url, ValidationContext ctx)
         {
             if (!Models.Remote.IsValidURL(url))
-                return new ValidationResult("Invalid repository URL format");
+                return new ValidationResult(App.Text("Validation.InvalidRepoUrl"));
 
             return ValidationResult.Success;
         }
@@ -40,9 +40,9 @@ namespace SourceGit.ViewModels
                 return true;
 
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Change submodule's url...";
+            ProgressDescription = App.Text("Progress.ChangeSubmoduleUrl");
 
-            var log = _repo.CreateLog("Change Submodule's URL");
+            var log = _repo.CreateLog(App.Text("Operation.ChangeSubmoduleUrl"));
             Use(log);
 
             var succ = await new Commands.Submodule(_repo.FullPath)

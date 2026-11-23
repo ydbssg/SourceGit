@@ -4,7 +4,6 @@ using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
-using Avalonia.Styling;
 
 namespace SourceGit.Views
 {
@@ -58,7 +57,7 @@ namespace SourceGit.Views
             var indicator = INDICATOR[idx];
             var color = COLOR[idx];
             var hsl = color.ToHsl();
-            var color2 = ActualThemeVariant == ThemeVariant.Dark
+            var color2 = Models.AppTheme.IsDark(ActualThemeVariant)
                 ? new HslColor(hsl.A, hsl.H, hsl.S, hsl.L - 0.1).ToRgb()
                 : new HslColor(hsl.A, hsl.H, hsl.S, hsl.L + 0.1).ToRgb();
 

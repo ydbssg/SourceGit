@@ -252,7 +252,7 @@ namespace SourceGit.Native
         {
             if (!IsSafeBrowserTarget(url))
             {
-                Models.Notification.Send(null, $"Blocked unsafe URL: {url}", true);
+                Models.Notification.Send(null, App.Text("Diagnostics.BlockedUrl", url), true);
                 return;
             }
 

@@ -72,9 +72,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = _changes == null ? "Discard all local changes ..." : $"Discard total {_changes.Count} changes ...";
+            ProgressDescription = _changes == null ? App.Text("Progress.DiscardAll") : App.Text("Progress.Discard", _changes.Count);
 
-            var log = _repo.CreateLog("Discard Changes");
+            var log = _repo.CreateLog(App.Text("Operation.Discard"));
             Use(log);
 
             if (Mode is DiscardAllMode all)

@@ -51,9 +51,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Deleting branch...";
+            ProgressDescription = App.Text("Progress.DeleteBranch");
 
-            var log = _repo.CreateLog("Delete Branch");
+            var log = _repo.CreateLog(App.Text("Operation.DeleteBranch"));
             Use(log);
 
             var succ = false;

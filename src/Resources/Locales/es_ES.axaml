@@ -817,6 +817,10 @@
   <x:String x:Key="Text.Repository.CustomActions.Empty" xml:space="preserve">No hay ninguna Acción Personalizada</x:String>
   <x:String x:Key="Text.Repository.DiscardAll" xml:space="preserve">Descartar todos los cambios</x:String>
   <x:String x:Key="Text.Repository.Explore" xml:space="preserve">Abrir en el Explorador</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Browse" xml:space="preserve">Explorar</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.More" xml:space="preserve">Más</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Remote" xml:space="preserve">Remoto</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.NoWebRemote" xml:space="preserve">No hay ningún repositorio remoto con una dirección web disponible.</x:String>
   <x:String x:Key="Text.Repository.Filter" xml:space="preserve">Buscar Ramas/Etiquetas/Submódulos</x:String>
   <x:String x:Key="Text.Repository.FilterCommits" xml:space="preserve">Visibilidad en el Gráfico</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Collapse" xml:space="preserve">Colapsar Filtros</x:String>

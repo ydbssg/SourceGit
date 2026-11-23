@@ -6,7 +6,7 @@ namespace SourceGit.ViewModels
 {
     public class CreateGroup : Popup
     {
-        [Required(ErrorMessage = "Group name is required!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.GroupNameRequired))]
         public string Name
         {
             get => _name;

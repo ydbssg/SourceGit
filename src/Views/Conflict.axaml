@@ -51,14 +51,16 @@
           </Border.DataTemplates>
 
           <Grid Margin="8,0,0,0" RowDefinitions="32,32" ColumnDefinitions="Auto,*">
-            <TextBlock Grid.Row="0" Grid.Column="0" Classes="info_label" Text="MINE"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Classes="info_label" Text="{DynamicResource Text.Conflict.Mine}"/>
             <ContentControl Grid.Row="0" Grid.Column="1" Margin="16,0,0,0" Content="{Binding Mine}"/>
-            <TextBlock Grid.Row="1" Grid.Column="0" Classes="info_label" Text="THEIRS"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Classes="info_label" Text="{DynamicResource Text.Conflict.Theirs}"/>
             <ContentControl Grid.Row="1" Grid.Column="1" Margin="16,0,0,0" Content="{Binding Theirs}"/>
           </Grid>
         </Border>
 
         <StackPanel Margin="0,8,0,0" Orientation="Horizontal" HorizontalAlignment="Center">
+          <Button Classes="flat primary" Margin="0,0,8,0" IsVisible="{Binding CanMergeSpreadsheet}"
+                  Content="{DynamicResource Text.SpreadsheetMerge.Open}" Click="OnMergeSpreadsheet"/>
           <Button Classes="flat" Margin="0,0,0,0" Click="OnUseTheirs">
             <StackPanel Orientation="Horizontal">
               <Path Width="12" Height="12" Data="{StaticResource Icons.Incoming}"/>

@@ -25,9 +25,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = $"Deleting tag '{Target.Name}' ...";
+            ProgressDescription = App.Text("Progress.DeleteTag", Target.Name);
 
-            var log = _repo.CreateLog("Delete Tag");
+            var log = _repo.CreateLog(App.Text("Operation.DeleteTag"));
             Use(log);
 
             var succ = await new Commands.Tag(_repo.FullPath, Target.Name)

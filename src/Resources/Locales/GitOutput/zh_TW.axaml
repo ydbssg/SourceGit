@@ -1,0 +1,96 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <x:String x:Key="Text.GitOutput.Aborting" xml:space="preserve">正在中止</x:String>
+  <x:String x:Key="Text.GitOutput.AlreadyOn" xml:space="preserve">目前已在 '{0}'</x:String>
+  <x:String x:Key="Text.GitOutput.ApplyError" xml:space="preserve">錯誤：無法套用提交 {0}</x:String>
+  <x:String x:Key="Text.GitOutput.ApplyErrorWithSubject" xml:space="preserve">錯誤：無法套用提交 {0}，{1}</x:String>
+  <x:String x:Key="Text.GitOutput.ApplyPatch" xml:space="preserve">正在套用修補檔：{0}</x:String>
+  <x:String x:Key="Text.GitOutput.ApplyStopped" xml:space="preserve">未能套用提交 {0}，{1}</x:String>
+  <x:String x:Key="Text.GitOutput.ApplyStoppedWithoutSubject" xml:space="preserve">未能套用提交 {0}</x:String>
+  <x:String x:Key="Text.GitOutput.Authentication" xml:space="preserve">錯誤：'{0}' 身分驗證失敗。</x:String>
+  <x:String x:Key="Text.GitOutput.AutoMerging" xml:space="preserve">正在自動合併 {0}</x:String>
+  <x:String x:Key="Text.GitOutput.Branch" xml:space="preserve">* 分支 {0}</x:String>
+  <x:String x:Key="Text.GitOutput.BranchDeleted" xml:space="preserve">已刪除分支 {0}（原指向 {1}）。</x:String>
+  <x:String x:Key="Text.GitOutput.BranchTracking" xml:space="preserve">分支 '{0}' 已設定為追蹤 '{1}'。</x:String>
+  <x:String x:Key="Text.GitOutput.BranchTrackingCurrent" xml:space="preserve">目前分支與 '{0}' 同步。</x:String>
+  <x:String x:Key="Text.GitOutput.CannotAccess" xml:space="preserve">錯誤：無法存取 '{0}'，{1}</x:String>
+  <x:String x:Key="Text.GitOutput.ChangesFrom" xml:space="preserve">從 {0} 到 {1} 的變更：</x:String>
+  <x:String x:Key="Text.GitOutput.Cloning" xml:space="preserve">正在複製至 '{0}'…</x:String>
+  <x:String x:Key="Text.GitOutput.CommitOrStash" xml:space="preserve">錯誤：請先提交或儲藏這些變更。</x:String>
+  <x:String x:Key="Text.GitOutput.Compressing" xml:space="preserve">正在壓縮物件：{0}</x:String>
+  <x:String x:Key="Text.GitOutput.ConflictBinary" xml:space="preserve">警告：無法合併二進位檔案 {0}</x:String>
+  <x:String x:Key="Text.GitOutput.ConflictContent" xml:space="preserve">衝突：{0} 發生合併衝突</x:String>
+  <x:String x:Key="Text.GitOutput.ConflictMerge" xml:space="preserve">自動合併失敗。請解決衝突後提交。</x:String>
+  <x:String x:Key="Text.GitOutput.Counting" xml:space="preserve">正在統計物件：{0}</x:String>
+  <x:String x:Key="Text.GitOutput.DeletedRef" xml:space="preserve">- [已刪除] {0}</x:String>
+  <x:String x:Key="Text.GitOutput.DroppedStash" xml:space="preserve">已刪除儲藏 {0}</x:String>
+  <x:String x:Key="Text.GitOutput.DubiousOwnership" xml:space="preserve">錯誤：Git 無法信任儲存庫 '{0}' 的擁有者。</x:String>
+  <x:String x:Key="Text.GitOutput.Enumerating" xml:space="preserve">正在列舉物件：{0}</x:String>
+  <x:String x:Key="Text.GitOutput.EverythingUpToDate" xml:space="preserve">所有參照均已是最新。</x:String>
+  <x:String x:Key="Text.GitOutput.FastForward" xml:space="preserve">快轉合併</x:String>
+  <x:String x:Key="Text.GitOutput.Fetching" xml:space="preserve">正在擷取 {0}</x:String>
+  <x:String x:Key="Text.GitOutput.FilesChanged" xml:space="preserve">{0} 個檔案有變更</x:String>
+  <x:String x:Key="Text.GitOutput.FilesChangedAdded" xml:space="preserve">{0} 個檔案有變更，新增 {1} 行 (+)</x:String>
+  <x:String x:Key="Text.GitOutput.FilesChangedBoth" xml:space="preserve">{0} 個檔案有變更，新增 {1} 行 (+)，刪除 {2} 行 (-)</x:String>
+  <x:String x:Key="Text.GitOutput.FilesChangedDeleted" xml:space="preserve">{0} 個檔案有變更，刪除 {1} 行 (-)</x:String>
+  <x:String x:Key="Text.GitOutput.ForcedUpdate" xml:space="preserve">+ {0}（強制更新）</x:String>
+  <x:String x:Key="Text.GitOutput.From" xml:space="preserve">來自 {0}</x:String>
+  <x:String x:Key="Text.GitOutput.HeadAt" xml:space="preserve">HEAD 現在指向 {0}</x:String>
+  <x:String x:Key="Text.GitOutput.HintAbort" xml:space="preserve">提示：執行 git rebase --abort 可中止變基並還原至變基前。</x:String>
+  <x:String x:Key="Text.GitOutput.HintConflictAdd" xml:space="preserve">提示：解決衝突後，使用下列命令標記衝突檔案</x:String>
+  <x:String x:Key="Text.GitOutput.HintConflictPath" xml:space="preserve">提示：{0}</x:String>
+  <x:String x:Key="Text.GitOutput.HintContinue" xml:space="preserve">提示：執行 git add 或 git rm 標記衝突檔案，再執行 git rebase --continue。</x:String>
+  <x:String x:Key="Text.GitOutput.HintDisable" xml:space="preserve">提示：執行 {0} 可關閉此提示。</x:String>
+  <x:String x:Key="Text.GitOutput.HintResolve" xml:space="preserve">提示：請手動解決所有衝突，再用下列命令標記為已解決</x:String>
+  <x:String x:Key="Text.GitOutput.HintSkip" xml:space="preserve">提示：執行 git rebase --skip 可略過此提交。</x:String>
+  <x:String x:Key="Text.GitOutput.HintThenRun" xml:space="preserve">提示：然後執行 {0}。</x:String>
+  <x:String x:Key="Text.GitOutput.LFSDownloading" xml:space="preserve">正在下載 LFS 物件：{0}</x:String>
+  <x:String x:Key="Text.GitOutput.LFSErrorDownloading" xml:space="preserve">下載 Git LFS 物件失敗：{0}</x:String>
+  <x:String x:Key="Text.GitOutput.LFSFiltering" xml:space="preserve">正在篩選檔案內容：{0}</x:String>
+  <x:String x:Key="Text.GitOutput.LFSInitialized" xml:space="preserve">Git LFS 初始化完成。</x:String>
+  <x:String x:Key="Text.GitOutput.LFSPointer" xml:space="preserve">發現 {0} 個檔案應為 Git LFS 指標，但實際內容並非指標：</x:String>
+  <x:String x:Key="Text.GitOutput.LFSUpdated" xml:space="preserve">已更新 Git 鉤子。</x:String>
+  <x:String x:Key="Text.GitOutput.LFSUploading" xml:space="preserve">正在上傳 LFS 物件：{0}</x:String>
+  <x:String x:Key="Text.GitOutput.LocalChangesOverwrite" xml:space="preserve">錯誤：執行 {0} 會覆寫以下檔案的本機變更：</x:String>
+  <x:String x:Key="Text.GitOutput.MergeMade" xml:space="preserve">已使用 '{0}' 策略完成合併。</x:String>
+  <x:String x:Key="Text.GitOutput.NewBranch" xml:space="preserve">* [新分支] {0}</x:String>
+  <x:String x:Key="Text.GitOutput.NewTag" xml:space="preserve">* [新標籤] {0}</x:String>
+  <x:String x:Key="Text.GitOutput.NoStashChanges" xml:space="preserve">沒有可儲藏的本機變更。</x:String>
+  <x:String x:Key="Text.GitOutput.NoStashEntries" xml:space="preserve">找不到儲藏記錄。</x:String>
+  <x:String x:Key="Text.GitOutput.NoTracking" xml:space="preserve">目前分支尚未設定上游分支。</x:String>
+  <x:String x:Key="Text.GitOutput.NoTrackingPush" xml:space="preserve">錯誤：目前分支 {0} 尚未設定上游分支。</x:String>
+  <x:String x:Key="Text.GitOutput.NotRepository" xml:space="preserve">錯誤：目前目錄及其上層目錄均找不到 Git 儲存庫（.git）。</x:String>
+  <x:String x:Key="Text.GitOutput.PatchFailed" xml:space="preserve">修補檔套用失敗：{0}</x:String>
+  <x:String x:Key="Text.GitOutput.PreviousHead" xml:space="preserve">HEAD 原先指向 {0}</x:String>
+  <x:String x:Key="Text.GitOutput.PullDivergent" xml:space="preserve">錯誤：本機與遠端分支已分岔，請指定同步方式。</x:String>
+  <x:String x:Key="Text.GitOutput.PushFailed" xml:space="preserve">錯誤：部分參照無法推送至 '{0}'。</x:String>
+  <x:String x:Key="Text.GitOutput.RebaseSuccess" xml:space="preserve">已完成變基並更新 {0}。</x:String>
+  <x:String x:Key="Text.GitOutput.RebaseUncommitted" xml:space="preserve">錯誤：暫存區有未提交的變更，無法變基。</x:String>
+  <x:String x:Key="Text.GitOutput.RebaseUnstaged" xml:space="preserve">錯誤：工作區有未暫存的變更，無法變基。</x:String>
+  <x:String x:Key="Text.GitOutput.Rebasing" xml:space="preserve">正在變基（{0}）</x:String>
+  <x:String x:Key="Text.GitOutput.Receiving" xml:space="preserve">正在接收物件：{0}</x:String>
+  <x:String x:Key="Text.GitOutput.Rejected" xml:space="preserve">! [已拒絕] {0}（無法快轉）</x:String>
+  <x:String x:Key="Text.GitOutput.RejectedFetchFirst" xml:space="preserve">! [已拒絕] {0}（請先擷取）</x:String>
+  <x:String x:Key="Text.GitOutput.RejectedStaleInfo" xml:space="preserve">! [已拒絕] {0}（遠端分支資訊已過期）</x:String>
+  <x:String x:Key="Text.GitOutput.Remote" xml:space="preserve">遠端：</x:String>
+  <x:String x:Key="Text.GitOutput.RemoteExistsHint" xml:space="preserve">且儲存庫確實存在。</x:String>
+  <x:String x:Key="Text.GitOutput.RemoteRead" xml:space="preserve">錯誤：無法讀取遠端儲存庫。</x:String>
+  <x:String x:Key="Text.GitOutput.RemoteReadHint" xml:space="preserve">請確認你有存取權限，</x:String>
+  <x:String x:Key="Text.GitOutput.RemoteRef" xml:space="preserve">錯誤：找不到遠端參照 {0}。</x:String>
+  <x:String x:Key="Text.GitOutput.RemoteRejected" xml:space="preserve">! [遠端拒絕] {0}</x:String>
+  <x:String x:Key="Text.GitOutput.Resolving" xml:space="preserve">正在解析差異：{0}</x:String>
+  <x:String x:Key="Text.GitOutput.SavedStash" xml:space="preserve">已儲藏工作區與暫存區狀態 {0}</x:String>
+  <x:String x:Key="Text.GitOutput.StashBeforeMerge" xml:space="preserve">請先提交或儲藏變更，再執行合併或切換分支。</x:String>
+  <x:String x:Key="Text.GitOutput.SwitchBranch" xml:space="preserve">已切換至分支 '{0}'</x:String>
+  <x:String x:Key="Text.GitOutput.SwitchNewBranch" xml:space="preserve">已切換至新分支 '{0}'</x:String>
+  <x:String x:Key="Text.GitOutput.Tag" xml:space="preserve">* 標籤 {0}</x:String>
+  <x:String x:Key="Text.GitOutput.TagDeleted" xml:space="preserve">已刪除標籤 '{0}'（原指向 {1}）。</x:String>
+  <x:String x:Key="Text.GitOutput.To" xml:space="preserve">推送至 {0}</x:String>
+  <x:String x:Key="Text.GitOutput.Unpacking" xml:space="preserve">正在解包物件：{0}</x:String>
+  <x:String x:Key="Text.GitOutput.UntrackedOverwrite" xml:space="preserve">錯誤：執行 {0} 會覆寫以下未追蹤檔案：</x:String>
+  <x:String x:Key="Text.GitOutput.UpToDate" xml:space="preserve">已是最新。</x:String>
+  <x:String x:Key="Text.GitOutput.UpToDateRef" xml:space="preserve">= [已是最新] {0}</x:String>
+  <x:String x:Key="Text.GitOutput.Updating" xml:space="preserve">正在更新 {0}</x:String>
+  <x:String x:Key="Text.GitOutput.UpdatingFiles" xml:space="preserve">正在更新檔案：{0}</x:String>
+  <x:String x:Key="Text.GitOutput.Writing" xml:space="preserve">正在寫入物件：{0}</x:String>
+</ResourceDictionary>

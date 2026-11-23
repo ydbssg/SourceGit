@@ -18,9 +18,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Run `prune` on remote ...";
+            ProgressDescription = App.Text("Progress.PruneRemote");
 
-            var log = _repo.CreateLog($"Prune Remote '{Remote.Name}'");
+            var log = _repo.CreateLog(App.Text("Operation.PruneRemote", Remote.Name));
             Use(log);
 
             var succ = await new Commands.Remote(_repo.FullPath)

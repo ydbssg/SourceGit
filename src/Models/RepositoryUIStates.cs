@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using Avalonia.Collections;
@@ -110,6 +111,12 @@ namespace SourceGit.Models
             get;
             set;
         } = false;
+
+        public bool PullOnlySelectedRemoteBranch
+        {
+            get;
+            set;
+        }
 
         public bool PreferRebaseInsteadOfMerge
         {
@@ -288,7 +295,15 @@ namespace SourceGit.Models
         public FilterMode GetHistoryFilterMode(string pattern = null)
         {
             if (string.IsNullOrEmpty(pattern))
-                return HistoryFilters.Count == 0 ? FilterMode.None : HistoryFilters[0].Mode;
+            {
+                foreach (var filter in HistoryFilters)
+                {
+                    if (filter.Mode is FilterMode.Included or FilterMode.Excluded)
+                        return filter.Mode;
+                }
+
+                return FilterMode.None;
+            }
 
             foreach (var filter in HistoryFilters)
             {
@@ -309,13 +324,18 @@ namespace SourceGit.Models
 
         public bool UpdateHistoryFilters(string pattern, FilterType type, FilterMode mode)
         {
-            // Clear all filters when there's a filter that has different mode.
-            if (mode != FilterMode.None)
+            if (mode == FilterMode.VisibleInHiddenFolder)
             {
+                if (type != FilterType.RemoteBranch || !IsRemoteBranchHiddenByFolder(pattern))
+                    return false;
+            }
+            else if (mode != FilterMode.None)
+            {
+                // Visibility exceptions use the parent folder's exclusion mode.
                 var clear = false;
                 foreach (var filter in HistoryFilters)
                 {
-                    if (filter.Mode != mode)
+                    if (filter.Mode != mode && filter.Mode != FilterMode.VisibleInHiddenFolder)
                     {
                         clear = true;
                         break;
@@ -346,15 +366,41 @@ namespace SourceGit.Models
 
             foreach (var filter in HistoryFilters)
             {
-                if (filter.Type != type)
+                if (filter.Type != type || !filter.Pattern.Equals(pattern, StringComparison.Ordinal))
                     continue;
 
-                if (filter.Pattern.Equals(pattern, StringComparison.Ordinal))
+                if (filter.Mode == mode)
                     return false;
+
+                filter.Mode = mode;
+                return true;
             }
 
             HistoryFilters.Add(new HistoryFilter(pattern, type, mode));
             return true;
+        }
+
+        public bool IsRemoteBranchHiddenByFolder(string branchRef)
+        {
+            foreach (var filter in HistoryFilters)
+            {
+                if (filter.Type == FilterType.RemoteBranchFolder &&
+                    filter.Mode == FilterMode.Excluded &&
+                    branchRef.StartsWith($"{filter.Pattern}/", StringComparison.Ordinal))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public void RemoveOrphanedVisibilityExceptions()
+        {
+            for (var i = HistoryFilters.Count - 1; i >= 0; i--)
+            {
+                var filter = HistoryFilters[i];
+                if (filter.Mode == FilterMode.VisibleInHiddenFolder && !IsRemoteBranchHiddenByFolder(filter.Pattern))
+                    HistoryFilters.RemoveAt(i);
+            }
         }
 
         public void RemoveHistoryFilter(string pattern, FilterType type)
@@ -400,9 +446,10 @@ namespace SourceGit.Models
                 HistoryFilters.Remove(filter);
         }
 
-        public string BuildHistoryParams(string gitDir)
+        public string BuildHistoryParams(string gitDir, out Predicate<Decorator> hideDecoration)
         {
             var builder = new StringBuilder();
+            hideDecoration = null;
 
             if (EnableTopoOrderInHistory)
                 builder.Append("--topo-order ");
@@ -424,7 +471,7 @@ namespace SourceGit.Models
             else if (mode == FilterMode.Included)
                 BuildHistoryParamsForIncluded(builder);
             else
-                BuildHistoryParamsForExcluded(builder, gitDir);
+                BuildHistoryParamsForExcluded(builder, gitDir, out hideDecoration);
 
             return builder.ToString();
         }
@@ -446,13 +493,26 @@ namespace SourceGit.Models
             }
         }
 
-        private void BuildHistoryParamsForExcluded(StringBuilder builder, string gitDir)
+        private void BuildHistoryParamsForExcluded(StringBuilder builder, string gitDir, out Predicate<Decorator> hideDecoration)
         {
             var excludedBranches = new List<string>();
             var excludedRemotes = new List<string>();
             var excludedTags = new List<string>();
+            var visibleRemoteRefs = new HashSet<string>(StringComparer.Ordinal);
+            var partiallyHiddenFolders = new List<string>();
+
             foreach (var filter in HistoryFilters)
             {
+                if (filter is { Type: FilterType.RemoteBranch, Mode: FilterMode.VisibleInHiddenFolder } &&
+                    IsRemoteBranchHiddenByFolder(filter.Pattern))
+                    visibleRemoteRefs.Add(filter.Pattern);
+            }
+
+            foreach (var filter in HistoryFilters)
+            {
+                if (filter.Mode != FilterMode.Excluded)
+                    continue;
+
                 if (filter.Type == FilterType.LocalBranch)
                     excludedBranches.Add($"--exclude=\"{filter.Pattern.AsSpan(11)}\" --decorate-refs-exclude=\"{filter.Pattern}\" ");
                 else if (filter.Type == FilterType.LocalBranchFolder)
@@ -460,7 +520,14 @@ namespace SourceGit.Models
                 else if (filter.Type == FilterType.RemoteBranch)
                     excludedRemotes.Add($"--exclude=\"{filter.Pattern.AsSpan(13)}\" --decorate-refs-exclude=\"{filter.Pattern}\" ");
                 else if (filter.Type == FilterType.RemoteBranchFolder)
-                    excludedRemotes.Add($"--exclude=\"{filter.Pattern.AsSpan(13)}/*\" --decorate-refs-exclude=\"{filter.Pattern}/*\" ");
+                {
+                    var prefix = $"{filter.Pattern}/";
+                    excludedRemotes.Add($"--exclude=\"{prefix.AsSpan(13)}*\" ");
+                    if (visibleRemoteRefs.Any(refName => refName.StartsWith(prefix, StringComparison.Ordinal)))
+                        partiallyHiddenFolders.Add(prefix[13..]);
+                    else
+                        excludedRemotes.Add($"--decorate-refs-exclude=\"{prefix}*\" ");
+                }
                 else if (filter.Type == FilterType.Tag)
                     excludedTags.Add($"--exclude=\"{filter.Pattern}\" --decorate-refs-exclude=\"refs/tags/{filter.Pattern}\" ");
             }
@@ -483,10 +550,25 @@ namespace SourceGit.Models
 
             builder.Append("--exclude=origin/HEAD --remotes ");
 
+            foreach (var branchRef in visibleRemoteRefs)
+            {
+                // A literal glob matches the exact ref and remains valid if the branch disappears after a fetch.
+                var pattern = $"refs/[r]emotes/{branchRef.AsSpan(13)}";
+                builder.Append("--glob=").Append(pattern.Quoted()).Append(' ');
+            }
+
             foreach (var t in excludedTags)
                 builder.Append(t);
 
             builder.Append("--tags ");
+
+            // A Git decoration exclusion applies to the whole folder. Keep its decorations in the
+            // query when it has exceptions and remove only the hidden labels from the returned commits.
+            hideDecoration = partiallyHiddenFolders.Count == 0
+                ? null
+                : decoration => decoration.Type == DecoratorType.RemoteBranchHead &&
+                    !visibleRemoteRefs.Contains($"refs/remotes/{decoration.Name}") &&
+                    partiallyHiddenFolders.Exists(prefix => decoration.Name.StartsWith(prefix, StringComparison.Ordinal));
         }
 
         public void AddRecentCommitMessage(string message)

@@ -5,7 +5,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
-using Avalonia.Styling;
 
 namespace SourceGit.Views
 {
@@ -15,7 +14,7 @@ namespace SourceGit.Views
         {
             if (_bgBrush == null)
             {
-                var maskBrush = new SolidColorBrush(ActualThemeVariant == ThemeVariant.Dark ? 0xFF404040 : 0xFFBBBBBB);
+                var maskBrush = new SolidColorBrush(Models.AppTheme.IsDark(ActualThemeVariant) ? 0xFF404040 : 0xFFBBBBBB);
                 var bg = new DrawingGroup()
                 {
                     Children =

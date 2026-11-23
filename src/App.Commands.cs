@@ -39,8 +39,20 @@ namespace SourceGit
 
         public static readonly Command OpenPreferencesCommand = new Command(async _ =>
         {
-            if (Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: { } owner })
+            if (Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime { MainWindow: { } owner } desktop)
             {
+                foreach (var window in desktop.Windows)
+                {
+                    if (window is Views.Preferences { IsVisible: true } && window.Owner == owner)
+                    {
+                        window.Activate();
+                        return;
+                    }
+                }
+
+                if (owner is Views.Launcher launcher)
+                    launcher.BringToTop();
+
                 var dialog = new Views.Preferences();
                 await dialog.ShowDialog(owner);
             }

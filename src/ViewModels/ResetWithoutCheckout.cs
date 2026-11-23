@@ -33,9 +33,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = $"Reset {Target.Name} to {_revision} ...";
+            ProgressDescription = App.Text("Progress.ResetBranch", Target.Name, _revision);
 
-            var log = _repo.CreateLog($"Reset '{Target.Name}' to '{_revision}'");
+            var log = _repo.CreateLog(App.Text("Operation.ResetBranch", Target.Name, _revision));
             Use(log);
 
             var succ = await new Commands.Branch(_repo.FullPath, Target.Name)

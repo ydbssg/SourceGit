@@ -88,6 +88,19 @@ namespace SourceGit.ViewModels
             get => _histories;
         }
 
+        internal bool CreateMergeRequestOnGitLab
+        {
+            get => _settings.CreateMergeRequestOnGitLab;
+            set
+            {
+                if (_settings.CreateMergeRequestOnGitLab != value)
+                {
+                    _settings.CreateMergeRequestOnGitLab = value;
+                    _settings.Save();
+                }
+            }
+        }
+
         public WorkingCopy WorkingCopy
         {
             get => _workingCopy;
@@ -446,7 +459,7 @@ namespace SourceGit.ViewModels
             }
             catch (Exception ex)
             {
-                SendNotification($"Failed to start watcher for repository: '{FullPath}'. You may need to press 'F5' to refresh repository manually!\n\nReason: {ex.Message}", true);
+                SendNotification(App.Text("Diagnostics.Watcher", FullPath, ex.Message), true);
             }
 
             _historyFilterMode = _uiStates.GetHistoryFilterMode();
@@ -488,13 +501,13 @@ namespace SourceGit.ViewModels
             Models.Notification.Send(FullPath, message, isError);
         }
 
-        public bool CanCreatePopup()
+        public bool CanCreatePopup(bool duringCommit = false)
         {
             var page = GetOwnerPage();
             if (page == null)
                 return false;
 
-            return !_isAutoFetching && page.CanCreatePopup();
+            return !_isAutoFetching && (duringCommit || _workingCopy?.IsCommitting != true) && page.CanCreatePopup();
         }
 
         public void ShowPopup(Popup popup)
@@ -554,23 +567,23 @@ namespace SourceGit.ViewModels
 
         public async Task InstallLFSAsync()
         {
-            var log = CreateLog("Install LFS");
+            var log = CreateLog(App.Text("Operation.LFSInstall"));
             var succ = await new Commands.LFS(FullPath).Use(log).InstallAsync();
             if (succ)
-                SendNotification("LFS enabled successfully!");
+                SendNotification(App.Text("Diagnostics.LFSEnabled"));
 
             log.Complete();
         }
 
         public async Task<bool> TrackLFSFileAsync(string pattern, bool isFilenameMode)
         {
-            var log = CreateLog("Track LFS");
+            var log = CreateLog(App.Text("Operation.LFSTrack"));
             var succ = await new Commands.LFS(FullPath)
                 .Use(log)
                 .TrackAsync(pattern, isFilenameMode);
 
             if (succ)
-                SendNotification($"Tracking successfully! Pattern: {pattern}");
+                SendNotification(App.Text("Diagnostics.LFSTracked", pattern));
 
             log.Complete();
             return succ;
@@ -578,13 +591,13 @@ namespace SourceGit.ViewModels
 
         public async Task<bool> LockLFSFileAsync(string remote, string path)
         {
-            var log = CreateLog("Lock LFS File");
+            var log = CreateLog(App.Text("Operation.LFSLockFile"));
             var succ = await new Commands.LFS(FullPath)
                 .Use(log)
                 .LockAsync(remote, path);
 
             if (succ)
-                SendNotification($"Lock file successfully! File: {path}");
+                SendNotification(App.Text("Diagnostics.LFSLocked", path));
 
             log.Complete();
             return succ;
@@ -592,13 +605,13 @@ namespace SourceGit.ViewModels
 
         public async Task<bool> UnlockLFSFileAsync(string remote, string path, bool force, bool notify)
         {
-            var log = CreateLog("Unlock LFS File");
+            var log = CreateLog(App.Text("Operation.LFSUnlockFile"));
             var succ = await new Commands.LFS(FullPath)
                 .Use(log)
                 .UnlockAsync(remote, path, force);
 
             if (succ && notify)
-                SendNotification($"Unlock file successfully! File: {path}");
+                SendNotification(App.Text("Diagnostics.LFSUnlocked", path));
 
             log.Complete();
             return succ;
@@ -657,7 +670,7 @@ namespace SourceGit.ViewModels
 
             if (_remotes.Count == 0)
             {
-                SendNotification("No remotes added to this repository!!!", true);
+                SendNotification(App.Text("Diagnostics.NoRemotes"), true);
                 return;
             }
 
@@ -674,13 +687,13 @@ namespace SourceGit.ViewModels
 
             if (_remotes.Count == 0)
             {
-                SendNotification("No remotes added to this repository!!!", true);
+                SendNotification(App.Text("Diagnostics.NoRemotes"), true);
                 return;
             }
 
             if (_currentBranch == null)
             {
-                SendNotification("Can NOT find current branch!!!", true);
+                SendNotification(App.Text("Diagnostics.NoCurrentBranch"), true);
                 return;
             }
 
@@ -698,13 +711,13 @@ namespace SourceGit.ViewModels
 
             if (_remotes.Count == 0)
             {
-                SendNotification("No remotes added to this repository!!!", true);
+                SendNotification(App.Text("Diagnostics.NoRemotes"), true);
                 return;
             }
 
             if (_currentBranch == null)
             {
-                SendNotification("Can NOT find current branch!!!", true);
+                SendNotification(App.Text("Diagnostics.NoCurrentBranch"), true);
                 return;
             }
 
@@ -964,10 +977,7 @@ namespace SourceGit.ViewModels
         public void RemoveHistoryFilter(Models.HistoryFilter filter)
         {
             if (_uiStates.HistoryFilters.Remove(filter))
-            {
-                HistoryFilterMode = _uiStates.GetHistoryFilterMode();
                 RefreshHistoryFilters(true);
-            }
         }
 
         public void UpdateBranchNodeIsExpanded(BranchTreeNode node)
@@ -1002,6 +1012,16 @@ namespace SourceGit.ViewModels
 
         public void SetBranchFilterMode(BranchTreeNode node, Models.FilterMode mode, bool clearExists, bool refresh)
         {
+            if (!clearExists && mode != Models.FilterMode.Included &&
+                node.Backend is Models.Branch { IsLocal: false } &&
+                _uiStates.IsRemoteBranchHiddenByFolder(node.Path))
+            {
+                var exceptionMode = mode == Models.FilterMode.VisibleInHiddenFolder ? mode : Models.FilterMode.None;
+                if (_uiStates.UpdateHistoryFilters(node.Path, Models.FilterType.RemoteBranch, exceptionMode))
+                    RefreshHistoryFilters(refresh);
+                return;
+            }
+
             var isLocal = node.Path.StartsWith("refs/heads/", StringComparison.Ordinal);
             var tree = isLocal ? _localBranchTrees : _remoteBranchTrees;
 
@@ -1108,7 +1128,7 @@ namespace SourceGit.ViewModels
             using var lockWatcher = _watcher?.Lock();
             IsBisectCommandRunning = true;
 
-            var log = CreateLog($"Bisect({subcmd})");
+            var log = CreateLog(App.Text("Operation.Bisect", subcmd));
 
             var succ = await new Commands.Bisect(FullPath, subcmd).Use(log).ExecAsync();
             log.Complete();
@@ -1218,20 +1238,25 @@ namespace SourceGit.ViewModels
 
             Task.Run(async () =>
             {
-                await Dispatcher.UIThread.InvokeAsync(() => _histories.IsLoading = true);
+                var (limits, hideDecoration) = await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    _histories.IsLoading = true;
+                    var parameters = _uiStates.BuildHistoryParams(GitDir, out var hide);
+                    return ($"-{Preferences.Instance.MaxHistoryCommits} {parameters}", hide);
+                });
+                if (token.IsCancellationRequested)
+                    return;
 
-                var builder = new StringBuilder();
-                builder
-                    .Append('-').Append(Preferences.Instance.MaxHistoryCommits).Append(' ')
-                    .Append(_uiStates.BuildHistoryParams(GitDir));
-
-                var commits = await new Commands.QueryCommits(FullPath, builder.ToString())
+                var commits = await new Commands.QueryCommits(FullPath, limits)
                     .GetResultAsync()
                     .ConfigureAwait(false);
 
                 var merged = new HashSet<string>();
                 foreach (var c in commits)
                 {
+                    if (hideDecoration != null)
+                        c.Decorators.RemoveAll(hideDecoration);
+
                     if (merged.Remove(c.SHA))
                         c.IsMerged = true;
 
@@ -1383,7 +1408,7 @@ namespace SourceGit.ViewModels
         {
             if (_currentBranch == null)
             {
-                SendNotification("Git cannot create a branch before your first commit.", true);
+                SendNotification(App.Text("Diagnostics.FirstCommitForBranch"), true);
                 return;
             }
 
@@ -1467,7 +1492,7 @@ namespace SourceGit.ViewModels
         {
             if (_currentBranch == null)
             {
-                SendNotification("Git cannot create a tag before your first commit.", true);
+                SendNotification(App.Text("Diagnostics.FirstCommitForTag"), true);
                 return;
             }
 
@@ -1575,7 +1600,7 @@ namespace SourceGit.ViewModels
         public async Task LockWorktreeAsync(Worktree worktree)
         {
             using var lockWatcher = _watcher?.Lock();
-            var log = CreateLog("Lock Worktree");
+            var log = CreateLog(App.Text("Operation.LockWorktree"));
             var succ = await new Commands.Worktree(FullPath).Use(log).LockAsync(worktree.FullPath);
             if (succ)
                 worktree.IsLocked = true;
@@ -1585,7 +1610,7 @@ namespace SourceGit.ViewModels
         public async Task UnlockWorktreeAsync(Worktree worktree)
         {
             using var lockWatcher = _watcher?.Lock();
-            var log = CreateLog("Unlock Worktree");
+            var log = CreateLog(App.Text("Operation.UnlockWorktree"));
             var succ = await new Commands.Worktree(FullPath).Use(log).UnlockAsync(worktree.FullPath);
             if (succ)
                 worktree.IsLocked = false;
@@ -1641,7 +1666,7 @@ namespace SourceGit.ViewModels
             builder.Append(".patch");
 
             var saveTo = Path.Combine(folder, builder.ToString());
-            var log = CreateLog("Save Commit as Patch");
+            var log = CreateLog(App.Text("Operation.SaveCommitAsPatch"));
             var succ = await new Commands.FormatPatch(FullPath, commit.SHA, saveTo).Use(log).ExecAsync();
             log.Complete();
             return succ;
@@ -1763,6 +1788,7 @@ namespace SourceGit.ViewModels
 
         private void RefreshHistoryFilters(bool refresh)
         {
+            _uiStates.RemoveOrphanedVisibilityExceptions();
             HistoryFilterMode = _uiStates.GetHistoryFilterMode();
             if (!refresh)
                 return;
@@ -1923,7 +1949,7 @@ namespace SourceGit.ViewModels
                     return;
 
                 IsAutoFetching = true;
-                log = CreateLog("Auto-Fetch");
+                log = CreateLog(App.Text("Operation.AutoFetch"));
 
                 foreach (var remote in remotes)
                     await new Commands.Fetch(FullPath, remote).Use(log).ExecAsync();

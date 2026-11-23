@@ -50,7 +50,7 @@ namespace SourceGit.Views
             context.FillRectangle(Brushes.Transparent, new Rect(0, 0, Bounds.Width, Bounds.Height));
 
             var defaultBrush = this.FindResource("Brush.FG1") as IBrush;
-            var selectedBorder = new Pen(new SolidColorBrush((Color)this.FindResource("SystemAccentColor")!));
+            var selectedBorder = new Pen(this.FindResource("Brush.Accent") as IBrush);
 
             for (var i = 0; i < _hitBoxes.Count; i++)
             {

@@ -788,6 +788,10 @@
   <x:String x:Key="Text.Repository.CustomActions.Empty" xml:space="preserve">Καμία προσαρμοσμένη ενέργεια</x:String>
   <x:String x:Key="Text.Repository.DiscardAll" xml:space="preserve">Απόρριψη όλων των αλλαγών</x:String>
   <x:String x:Key="Text.Repository.Explore" xml:space="preserve">Άνοιγμα στον περιηγητή αρχείων</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Browse" xml:space="preserve">Περιήγηση</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.More" xml:space="preserve">Περισσότερα</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Remote" xml:space="preserve">Απομακρυσμένο</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.NoWebRemote" xml:space="preserve">Δεν υπάρχει απομακρυσμένο αποθετήριο με διαθέσιμη διεύθυνση ιστού.</x:String>
   <x:String x:Key="Text.Repository.Filter" xml:space="preserve">Αναζήτηση κλάδων/ετικετών/υπομονάδων</x:String>
   <x:String x:Key="Text.Repository.FilterCommits" xml:space="preserve">Ορατότητα στο γράφημα</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Default" xml:space="preserve">Μη ορισμένο</x:String>

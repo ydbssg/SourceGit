@@ -8,7 +8,26 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SourceGit.Views.RepositoryToolbar"
              x:DataType="vm:Repository">
-  <Grid ColumnDefinitions="*,Auto,0,*">
+  <UserControl.Styles>
+    <Style Selector="Button.toolbar_action">
+      <Setter Property="MinWidth" Value="36"/>
+      <Setter Property="Height" Value="40"/>
+      <Setter Property="Padding" Value="4,0"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="StackPanel.toolbar_action > Path">
+      <Setter Property="Margin" Value="0,5"/>
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+    <Style Selector="TextBlock.toolbar_label">
+      <Setter Property="FontSize" Value="11"/>
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+      <Setter Property="MaxWidth" Value="78"/>
+      <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+    </Style>
+  </UserControl.Styles>
+
+  <Grid ColumnDefinitions="*,Auto,0,*" MinHeight="44">
     <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="4,0,0,0">
       <Button Classes="icon_button" Width="32" Click="OpenWithExternalTools" ToolTip.Tip="{DynamicResource Text.Repository.OpenWithExternalTools}">
         <Path Width="14" Height="14" Data="{StaticResource Icons.OpenWith}"/>
@@ -23,19 +42,8 @@
       </Button>
     </StackPanel>
 
-    <StackPanel Grid.Column="1" Orientation="Horizontal">
-      <Button Classes="icon_button" Width="32" Tapped="Fetch">
-        <ToolTip.Tip>
-          <StackPanel Orientation="Vertical">
-            <TextBlock Text="{DynamicResource Text.Fetch}"/>
-            <TextBlock Classes="small italic" Margin="0,4,0,0" Text="{DynamicResource Text.CtrlClickTip}" Foreground="{DynamicResource Brush.FG2}"/>
-          </StackPanel>
-        </ToolTip.Tip>
-
-        <Path Width="14" Height="14" Data="{StaticResource Icons.Fetch}"/>
-      </Button>
-
-      <Button Classes="icon_button" Width="32" Margin="16,0,0,0" Tapped="Pull" IsVisible="{Binding !IsBare}" IsEnabled="{Binding !IsBare}">
+    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
+      <Button Classes="icon_button toolbar_action" Tapped="Pull" IsVisible="{Binding !IsBare}" IsEnabled="{Binding !IsBare}">
         <ToolTip.Tip>
           <StackPanel Orientation="Vertical">
             <TextBlock Text="{DynamicResource Text.Pull}"/>
@@ -43,16 +51,19 @@
           </StackPanel>
         </ToolTip.Tip>
         
-        <Grid Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center">
-          <Path Width="14" Height="14" Data="{StaticResource Icons.Pull}"/>
-          <Ellipse Width="8" Height="8"
-                   HorizontalAlignment="Right" VerticalAlignment="Top"
-                   Fill="Green"
-                   IsVisible="{Binding CurrentBranch?.Behind, Mode=OneWay, Converter={x:Static c:ListConverters.IsNotNullOrEmpty}}"/>
-        </Grid>
+        <StackPanel Classes="toolbar_action">
+          <Grid Width="24" Height="24" HorizontalAlignment="Center">
+            <Path Width="14" Height="14" Data="{StaticResource Icons.Pull}"/>
+            <Ellipse Width="8" Height="8"
+                     HorizontalAlignment="Right" VerticalAlignment="Top"
+                     Fill="Green"
+                     IsVisible="{Binding CurrentBranch?.Behind, Mode=OneWay, Converter={x:Static c:ListConverters.IsNotNullOrEmpty}}"/>
+          </Grid>
+          <TextBlock Classes="toolbar_label" Text="{DynamicResource Text.Repository.Toolbar.Pull}"/>
+        </StackPanel>
       </Button>
 
-      <Button Classes="icon_button" Width="32" Margin="16,0,0,0" Tapped="Push">
+      <Button Classes="icon_button toolbar_action" Tapped="Push">
         <ToolTip.Tip>
           <StackPanel Orientation="Vertical">
             <TextBlock Text="{DynamicResource Text.Push}"/>
@@ -60,36 +71,24 @@
           </StackPanel>
         </ToolTip.Tip>
 
-        <Grid Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center">
-          <Path Width="14" Height="14" Data="{StaticResource Icons.Push}"/>
-          <Ellipse Width="8" Height="8"
-                   HorizontalAlignment="Right" VerticalAlignment="Top"
-                   Fill="Green"
-                   IsVisible="{Binding CurrentBranch?.Ahead, Mode=OneWay, Converter={x:Static c:ListConverters.IsNotNullOrEmpty}}"/>
-        </Grid>
-      </Button>
-
-      <Button Classes="icon_button" Width="32" Margin="16,0,0,0" Tapped="StashAll" IsVisible="{Binding !IsBare}">
-        <ToolTip.Tip>
-          <StackPanel Orientation="Vertical">
-            <TextBlock Text="{DynamicResource Text.Stash}"/>
-            <TextBlock Classes="small italic" Margin="0,4,0,0" Text="{DynamicResource Text.CtrlClickTip}" Foreground="{DynamicResource Brush.FG2}"/>
-          </StackPanel>
-        </ToolTip.Tip>
-
-        <Path Width="14" Height="14" Data="{StaticResource Icons.Stashes.Add}"/>
-      </Button>
-
-      <Button Classes="icon_button" Width="32" Margin="16,0,0,0" Command="{Binding ApplyPatch}" IsVisible="{Binding !IsBare}" ToolTip.Tip="{DynamicResource Text.Apply.Title}">
-        <Path Width="14" Height="14" Data="{StaticResource Icons.ApplyPatch}"/>
+        <StackPanel Classes="toolbar_action">
+          <Grid Width="24" Height="24" HorizontalAlignment="Center">
+            <Path Width="14" Height="14" Data="{StaticResource Icons.Push}"/>
+            <Ellipse Width="8" Height="8"
+                     HorizontalAlignment="Right" VerticalAlignment="Top"
+                     Fill="Green"
+                     IsVisible="{Binding CurrentBranch?.Ahead, Mode=OneWay, Converter={x:Static c:ListConverters.IsNotNullOrEmpty}}"/>
+          </Grid>
+          <TextBlock Classes="toolbar_label" Text="{DynamicResource Text.Repository.Toolbar.Push}"/>
+        </StackPanel>
       </Button>
 
       <Rectangle Width="1" Height="16"
-                 Margin="16,0,0,0"
+                 Margin="4,0"
                  VerticalAlignment="Center"
                  Fill="{DynamicResource Brush.Border2}"/>
 
-      <Button Classes="icon_button" Width="32" Margin="18,0,0,0" Command="{Binding CreateNewBranch}" HotKey="{OnPlatform Ctrl+B, macOS=⌘+B}">
+      <Button Classes="icon_button toolbar_action" Command="{Binding CreateNewBranch}" HotKey="{OnPlatform Ctrl+B, macOS=⌘+B}">
         <ToolTip.Tip>
           <TextBlock>
             <Run Text="{DynamicResource Text.Repository.NewBranch}"/>
@@ -97,27 +96,46 @@
             <Run Text="{OnPlatform Ctrl+B, macOS=⌘+B}" FontSize="11" Foreground="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForeground}"/>
           </TextBlock>
         </ToolTip.Tip>
-        <Path Width="14" Height="14" Data="{StaticResource Icons.Branch.Add}"/>
+        <StackPanel Classes="toolbar_action">
+          <Path Width="14" Height="14" Data="{StaticResource Icons.Branch.Add}"/>
+          <TextBlock Classes="toolbar_label" Text="{DynamicResource Text.Repository.NewBranch}"/>
+        </StackPanel>
       </Button>
 
-      <Button Classes="icon_button" Width="32" Margin="12,0,0,0" Click="OpenGitFlowMenu" IsVisible="{Binding !IsBare}" ToolTip.Tip="{DynamicResource Text.GitFlow}">
-        <Path Width="14" Height="14" Data="{StaticResource Icons.GitFlow}"/>
+      <Button Classes="icon_button toolbar_action" Click="OpenMergeRequest" ToolTip.Tip="{DynamicResource Text.CreateMergeRequest.Title}"
+              IsEnabled="{Binding IsDashboardVisible}">
+        <StackPanel Classes="toolbar_action">
+          <Path Width="14" Height="14" Data="{StaticResource Icons.CreatePR}"/>
+          <TextBlock Classes="toolbar_label" Text="{DynamicResource Text.CreateMergeRequest.Toolbar}"/>
+        </StackPanel>
       </Button>
 
-      <Button Classes="icon_button" Width="32" Margin="12,0,0,0" Click="OpenGitLFSMenu" IsVisible="{Binding !IsBare}" ToolTip.Tip="{DynamicResource Text.GitLFS}">
-        <Path Width="14" Height="14" Data="{StaticResource Icons.LFS}"/>
+      <Button Classes="icon_button toolbar_action" Click="OpenRemote" ToolTip.Tip="{DynamicResource Text.RemoteCM.OpenInBrowser}">
+        <StackPanel Classes="toolbar_action">
+          <Path Width="14" Height="14" Data="{StaticResource Icons.Remotes}"/>
+          <TextBlock Classes="toolbar_label" Text="{DynamicResource Text.Repository.Toolbar.Remote}"/>
+        </StackPanel>
       </Button>
 
-      <Button Classes="icon_button" Width="32" Margin="12,0,0,0" Click="StartBisect" IsVisible="{Binding !IsBare}" ToolTip.Tip="{DynamicResource Text.Bisect}">
-        <Path Width="14" Height="14" Data="{StaticResource Icons.Bisect}"/>
+      <Button Classes="icon_button toolbar_action" Click="BrowseRepository" ToolTip.Tip="{DynamicResource Text.Repository.Explore}">
+        <StackPanel Classes="toolbar_action">
+          <Path Width="14" Height="14" Data="{StaticResource Icons.Explore}"/>
+          <TextBlock Classes="toolbar_label" Text="{DynamicResource Text.Repository.Toolbar.Browse}"/>
+        </StackPanel>
       </Button>
 
-      <Button Classes="icon_button" Width="32" Margin="12,0,0,0" Click="OpenCustomActionMenu" ToolTip.Tip="{DynamicResource Text.Repository.CustomActions}">
-        <Path Width="14" Height="14" Data="{StaticResource Icons.Action}"/>
+      <Button Classes="icon_button toolbar_action" Click="OpenCustomActionMenu" ToolTip.Tip="{DynamicResource Text.Repository.CustomActions}">
+        <StackPanel Classes="toolbar_action">
+          <Path Width="14" Height="14" Data="{StaticResource Icons.Action}"/>
+          <TextBlock Classes="toolbar_label" Text="{DynamicResource Text.Repository.CustomActions}"/>
+        </StackPanel>
       </Button>
 
-      <Button Classes="icon_button" Width="32" Margin="12,0,0,0" Click="Cleanup" ToolTip.Tip="{DynamicResource Text.Repository.Clean}">
-        <Path Width="14" Height="14" Margin="0,1,0,0" Data="{StaticResource Icons.Clean}"/>
+      <Button Classes="icon_button toolbar_action" Click="OpenMoreMenu" ToolTip.Tip="{DynamicResource Text.Repository.Toolbar.More}">
+        <StackPanel Classes="toolbar_action">
+          <Path Width="14" Height="14" Data="{StaticResource Icons.More}"/>
+          <TextBlock Classes="toolbar_label" Text="{DynamicResource Text.Repository.Toolbar.More}"/>
+        </StackPanel>
       </Button>
     </StackPanel>
 

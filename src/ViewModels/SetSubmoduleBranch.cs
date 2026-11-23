@@ -25,13 +25,13 @@ namespace SourceGit.ViewModels
 
         public override async Task<bool> Sure()
         {
-            ProgressDescription = "Set submodule's branch ...";
+            ProgressDescription = App.Text("Progress.SubmoduleBranch");
 
             if (_changeTo.Equals(Submodule.Branch, StringComparison.Ordinal))
                 return true;
 
             using var lockWatcher = _repo.LockWatcher();
-            var log = _repo.CreateLog("Set Submodule's Branch");
+            var log = _repo.CreateLog(App.Text("Operation.SetSubmoduleBranch"));
             Use(log);
 
             var succ = await new Commands.Submodule(_repo.FullPath)

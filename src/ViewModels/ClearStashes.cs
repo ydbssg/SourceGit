@@ -12,9 +12,9 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Clear all stashes...";
+            ProgressDescription = App.Text("Progress.ClearStashes");
 
-            var log = _repo.CreateLog("Clear Stashes");
+            var log = _repo.CreateLog(App.Text("Operation.ClearStashes"));
             Use(log);
 
             await new Commands.Stash(_repo.FullPath)

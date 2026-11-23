@@ -1,0 +1,99 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:m="using:SourceGit.Models"
+             xmlns:v="using:SourceGit.Views"
+             xmlns:vm="using:SourceGit.ViewModels"
+             x:Class="SourceGit.Views.SpreadsheetDiffView"
+             x:DataType="vm:SpreadsheetDiff">
+  <Panel>
+    <StackPanel IsVisible="{Binding !HasSheets}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Margin="16"
+                Spacing="8">
+      <Button Classes="flat primary"
+              Content="{DynamicResource Text.Diff.Spreadsheet.Open}"
+              HorizontalAlignment="Center"
+              IsEnabled="{Binding !IsLoading}"
+              Click="OnLoad"/>
+      <StackPanel IsVisible="{Binding IsLoading}" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
+        <v:LoadingIcon Width="16" Height="16"/>
+        <TextBlock Text="{DynamicResource Text.Diff.Spreadsheet.Loading}"/>
+      </StackPanel>
+      <TextBlock Text="{Binding Error}" TextWrapping="Wrap" MaxWidth="420"/>
+    </StackPanel>
+
+    <Grid IsVisible="{Binding HasSheets}" RowDefinitions="Auto,Auto,Auto,*">
+      <Grid Margin="8,6,8,2" ColumnDefinitions="*,Auto,Auto">
+        <ComboBox HorizontalAlignment="Left"
+                  MinWidth="104"
+                  MaxWidth="260"
+                  AutomationProperties.Name="{DynamicResource Text.Diff.Spreadsheet.Sheet}"
+                  ItemsSource="{Binding Sheets}"
+                  SelectedItem="{Binding SelectedSheet, Mode=TwoWay}">
+          <ComboBox.ItemTemplate>
+            <DataTemplate DataType="m:SpreadsheetSheetComparison">
+              <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+        <CheckBox Grid.Column="1" Margin="8,0"
+                  VerticalAlignment="Center"
+                  Content="{DynamicResource Text.Diff.Spreadsheet.Changes}"
+                  IsChecked="{Binding OnlyChangedRows, Mode=TwoWay}"/>
+        <Button Grid.Column="2"
+                Classes="flat"
+                Height="28"
+                Padding="10,0"
+                Content="{Binding SwitchVersionLabel}"
+                Command="{Binding SwitchVersion}"/>
+      </Grid>
+
+      <Grid Grid.Row="1" Margin="8,2,8,6" ColumnDefinitions="Auto,*">
+        <TextBlock FontWeight="SemiBold" Text="{Binding VisibleVersionLabel}"/>
+        <TextBlock Grid.Column="1" Margin="10,0,0,0"
+                   HorizontalAlignment="Right"
+                   Foreground="{DynamicResource Brush.FG2}"
+                   Text="{Binding SelectedSheet?.Mode}"/>
+      </Grid>
+
+      <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="6" Margin="8,0,8,6">
+        <Button Classes="flat" Height="26" Padding="8,0"
+                Content="{DynamicResource Text.Diff.Spreadsheet.Locate}"
+                IsEnabled="{Binding CanLocateChange}" Click="OnLocateChange"/>
+        <Button Classes="flat" Height="26" Padding="8,0"
+                Content="{DynamicResource Text.Diff.Prev}"
+                IsEnabled="{Binding CanLocatePreviousChange}" Click="OnLocatePreviousChange"/>
+        <Button Classes="flat" Height="26" Padding="8,0"
+                Content="{DynamicResource Text.Diff.Next}"
+                IsEnabled="{Binding CanLocateNextChange}" Click="OnLocateNextChange"/>
+        <TextBlock Text="{Binding LocatedChange}" VerticalAlignment="Center" Margin="4,0,0,0"
+                   Foreground="{DynamicResource Brush.FG2}"/>
+      </StackPanel>
+
+      <Panel Grid.Row="3">
+        <v:SpreadsheetSheetView x:Name="SheetGrid"
+                                Version="{Binding VisibleVersion}"
+                                OnlyChangedRows="{Binding OnlyChangedRows}"
+                                IsVisible="{Binding HasVisibleRows}">
+          <v:SpreadsheetSheetView.Resources>
+            <x:Double x:Key="DataGridSortIconMinWidth">0</x:Double>
+          </v:SpreadsheetSheetView.Resources>
+          <v:SpreadsheetSheetView.Styles>
+            <Style Selector="DataGridColumnHeader">
+              <Setter Property="Padding" Value="0"/>
+              <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+            </Style>
+          </v:SpreadsheetSheetView.Styles>
+        </v:SpreadsheetSheetView>
+        <TextBlock IsVisible="{Binding !HasVisibleRows}"
+                   Text="{Binding EmptyMessage}"
+                   Foreground="{DynamicResource Brush.FG2}"
+                   TextWrapping="Wrap"
+                   Margin="12"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"/>
+      </Panel>
+    </Grid>
+  </Panel>
+</UserControl>

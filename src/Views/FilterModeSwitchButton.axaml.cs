@@ -125,7 +125,11 @@ namespace SourceGit.Views
 
         private void FillContextMenuForBranch(ContextMenu menu, ViewModels.Repository repo, ViewModels.BranchTreeNode node, Models.FilterMode current)
         {
-            if (current != Models.FilterMode.None)
+            var isException = current == Models.FilterMode.VisibleInHiddenFolder;
+            var inheritsHidden = node.Backend is Models.Branch { IsLocal: false } &&
+                repo.UIStates.IsRemoteBranchHiddenByFolder(node.Path);
+
+            if (current != Models.FilterMode.None && !isException)
             {
                 var unset = new MenuItem();
                 unset.Header = App.Text("Repository.FilterCommits.Default");
@@ -152,7 +156,7 @@ namespace SourceGit.Views
             var exclude = new MenuItem();
             exclude.Icon = this.CreateMenuIcon("Icons.EyeClose");
             exclude.Header = App.Text("Repository.FilterCommits.Exclude");
-            exclude.IsEnabled = current != Models.FilterMode.Excluded;
+            exclude.IsEnabled = current != Models.FilterMode.Excluded && (!inheritsHidden || isException);
             exclude.Click += (_, ev) =>
             {
                 repo.SetBranchFilterMode(node, Models.FilterMode.Excluded, false, true);
@@ -161,6 +165,21 @@ namespace SourceGit.Views
 
             menu.Items.Add(include);
             menu.Items.Add(exclude);
+
+            if (inheritsHidden)
+            {
+                var show = new MenuItem();
+                show.Icon = this.CreateMenuIcon("Icons.Eye");
+                show.Header = App.Text("Repository.FilterCommits.ShowBranchException");
+                show.IsEnabled = !isException;
+                show.Click += (_, ev) =>
+                {
+                    repo.SetBranchFilterMode(node, Models.FilterMode.VisibleInHiddenFolder, false, true);
+                    ev.Handled = true;
+                };
+
+                menu.Items.Add(show);
+            }
         }
 
         private Models.FilterMode _mode = Models.FilterMode.None;

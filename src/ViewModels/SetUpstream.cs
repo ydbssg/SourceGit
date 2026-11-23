@@ -53,7 +53,7 @@ namespace SourceGit.ViewModels
 
         public override async Task<bool> Sure()
         {
-            ProgressDescription = "Setting upstream...";
+            ProgressDescription = App.Text("Progress.SetUpstream");
             Models.Branch upstream = _unset ? null : SelectedRemoteBranch;
 
             if (upstream == null)
@@ -66,7 +66,7 @@ namespace SourceGit.ViewModels
                 return true;
             }
 
-            var log = _repo.CreateLog("Set Upstream");
+            var log = _repo.CreateLog(App.Text("Operation.SetUpstream"));
             Use(log);
 
             var succ = await new Commands.Branch(_repo.FullPath, Local.Name)

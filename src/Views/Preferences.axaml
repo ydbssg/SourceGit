@@ -202,6 +202,7 @@
               <ComboBox.Items>
                 <ThemeVariant>Default</ThemeVariant>
                 <ThemeVariant>Dark</ThemeVariant>
+                <x:Static Member="m:AppTheme.CodexDark"/>
                 <ThemeVariant>Light</ThemeVariant>
               </ComboBox.Items>
             </ComboBox>

@@ -105,6 +105,8 @@
   <x:String x:Key="Text.ChangeDisplayMode.Grid" xml:space="preserve">Show as File and Dir List</x:String>
   <x:String x:Key="Text.ChangeDisplayMode.List" xml:space="preserve">Show as Path List</x:String>
   <x:String x:Key="Text.ChangeDisplayMode.Tree" xml:space="preserve">Show as Filesystem Tree</x:String>
+  <x:String x:Key="Text.ChangeDisplayMode.FileType" xml:space="preserve">Group by File Type</x:String>
+  <x:String x:Key="Text.ChangeDisplayMode.NoExtension" xml:space="preserve">No Extension</x:String>
   <x:String x:Key="Text.ChangeSubmoduleUrl" xml:space="preserve">Change Submodule's URL</x:String>
   <x:String x:Key="Text.ChangeSubmoduleUrl.Submodule" xml:space="preserve">Submodule:</x:String>
   <x:String x:Key="Text.ChangeSubmoduleUrl.URL" xml:space="preserve">URL:</x:String>
@@ -370,6 +372,13 @@
   <x:String x:Key="Text.DeleteTag.Tag" xml:space="preserve">Tag:</x:String>
   <x:String x:Key="Text.DeleteTag.WithRemote" xml:space="preserve">Delete from remote repositories</x:String>
   <x:String x:Key="Text.Diff.Binary" xml:space="preserve">BINARY DIFF</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable" xml:space="preserve">MiniFire Binary Config Table</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.Open" xml:space="preserve">View Config Diff</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.Loading" xml:space="preserve">Reading config table…</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.LoadFailed" xml:space="preserve">Could not read the config table. {0}</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.NoChanges" xml:space="preserve">No config values or field types changed.</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.FieldTypes" xml:space="preserve">Field types</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.Hex" xml:space="preserve">View Hex</x:String>
   <x:String x:Key="Text.Diff.Binary.ViewContentOfNew" xml:space="preserve">VIEW NEW CONTENT</x:String>
   <x:String x:Key="Text.Diff.EmptyFile" xml:space="preserve">EMPTY FILE</x:String>
   <x:String x:Key="Text.Diff.First" xml:space="preserve">First Difference</x:String>
@@ -388,6 +397,26 @@
   <x:String x:Key="Text.Diff.SaveAsPatch" xml:space="preserve">Save as Patch</x:String>
   <x:String x:Key="Text.Diff.ShowHiddenSymbols" xml:space="preserve">Show hidden symbols</x:String>
   <x:String x:Key="Text.Diff.SideBySide" xml:space="preserve">Side-By-Side Diff</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.Added" xml:space="preserve">Added</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.ByAddress" xml:space="preserve">Compare by cell address</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.ByKey" xml:space="preserve">Compare by ID and field</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.Changes" xml:space="preserve">Changes only</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.Deleted" xml:space="preserve">Deleted</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.EmptySheet" xml:space="preserve">This worksheet is empty.</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.FormulaChanged" xml:space="preserve">Formula</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.FormulaValue" xml:space="preserve">{0} (formula result)</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.LoadFailed" xml:space="preserve">Failed to load spreadsheet: {0}</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.Loading" xml:space="preserve">Loading worksheet versions…</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.Locate" xml:space="preserve">Locate Change</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.Modified" xml:space="preserve">Modified</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.NoChanges" xml:space="preserve">No cell changes on this worksheet.</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.NoChangesInVersion" xml:space="preserve">This version has no changed cells to show. Switch versions to see the changes.</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.NoFormulaResult" xml:space="preserve">No saved formula result.</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.NoSheet" xml:space="preserve">This worksheet is absent in this version.</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.Open" xml:space="preserve">View Spreadsheet Diff</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.Sheet" xml:space="preserve">Worksheet</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.ViewAfter" xml:space="preserve">View After</x:String>
+  <x:String x:Key="Text.Diff.Spreadsheet.ViewBefore" xml:space="preserve">View Before</x:String>
   <x:String x:Key="Text.Diff.Submodule" xml:space="preserve">SUBMODULE</x:String>
   <x:String x:Key="Text.Diff.Submodule.Deleted" xml:space="preserve">DELETED</x:String>
   <x:String x:Key="Text.Diff.Submodule.New" xml:space="preserve">NEW</x:String>
@@ -445,8 +474,13 @@
   <x:String x:Key="Text.FileCM.UseMine" xml:space="preserve">Use Mine (checkout --ours)</x:String>
   <x:String x:Key="Text.FileCM.UseTheirs" xml:space="preserve">Use Theirs (checkout --theirs)</x:String>
   <x:String x:Key="Text.FileHistory" xml:space="preserve">File History</x:String>
+  <x:String x:Key="Text.FileHistory.AnyDate" xml:space="preserve">Any date</x:String>
+  <x:String x:Key="Text.FileHistory.EndDate" xml:space="preserve">End date</x:String>
   <x:String x:Key="Text.FileHistory.FileChange" xml:space="preserve">CHANGE</x:String>
   <x:String x:Key="Text.FileHistory.FileContent" xml:space="preserve">CONTENT</x:String>
+  <x:String x:Key="Text.FileHistory.InvalidDateRange" xml:space="preserve">Start date must be on or before the end date.</x:String>
+  <x:String x:Key="Text.FileHistory.NoRevisionsInDateRange" xml:space="preserve">No commits in this date range.</x:String>
+  <x:String x:Key="Text.FileHistory.StartDate" xml:space="preserve">Start date</x:String>
   <x:String x:Key="Text.FileModeChange" xml:space="preserve">File mode change: </x:String>
   <x:String x:Key="Text.FileModeChange.Deleted" xml:space="preserve">Deleted file mode: </x:String>
   <x:String x:Key="Text.FileModeChange.Directory" xml:space="preserve">Directory</x:String>
@@ -516,6 +550,17 @@
   <x:String x:Key="Text.GotoRevisionSelector" xml:space="preserve">Select Commit</x:String>
   <x:String x:Key="Text.Histories.AdvancedOptions" xml:space="preserve">Advanced Options</x:String>
   <x:String x:Key="Text.Histories.Header.Author" xml:space="preserve">AUTHOR</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Add" xml:space="preserve">Add box</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.ChangeColor" xml:space="preserve">Change box color</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Remove" xml:space="preserve">Remove box</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Orange" xml:space="preserve">Orange</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Blue" xml:space="preserve">Blue</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Green" xml:space="preserve">Green</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Red" xml:space="preserve">Red</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Purple" xml:space="preserve">Purple</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Gold" xml:space="preserve">Gold</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Pink" xml:space="preserve">Pink</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Cyan" xml:space="preserve">Cyan</x:String>
   <x:String x:Key="Text.Histories.Header.AuthorTime" xml:space="preserve">AUTHOR TIME</x:String>
   <x:String x:Key="Text.Histories.Header.CommitTime" xml:space="preserve">COMMIT TIME</x:String>
   <x:String x:Key="Text.Histories.Header.GraphAndSubject" xml:space="preserve">GRAPH &amp; SUBJECT</x:String>
@@ -744,6 +789,7 @@
   <x:String x:Key="Text.Pull.Branch" xml:space="preserve">Remote Branch:</x:String>
   <x:String x:Key="Text.Pull.Into" xml:space="preserve">Into:</x:String>
   <x:String x:Key="Text.Pull.LocalChanges" xml:space="preserve">Local Changes:</x:String>
+  <x:String x:Key="Text.Pull.OnlySelectedRemoteBranch" xml:space="preserve">Fetch only the selected remote branch</x:String>
   <x:String x:Key="Text.Pull.Remote" xml:space="preserve">Remote:</x:String>
   <x:String x:Key="Text.Pull.Title" xml:space="preserve">Pull (Fetch &amp; Merge)</x:String>
   <x:String x:Key="Text.Pull.UseRebase" xml:space="preserve">Use rebase instead of merge</x:String>
@@ -813,6 +859,10 @@
   <x:String x:Key="Text.Repository.CustomActions.Empty" xml:space="preserve">No Custom Actions</x:String>
   <x:String x:Key="Text.Repository.DiscardAll" xml:space="preserve">Discard all changes</x:String>
   <x:String x:Key="Text.Repository.Explore" xml:space="preserve">Open in File Browser</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Browse" xml:space="preserve">Browse</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.More" xml:space="preserve">More</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Remote" xml:space="preserve">Remote</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.NoWebRemote" xml:space="preserve">No remote repository has a browsable URL.</x:String>
   <x:String x:Key="Text.Repository.Filter" xml:space="preserve">Filter Branches/Tags/Submodules</x:String>
   <x:String x:Key="Text.Repository.FilterCommits" xml:space="preserve">Visibility in Graph</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Collapse" xml:space="preserve">Collapse Filters</x:String>
@@ -820,6 +870,7 @@
   <x:String x:Key="Text.Repository.FilterCommits.Exclude" xml:space="preserve">Hide in commit graph</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Expand" xml:space="preserve">Expand Filters</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Include" xml:space="preserve">Filter in commit graph</x:String>
+  <x:String x:Key="Text.Repository.FilterCommits.ShowBranchException" xml:space="preserve">Show this branch in hidden group</x:String>
   <x:String x:Key="Text.Repository.FilterCommits.Summary" xml:space="preserve">filter(s) enabled</x:String>
   <x:String x:Key="Text.Repository.HistoriesLayout" xml:space="preserve">LAYOUT</x:String>
   <x:String x:Key="Text.Repository.HistoriesLayout.Horizontal" xml:space="preserve">Horizontal</x:String>
@@ -863,6 +914,10 @@
   <x:String x:Key="Text.Repository.Tags.OrderByName" xml:space="preserve">By Name</x:String>
   <x:String x:Key="Text.Repository.Tags.Sort" xml:space="preserve">Sort</x:String>
   <x:String x:Key="Text.Repository.Terminal" xml:space="preserve">Open in Terminal</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Fetch" xml:space="preserve">Fetch</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Pull" xml:space="preserve">Pull</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Push" xml:space="preserve">Push</x:String>
+  <x:String x:Key="Text.Repository.Toolbar.Stash" xml:space="preserve">Stash</x:String>
   <x:String x:Key="Text.Repository.ViewLogs" xml:space="preserve">View Logs</x:String>
   <x:String x:Key="Text.Repository.Visit" xml:space="preserve">Visit '{0}' in Browser</x:String>
   <x:String x:Key="Text.Repository.Worktrees" xml:space="preserve">WORKTREES</x:String>
@@ -1046,6 +1101,12 @@
   <x:String x:Key="Text.WorkingCopy.CollapseSidebar" xml:space="preserve">Hide Sidebar</x:String>
   <x:String x:Key="Text.WorkingCopy.Commit" xml:space="preserve">COMMIT</x:String>
   <x:String x:Key="Text.WorkingCopy.CommitAndPush" xml:space="preserve">COMMIT &amp; PUSH</x:String>
+  <x:String x:Key="Text.WorkingCopy.CommitAndPullPush" xml:space="preserve">COMMIT, PULL &amp; PUSH</x:String>
+  <x:String x:Key="Text.WorkingCopy.CommitAndPullPush.AbortFailed" xml:space="preserve">Git could not abort the pull automatically. Nothing was pushed. See the Git log for details.</x:String>
+  <x:String x:Key="Text.WorkingCopy.CommitAndPullPush.LocalChanges" xml:space="preserve">The local commit was saved. Pull and push stopped because the tracked working tree is not clean.</x:String>
+  <x:String x:Key="Text.WorkingCopy.CommitAndPullPush.NoUpstream" xml:space="preserve">The current branch needs a configured remote upstream before you can commit, pull, and push.</x:String>
+  <x:String x:Key="Text.WorkingCopy.CommitAndPullPush.PullAborted" xml:space="preserve">The pull was aborted. The local commit was kept and nothing was pushed.</x:String>
+  <x:String x:Key="Text.WorkingCopy.CommitAndPullPush.RepositoryChanged" xml:space="preserve">The current branch, upstream, or repository operation changed. Commit, pull, and push stopped.</x:String>
   <x:String x:Key="Text.WorkingCopy.CommitMessageHelper" xml:space="preserve">Template/History</x:String>
   <x:String x:Key="Text.WorkingCopy.CommitTip" xml:space="preserve">Trigger click event</x:String>
   <x:String x:Key="Text.WorkingCopy.CommitToEdit" xml:space="preserve">Commit (Edit)</x:String>
@@ -1088,4 +1149,347 @@
   <x:String x:Key="Text.Worktree.Remove" xml:space="preserve">Remove</x:String>
   <x:String x:Key="Text.Worktree.Unlock" xml:space="preserve">Unlock</x:String>
   <x:String x:Key="Text.Yes" xml:space="preserve">YES</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.Abort" xml:space="preserve">Abort Pull</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.Apply" xml:space="preserve">Apply and Continue</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.Base" xml:space="preserve">Base</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.ConfirmFields" xml:space="preserve">Confirm Field Choices</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.DeleteLocal" xml:space="preserve">Use Local (Delete Row)</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.DeleteRemote" xml:space="preserve">Use Remote (Delete Row)</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.Failed" xml:space="preserve">Spreadsheet merge paused: {0}</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.Field" xml:space="preserve">Field</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.Local" xml:space="preserve">Local</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.Open" xml:space="preserve">Merge Spreadsheet</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.Remaining" xml:space="preserve">{0} rows awaiting confirmation</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.Remote" xml:space="preserve">Remote</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.ResolvedFiles" xml:space="preserve">Resolved {0} spreadsheet conflicts.</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.Result" xml:space="preserve">Result Source</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.Title" xml:space="preserve">Spreadsheet Conflict</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.UseLocal" xml:space="preserve">Use Entire Local Row</x:String>
+  <x:String x:Key="Text.SpreadsheetMerge.UseRemote" xml:space="preserve">Use Entire Remote Row</x:String>
+  <x:String x:Key="Text.AI.Diagnostics.AvailableModels" xml:space="preserve">Fetching available models...</x:String>
+  <x:String x:Key="Text.AI.Diagnostics.Error" xml:space="preserve">[ERROR]</x:String>
+  <x:String x:Key="Text.AI.Diagnostics.GeneratingCommit" xml:space="preserve">Asking AI to generate commit message...</x:String>
+  <x:String x:Key="Text.AI.Diagnostics.ModelSwitched" xml:space="preserve">The model({0}) last used is not available. Auto change to the first available model.</x:String>
+  <x:String x:Key="Text.AI.Diagnostics.NoModelSelected" xml:space="preserve">No model is selected and auto-fetching is disabled. Please select a model or enable auto-fetching.</x:String>
+  <x:String x:Key="Text.AI.Diagnostics.NoModels" xml:space="preserve">No available models found. Please check your OpenAI API key and network connection.</x:String>
+  <x:String x:Key="Text.Diagnostics.ArchiveSaved" xml:space="preserve">Save archive to : {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.BisectRunning" xml:space="preserve">Bisect is running! Please abort it before starting a new one.</x:String>
+  <x:String x:Key="Text.Diagnostics.BlockedUrl" xml:space="preserve">Blocked unsafe URL: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.CloneFolderMissing" xml:space="preserve">Folder '{0}' can NOT be found</x:String>
+  <x:String x:Key="Text.Diagnostics.DirtyWorktree" xml:space="preserve">You have un-committed local changes. Please discard or stash them first.</x:String>
+  <x:String x:Key="Text.Diagnostics.Discard" xml:space="preserve">Failed to discard changes. Reason: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.FirstCommitForBranch" xml:space="preserve">Git cannot create a branch before your first commit.</x:String>
+  <x:String x:Key="Text.Diagnostics.FirstCommitForTag" xml:space="preserve">Git cannot create a tag before your first commit.</x:String>
+  <x:String x:Key="Text.Diagnostics.InvalidDiffTool" xml:space="preserve">Invalid diff/merge tool in preference setting!</x:String>
+  <x:String x:Key="Text.Diagnostics.InvalidRebaseCommit" xml:space="preserve">Commit '{0}' is not a valid revision for `git rebase -i`!</x:String>
+  <x:String x:Key="Text.Diagnostics.LFSEnabled" xml:space="preserve">LFS enabled successfully!</x:String>
+  <x:String x:Key="Text.Diagnostics.LFSLocked" xml:space="preserve">Lock file successfully! File: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.LFSTracked" xml:space="preserve">Tracking successfully! Pattern: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.LFSUnlocked" xml:space="preserve">Unlock file successfully! File: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.MissingGitConfig" xml:space="preserve">Missing git configuration: diff.guitool</x:String>
+  <x:String x:Key="Text.Diagnostics.MissingTerminal" xml:space="preserve">Terminal is not specified! Please confirm that the correct shell/terminal has been configured.</x:String>
+  <x:String x:Key="Text.Diagnostics.MixedConflictSelection" xml:space="preserve">Selection contains both conflict and non-conflict changes!</x:String>
+  <x:String x:Key="Text.Diagnostics.NoAmend" xml:space="preserve">No commits to amend!!!</x:String>
+  <x:String x:Key="Text.Diagnostics.NoClipboard" xml:space="preserve">Clipboard service is not available!!!</x:String>
+  <x:String x:Key="Text.Diagnostics.NoClipboardPatch" xml:space="preserve">There's no valid patch content in clipboard!!!</x:String>
+  <x:String x:Key="Text.Diagnostics.NoCommitFiles" xml:space="preserve">No files added to commit!</x:String>
+  <x:String x:Key="Text.Diagnostics.NoCurrentBranch" xml:space="preserve">Can NOT find current branch!!!</x:String>
+  <x:String x:Key="Text.Diagnostics.NoGitFlowBranch" xml:space="preserve">Git flow init failed: No branch found!!!</x:String>
+  <x:String x:Key="Text.Diagnostics.NoRemotes" xml:space="preserve">No remotes added to this repository!!!</x:String>
+  <x:String x:Key="Text.Diagnostics.OpenAIConfig" xml:space="preserve">Bad configuration for OpenAI</x:String>
+  <x:String x:Key="Text.Diagnostics.OpenFile" xml:space="preserve">Failed to open: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.OpenRepository" xml:space="preserve">Failed to open repository: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.QueryFile" xml:space="preserve">Failed to query file content: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.QueryRebaseCommits" xml:space="preserve">Failed to query commits for interactive-rebase. Reason: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.RepositoryBusy" xml:space="preserve">Repository has an unfinished job! Please wait!</x:String>
+  <x:String x:Key="Text.Diagnostics.SaveFile" xml:space="preserve">Failed to save file: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.SavePatch" xml:space="preserve">Failed to save as patch: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.SavePatchFromCommand" xml:space="preserve">Save change to patch failed: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.SaveRevision" xml:space="preserve">Save file failed: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.ScanRootMissing" xml:space="preserve">Missing root directory to scan!</x:String>
+  <x:String x:Key="Text.Diagnostics.SelectChangedLine" xml:space="preserve">You should select at lease one changed line!</x:String>
+  <x:String x:Key="Text.Diagnostics.SelectLocation" xml:space="preserve">Failed to select location: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.SelectParentFolder" xml:space="preserve">Failed to select parent folder: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.SelectScanDirectory" xml:space="preserve">Failed to select root scanning directory: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.StartTerminal" xml:space="preserve">Failed to start '{0}'. Reason: {1}</x:String>
+  <x:String x:Key="Text.Diagnostics.TrustedOpenFailed" xml:space="preserve">Failed to open the repository after trusting it.</x:String>
+  <x:String x:Key="Text.Diagnostics.UnknownError" xml:space="preserve">unknown error</x:String>
+  <x:String x:Key="Text.Diagnostics.UnknownRepositoryError" xml:space="preserve">Unknown error occurred while opening the repository.</x:String>
+  <x:String x:Key="Text.Diagnostics.UnresolvedConflicts" xml:space="preserve">Repository has unsolved conflict(s). Auto-stage and commit is disabled!</x:String>
+  <x:String x:Key="Text.Diagnostics.UnsupportedDiffTool" xml:space="preserve">CLI based diff tool "{0}" is not supported by this app!</x:String>
+  <x:String x:Key="Text.Diagnostics.UpdateIndex" xml:space="preserve">Failed to update index: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.Watcher" xml:space="preserve">Failed to start watcher for repository: '{0}'. You may need to press 'F5' to refresh repository manually!&#10;&#10;Reason: {1}</x:String>
+  <x:String x:Key="Text.Operation.Abort" xml:space="preserve">Abort {0}</x:String>
+  <x:String x:Key="Text.Operation.AddRemote" xml:space="preserve">Add Remote</x:String>
+  <x:String x:Key="Text.Operation.AddSubmodule" xml:space="preserve">Add Submodule</x:String>
+  <x:String x:Key="Text.Operation.AddWorktree" xml:space="preserve">Add Worktree</x:String>
+  <x:String x:Key="Text.Operation.ApplyPatch" xml:space="preserve">Apply Patch</x:String>
+  <x:String x:Key="Text.Operation.ApplyStash" xml:space="preserve">Apply Stash</x:String>
+  <x:String x:Key="Text.Operation.ApplyStashChanges" xml:space="preserve">Apply changes from '{0}'</x:String>
+  <x:String x:Key="Text.Operation.Archive" xml:space="preserve">Archive</x:String>
+  <x:String x:Key="Text.Operation.AutoFetch" xml:space="preserve">Auto-Fetch</x:String>
+  <x:String x:Key="Text.Operation.Bisect" xml:space="preserve">Bisect({0})</x:String>
+  <x:String x:Key="Text.Operation.ChangeSubmoduleUrl" xml:space="preserve">Change Submodule's URL</x:String>
+  <x:String x:Key="Text.Operation.CheckoutBranch" xml:space="preserve">Checkout Branch '{0}'</x:String>
+  <x:String x:Key="Text.Operation.CheckoutCommit" xml:space="preserve">Checkout Commit</x:String>
+  <x:String x:Key="Text.Operation.CheckoutFastForward" xml:space="preserve">Checkout and Fast-Forward '{0}' ...</x:String>
+  <x:String x:Key="Text.Operation.CheckoutRef" xml:space="preserve">Checkout '{0}'</x:String>
+  <x:String x:Key="Text.Operation.CherryPick" xml:space="preserve">Cherry-Pick</x:String>
+  <x:String x:Key="Text.Operation.Cleanup" xml:space="preserve">Cleanup (GC &amp; prune)</x:String>
+  <x:String x:Key="Text.Operation.ClearStashes" xml:space="preserve">Clear Stashes</x:String>
+  <x:String x:Key="Text.Operation.Clone" xml:space="preserve">Clone</x:String>
+  <x:String x:Key="Text.Operation.Commit" xml:space="preserve">Commit</x:String>
+  <x:String x:Key="Text.Operation.Continue" xml:space="preserve">Continue {0}</x:String>
+  <x:String x:Key="Text.Operation.CreateBranch" xml:space="preserve">Create Branch '{0}'</x:String>
+  <x:String x:Key="Text.Operation.CreateTag" xml:space="preserve">Create Tag</x:String>
+  <x:String x:Key="Text.Operation.DeinitSubmodule" xml:space="preserve">De-initialize Submodule</x:String>
+  <x:String x:Key="Text.Operation.DeleteBranch" xml:space="preserve">Delete Branch</x:String>
+  <x:String x:Key="Text.Operation.DeleteBranches" xml:space="preserve">Delete Multiple Branches</x:String>
+  <x:String x:Key="Text.Operation.DeleteRemote" xml:space="preserve">Delete Remote</x:String>
+  <x:String x:Key="Text.Operation.DeleteSubmodule" xml:space="preserve">Delete Submodule</x:String>
+  <x:String x:Key="Text.Operation.DeleteTag" xml:space="preserve">Delete Tag</x:String>
+  <x:String x:Key="Text.Operation.DeleteTags" xml:space="preserve">Delete Multiple Tags</x:String>
+  <x:String x:Key="Text.Operation.Discard" xml:space="preserve">Discard Changes</x:String>
+  <x:String x:Key="Text.Operation.DropStash" xml:space="preserve">Drop Stash</x:String>
+  <x:String x:Key="Text.Operation.EditBranchDescription" xml:space="preserve">Edit Branch Description</x:String>
+  <x:String x:Key="Text.Operation.ExcelMerge" xml:space="preserve">Excel Merge</x:String>
+  <x:String x:Key="Text.Operation.Fetch" xml:space="preserve">Fetch</x:String>
+  <x:String x:Key="Text.Operation.FetchInto" xml:space="preserve">Fetch Into '{0}'</x:String>
+  <x:String x:Key="Text.Operation.GitFlowFinish" xml:space="preserve">GitFlow - Finish</x:String>
+  <x:String x:Key="Text.Operation.GitFlowInit" xml:space="preserve">Gitflow - Init</x:String>
+  <x:String x:Key="Text.Operation.GitFlowStart" xml:space="preserve">GitFlow - Start</x:String>
+  <x:String x:Key="Text.Operation.Init" xml:space="preserve">Initialize</x:String>
+  <x:String x:Key="Text.Operation.InteractiveRebase" xml:space="preserve">Interactive Rebase</x:String>
+  <x:String x:Key="Text.Operation.LFSFetch" xml:space="preserve">LFS Fetch</x:String>
+  <x:String x:Key="Text.Operation.LFSInstall" xml:space="preserve">Install LFS</x:String>
+  <x:String x:Key="Text.Operation.LFSLockFile" xml:space="preserve">Lock LFS File</x:String>
+  <x:String x:Key="Text.Operation.LFSPrune" xml:space="preserve">LFS Prune</x:String>
+  <x:String x:Key="Text.Operation.LFSPull" xml:space="preserve">LFS Pull</x:String>
+  <x:String x:Key="Text.Operation.LFSPush" xml:space="preserve">LFS Push</x:String>
+  <x:String x:Key="Text.Operation.LFSTrack" xml:space="preserve">Track LFS</x:String>
+  <x:String x:Key="Text.Operation.LFSTrackCustom" xml:space="preserve">LFS Add Custom Pattern</x:String>
+  <x:String x:Key="Text.Operation.LFSUnlock" xml:space="preserve">Unlock LFS Locks</x:String>
+  <x:String x:Key="Text.Operation.LFSUnlockFile" xml:space="preserve">Unlock LFS File</x:String>
+  <x:String x:Key="Text.Operation.LockWorktree" xml:space="preserve">Lock Worktree</x:String>
+  <x:String x:Key="Text.Operation.Merge" xml:space="preserve">Merging '{0}' into '{1}'</x:String>
+  <x:String x:Key="Text.Operation.MergeMultiple" xml:space="preserve">Merge Multiple Heads</x:String>
+  <x:String x:Key="Text.Operation.MergeName" xml:space="preserve">Merge</x:String>
+  <x:String x:Key="Text.Operation.MoveSubmodule" xml:space="preserve">Move Submodule</x:String>
+  <x:String x:Key="Text.Operation.PruneRemote" xml:space="preserve">Prune Remote '{0}'</x:String>
+  <x:String x:Key="Text.Operation.Pull" xml:space="preserve">Pull</x:String>
+  <x:String x:Key="Text.Operation.PullPush" xml:space="preserve">Pull and Push</x:String>
+  <x:String x:Key="Text.Operation.Push" xml:space="preserve">Push</x:String>
+  <x:String x:Key="Text.Operation.PushRevision" xml:space="preserve">Push Revision</x:String>
+  <x:String x:Key="Text.Operation.PushTag" xml:space="preserve">Push Tag</x:String>
+  <x:String x:Key="Text.Operation.Rebase" xml:space="preserve">Rebase</x:String>
+  <x:String x:Key="Text.Operation.RemoveAssumeUnchanged" xml:space="preserve">Remove Assume Unchanged File</x:String>
+  <x:String x:Key="Text.Operation.RemoveWorktree" xml:space="preserve">Remove worktree</x:String>
+  <x:String x:Key="Text.Operation.RenameBranch" xml:space="preserve">Rename Branch '{0}'</x:String>
+  <x:String x:Key="Text.Operation.ResetBranch" xml:space="preserve">Reset '{0}' to '{1}'</x:String>
+  <x:String x:Key="Text.Operation.ResetFile" xml:space="preserve">Reset File to '{0}'</x:String>
+  <x:String x:Key="Text.Operation.ResetFiles" xml:space="preserve">Reset Files to '{0}'</x:String>
+  <x:String x:Key="Text.Operation.ResetHead" xml:space="preserve">Reset HEAD to '{0}'</x:String>
+  <x:String x:Key="Text.Operation.Revert" xml:space="preserve">Revert</x:String>
+  <x:String x:Key="Text.Operation.RevertCommit" xml:space="preserve">Revert '{0}'</x:String>
+  <x:String x:Key="Text.Operation.SaveCommitAsPatch" xml:space="preserve">Save Commit as Patch</x:String>
+  <x:String x:Key="Text.Operation.SetSubmoduleBranch" xml:space="preserve">Set Submodule's Branch</x:String>
+  <x:String x:Key="Text.Operation.SetUpstream" xml:space="preserve">Set Upstream</x:String>
+  <x:String x:Key="Text.Operation.Skip" xml:space="preserve">Skip {0}</x:String>
+  <x:String x:Key="Text.Operation.Stage" xml:space="preserve">Stage</x:String>
+  <x:String x:Key="Text.Operation.Stash" xml:space="preserve">Stash Local Changes</x:String>
+  <x:String x:Key="Text.Operation.TrustRepository" xml:space="preserve">Trust Repository</x:String>
+  <x:String x:Key="Text.Operation.UnlockWorktree" xml:space="preserve">Unlock Worktree</x:String>
+  <x:String x:Key="Text.Operation.Unstage" xml:space="preserve">Unstage</x:String>
+  <x:String x:Key="Text.Operation.UpdateSubmodule" xml:space="preserve">Update Submodule</x:String>
+  <x:String x:Key="Text.Operation.UseMine" xml:space="preserve">Use Mine</x:String>
+  <x:String x:Key="Text.Operation.UseTheirs" xml:space="preserve">Use Theirs</x:String>
+  <x:String x:Key="Text.Progress.AddRemote" xml:space="preserve">Adding remote ...</x:String>
+  <x:String x:Key="Text.Progress.AddSubmodule" xml:space="preserve">Adding submodule...</x:String>
+  <x:String x:Key="Text.Progress.AddToIgnore" xml:space="preserve">Adding Ignored File(s) ...</x:String>
+  <x:String x:Key="Text.Progress.AddWorktree" xml:space="preserve">Adding a new worktree ...</x:String>
+  <x:String x:Key="Text.Progress.ApplyPatch" xml:space="preserve">Apply patch...</x:String>
+  <x:String x:Key="Text.Progress.ApplyStash" xml:space="preserve">Applying stash: {0}</x:String>
+  <x:String x:Key="Text.Progress.Archive" xml:space="preserve">Archiving ...</x:String>
+  <x:String x:Key="Text.Progress.ChangeSubmoduleUrl" xml:space="preserve">Change submodule's url...</x:String>
+  <x:String x:Key="Text.Progress.Checkout" xml:space="preserve">Checkout '{0}' ...</x:String>
+  <x:String x:Key="Text.Progress.CheckoutBranchFromStash" xml:space="preserve">Checkout branch from stash...</x:String>
+  <x:String x:Key="Text.Progress.CheckoutCommit" xml:space="preserve">Checkout Commit '{0}' ...</x:String>
+  <x:String x:Key="Text.Progress.CheckoutFastForward" xml:space="preserve">Checkout and Fast-Forward '{0}' ...</x:String>
+  <x:String x:Key="Text.Progress.CheckoutLocalWorktree" xml:space="preserve">Checkout branch '{0}' as worktree ...</x:String>
+  <x:String x:Key="Text.Progress.CheckoutRemoteWorktree" xml:space="preserve">Checkout branch '{0}' as worktree ...</x:String>
+  <x:String x:Key="Text.Progress.CherryPick" xml:space="preserve">Cherry-Pick commit(s) ...</x:String>
+  <x:String x:Key="Text.Progress.Cleanup" xml:space="preserve">Cleanup (GC &amp; prune) ...</x:String>
+  <x:String x:Key="Text.Progress.ClearStashes" xml:space="preserve">Clear all stashes...</x:String>
+  <x:String x:Key="Text.Progress.Clone" xml:space="preserve">Clone ...</x:String>
+  <x:String x:Key="Text.Progress.CreateTag" xml:space="preserve">Create tag...</x:String>
+  <x:String x:Key="Text.Progress.DeinitSubmodule" xml:space="preserve">De-initialize Submodule</x:String>
+  <x:String x:Key="Text.Progress.DeleteBranch" xml:space="preserve">Deleting branch...</x:String>
+  <x:String x:Key="Text.Progress.DeleteBranches" xml:space="preserve">Deleting multiple branches...</x:String>
+  <x:String x:Key="Text.Progress.DeleteRemote" xml:space="preserve">Deleting remote ...</x:String>
+  <x:String x:Key="Text.Progress.DeleteSubmodule" xml:space="preserve">Deleting submodule ...</x:String>
+  <x:String x:Key="Text.Progress.DeleteTag" xml:space="preserve">Deleting tag '{0}' ...</x:String>
+  <x:String x:Key="Text.Progress.DeleteTags" xml:space="preserve">Deleting multiple tags...</x:String>
+  <x:String x:Key="Text.Progress.Discard" xml:space="preserve">Discard total {0} changes ...</x:String>
+  <x:String x:Key="Text.Progress.DiscardAll" xml:space="preserve">Discard all local changes ...</x:String>
+  <x:String x:Key="Text.Progress.DropStash" xml:space="preserve">Dropping stash: {0}</x:String>
+  <x:String x:Key="Text.Progress.EditRemote" xml:space="preserve">Editing remote '{0}' ...</x:String>
+  <x:String x:Key="Text.Progress.FastForward" xml:space="preserve">Fast-Forward ...</x:String>
+  <x:String x:Key="Text.Progress.GitFlowFinish" xml:space="preserve">Git Flow - Finish {0} ...</x:String>
+  <x:String x:Key="Text.Progress.GitFlowInit" xml:space="preserve">Init git-flow ...</x:String>
+  <x:String x:Key="Text.Progress.GitFlowStart" xml:space="preserve">Git Flow - Start {0}{1} ...</x:String>
+  <x:String x:Key="Text.Progress.Init" xml:space="preserve">Initialize git repository at: '{0}'</x:String>
+  <x:String x:Key="Text.Progress.LFSFetch" xml:space="preserve">Fetching LFS objects from remote ...</x:String>
+  <x:String x:Key="Text.Progress.LFSPrune" xml:space="preserve">LFS prune ...</x:String>
+  <x:String x:Key="Text.Progress.LFSPull" xml:space="preserve">Pull LFS objects from remote ...</x:String>
+  <x:String x:Key="Text.Progress.LFSPush" xml:space="preserve">Push LFS objects to remote ...</x:String>
+  <x:String x:Key="Text.Progress.LFSTrackCustom" xml:space="preserve">Adding custom LFS tracking pattern ...</x:String>
+  <x:String x:Key="Text.Progress.Merge" xml:space="preserve">Merging '{0}' into '{1}' ...</x:String>
+  <x:String x:Key="Text.Progress.MergeMultiple" xml:space="preserve">Merge head(s) ...</x:String>
+  <x:String x:Key="Text.Progress.MoveSubmodule" xml:space="preserve">Moving submodule ...</x:String>
+  <x:String x:Key="Text.Progress.OpenRepository" xml:space="preserve">Opening '{0}' ...</x:String>
+  <x:String x:Key="Text.Progress.PruneRemote" xml:space="preserve">Run `prune` on remote ...</x:String>
+  <x:String x:Key="Text.Progress.PruneWorktrees" xml:space="preserve">Prune worktrees ...</x:String>
+  <x:String x:Key="Text.Progress.Push" xml:space="preserve">Push {0} -&gt; {1} ...</x:String>
+  <x:String x:Key="Text.Progress.PushRevision" xml:space="preserve">Push {0} -&gt; {1} ...</x:String>
+  <x:String x:Key="Text.Progress.PushTag" xml:space="preserve">Pushing tag ...</x:String>
+  <x:String x:Key="Text.Progress.Rebase" xml:space="preserve">Rebasing ...</x:String>
+  <x:String x:Key="Text.Progress.RegisterRepository" xml:space="preserve">Registering ({0}/{1}) {2}...</x:String>
+  <x:String x:Key="Text.Progress.RemoveWorktree" xml:space="preserve">Remove worktree ...</x:String>
+  <x:String x:Key="Text.Progress.RenameBranch" xml:space="preserve">Rename '{0}'</x:String>
+  <x:String x:Key="Text.Progress.Reset" xml:space="preserve">Reset current branch to {0} ...</x:String>
+  <x:String x:Key="Text.Progress.ResetBranch" xml:space="preserve">Reset {0} to {1} ...</x:String>
+  <x:String x:Key="Text.Progress.Revert" xml:space="preserve">Revert commit '{0}' ...</x:String>
+  <x:String x:Key="Text.Progress.RunCustomAction" xml:space="preserve">Run custom action ...</x:String>
+  <x:String x:Key="Text.Progress.ScanDirectory" xml:space="preserve">Scanning {0}...</x:String>
+  <x:String x:Key="Text.Progress.ScanRepositories" xml:space="preserve">Scan repositories under '{0}' ...</x:String>
+  <x:String x:Key="Text.Progress.SetPushUrl" xml:space="preserve">Set PushURL for '{0}' ...</x:String>
+  <x:String x:Key="Text.Progress.SetUpstream" xml:space="preserve">Setting upstream...</x:String>
+  <x:String x:Key="Text.Progress.Stash" xml:space="preserve">Stash changes ...</x:String>
+  <x:String x:Key="Text.Progress.SubmoduleBranch" xml:space="preserve">Set submodule's branch ...</x:String>
+  <x:String x:Key="Text.Progress.TrustRepository" xml:space="preserve">Adding '{0}' into git global `safe.directory` ...</x:String>
+  <x:String x:Key="Text.RepositoryFileError.FileTooLarge" xml:space="preserve">The file exceeds the supported size.</x:String>
+  <x:String x:Key="Text.RepositoryFileError.GitRead" xml:space="preserve">Git could not read the file.</x:String>
+  <x:String x:Key="Text.RepositoryFileError.GitStart" xml:space="preserve">Git could not be started.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.HeaderMissing" xml:space="preserve">Worksheet {0} has no configuration header.</x:String>
+  <x:String x:Key="Text.RepositoryFileError.IncompleteLFS" xml:space="preserve">Git LFS did not return the complete file.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.IndexChanged" xml:space="preserve">The conflict index changed while the workbook was open.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.InvalidColumn" xml:space="preserve">The worksheet contains an invalid column.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.InvalidFields" xml:space="preserve">Worksheet {0} has an invalid ID or a cell outside the configuration fields.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.InvalidIndexEntry" xml:space="preserve">Git returned an invalid index entry.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.InvalidIndexStage" xml:space="preserve">Git returned an invalid conflict stage.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.InvalidPath" xml:space="preserve">Invalid workbook path: {0}</x:String>
+  <x:String x:Key="Text.SpreadsheetError.InvalidRow" xml:space="preserve">The worksheet contains an invalid row number.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.LocalSheetRemoved" xml:space="preserve">The local workbook removed worksheet {0}.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.MissingPart" xml:space="preserve">A workbook part is missing ({0}).</x:String>
+  <x:String x:Key="Text.SpreadsheetError.MissingSharedString" xml:space="preserve">A worksheet references a missing shared string.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.MissingVersions" xml:space="preserve">{0}: all three workbook versions are required.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.MissingWorksheetRef" xml:space="preserve">The workbook has a missing worksheet reference.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.NoVersions" xml:space="preserve">No workbook is available in either version.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.NoWorkbook" xml:space="preserve">The package has no workbook.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.NoWorksheets" xml:space="preserve">The workbook has no worksheets.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.PartTooLarge" xml:space="preserve">A workbook part is too large to display.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.RowLimit" xml:space="preserve">{0}: worksheet row limit exceeded.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.SchemaChange" xml:space="preserve">Worksheet {0} has an unsupported header or schema change.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.SheetsChanged" xml:space="preserve">The remote workbook has added, removed, or renamed a worksheet.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.TooManyCells" xml:space="preserve">The workbook has too many cells to display.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.TooManySharedStrings" xml:space="preserve">The workbook has too many shared strings to display.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.UnresolvedRows" xml:space="preserve">Some spreadsheet rows still need a decision.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.UnsupportedFormula" xml:space="preserve">{0}: the selected result would move or replace a shared or array formula.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.Verification" xml:space="preserve">{0}: workbook verification failed.</x:String>
+  <x:String x:Key="Text.SpreadsheetError.WorkingFileChanged" xml:space="preserve">{0}: the working file changed while the workbook was open.</x:String>
+  <x:String x:Key="Text.Validation.AddWorktreeContext" xml:space="preserve">Missing runtime context to add worktree!</x:String>
+  <x:String x:Key="Text.Validation.BranchNameFormat" xml:space="preserve">Bad branch name format!</x:String>
+  <x:String x:Key="Text.Validation.CheckoutWorktreeContext" xml:space="preserve">Missing runtime context to checkout branch as worktree!</x:String>
+  <x:String x:Key="Text.Validation.CreateBranchContext" xml:space="preserve">Missing runtime context to create branch!</x:String>
+  <x:String x:Key="Text.Validation.DuplicateRemoteUrl" xml:space="preserve">A remote with the same url already exists!!!</x:String>
+  <x:String x:Key="Text.Validation.ExistingBranch" xml:space="preserve">A branch with same name already exists!</x:String>
+  <x:String x:Key="Text.Validation.ExistingBranchNamed" xml:space="preserve">A branch with name '{0}' already exists!</x:String>
+  <x:String x:Key="Text.Validation.ExistingRemote" xml:space="preserve">A remote with given name already exists!!!</x:String>
+  <x:String x:Key="Text.Validation.ExistingTag" xml:space="preserve">A tag with same name already exists!</x:String>
+  <x:String x:Key="Text.Validation.FileMissing" xml:space="preserve">File '{0}' can NOT be found!!!</x:String>
+  <x:String x:Key="Text.Validation.InvalidBranchName" xml:space="preserve">{0} is not a valid branch name!</x:String>
+  <x:String x:Key="Text.Validation.InvalidContext" xml:space="preserve">Invalid object instance!!!</x:String>
+  <x:String x:Key="Text.Validation.InvalidRemoteRepoUrl" xml:space="preserve">Invalid remote repository URL format</x:String>
+  <x:String x:Key="Text.Validation.InvalidRemoteUrl" xml:space="preserve">Bad remote URL format!!!</x:String>
+  <x:String x:Key="Text.Validation.InvalidRepoUrl" xml:space="preserve">Invalid repository URL format</x:String>
+  <x:String x:Key="Text.Validation.NonEmptyPath" xml:space="preserve">Given path is not empty!!!</x:String>
+  <x:String x:Key="Text.Validation.PassphraseCharacters" xml:space="preserve">Passphrase can only contain letters, numbers, and special characters: _ + - = @ # $ % ! &amp;</x:String>
+  <x:String x:Key="Text.Validation.PassphraseMismatch" xml:space="preserve">Passphrase and confirmation do not match!</x:String>
+  <x:String x:Key="Text.Validation.PassphraseRequired" xml:space="preserve">Passphrase is required!</x:String>
+  <x:String x:Key="Text.Validation.PathMissing" xml:space="preserve">Given path can NOT be found</x:String>
+  <x:String x:Key="Text.Validation.SSHKeyMissing" xml:space="preserve">Given SSH private key can NOT be found!</x:String>
+  <x:String x:Key="Text.Validation.SameGitFlowBranch" xml:space="preserve">Develop branch has the same name with production branch!</x:String>
+  <x:String x:Key="Text.Validation.SelectPatch" xml:space="preserve">Please select a patch file!!!</x:String>
+  <x:String x:Key="Text.Validation.TagNameFormat" xml:space="preserve">Bad tag name format!</x:String>
+  <x:String x:Key="Text.Validation.TagPrefixFormat" xml:space="preserve">Bad tag prefix format!</x:String>
+  <x:String x:Key="Text.Validation.WorktreePath" xml:space="preserve">Worktree path is required!</x:String>
+  <x:String x:Key="Text.AddToIgnore.LocalOnly" xml:space="preserve">LOCAL ONLY</x:String>
+  <x:String x:Key="Text.ConfigureCustomActionControls.CheckBox" xml:space="preserve">Check Box</x:String>
+  <x:String x:Key="Text.ConfigureCustomActionControls.ComboBox" xml:space="preserve">Combo Box</x:String>
+  <x:String x:Key="Text.ConfigureCustomActionControls.LocalBranchSelector" xml:space="preserve">Local Branch Selector</x:String>
+  <x:String x:Key="Text.ConfigureCustomActionControls.PathSelector" xml:space="preserve">Path Selector</x:String>
+  <x:String x:Key="Text.ConfigureCustomActionControls.RemoteBranchSelector" xml:space="preserve">Remote Branch Selector</x:String>
+  <x:String x:Key="Text.ConfigureCustomActionControls.TextBox" xml:space="preserve">Text Box</x:String>
+  <x:String x:Key="Text.Diagnostics.CreateSSHDirectory" xml:space="preserve">Failed to create .ssh directory: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.GenerateSSHKey" xml:space="preserve">Failed to generate SSH key: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.SSHKeyFilesMissing" xml:space="preserve">Failed to generate SSH key: Key files not found.</x:String>
+  <x:String x:Key="Text.EditApiKey.PlainText" xml:space="preserve">Plain Text</x:String>
+  <x:String x:Key="Text.EditApiKey.SystemKeychain" xml:space="preserve">System Keychain</x:String>
+  <x:String x:Key="Text.Operation.AssumeUnchanged" xml:space="preserve">Assume File Unchanged</x:String>
+  <x:String x:Key="Text.Operation.PruneWorktrees" xml:space="preserve">Prune Worktrees</x:String>
+  <x:String x:Key="Text.Validation.BranchNameRequired" xml:space="preserve">Branch name is required!</x:String>
+  <x:String x:Key="Text.Validation.ChangeTypeRequired" xml:space="preserve">Type of changes can not be null</x:String>
+  <x:String x:Key="Text.Validation.DevelopmentBranchRequired" xml:space="preserve">Development branch name is required!!!</x:String>
+  <x:String x:Key="Text.Validation.EmailFormat" xml:space="preserve">Invalid email address.</x:String>
+  <x:String x:Key="Text.Validation.EmailRequired" xml:space="preserve">Email is required.</x:String>
+  <x:String x:Key="Text.Validation.FeaturePrefixFormat" xml:space="preserve">Bad feature prefix format!</x:String>
+  <x:String x:Key="Text.Validation.FeaturePrefixRequired" xml:space="preserve">Feature prefix is required!!!</x:String>
+  <x:String x:Key="Text.Validation.GroupNameRequired" xml:space="preserve">Group name is required!</x:String>
+  <x:String x:Key="Text.Validation.HotfixPrefixFormat" xml:space="preserve">Bad hotfix prefix format!</x:String>
+  <x:String x:Key="Text.Validation.HotfixPrefixRequired" xml:space="preserve">Hotfix prefix is required!!!</x:String>
+  <x:String x:Key="Text.Validation.IgnorePatternRequired" xml:space="preserve">Ignore pattern is required!</x:String>
+  <x:String x:Key="Text.Validation.LFSPatternRequired" xml:space="preserve">LFS track pattern is required!!!</x:String>
+  <x:String x:Key="Text.Validation.LocalBranchRequired" xml:space="preserve">Local branch is required!!!</x:String>
+  <x:String x:Key="Text.Validation.NameRequired" xml:space="preserve">Name is required!</x:String>
+  <x:String x:Key="Text.Validation.OutputFileRequired" xml:space="preserve">Output file name is required</x:String>
+  <x:String x:Key="Text.Validation.ParentFolderRequired" xml:space="preserve">Parent folder is required</x:String>
+  <x:String x:Key="Text.Validation.PathRequired" xml:space="preserve">Path is required!!!</x:String>
+  <x:String x:Key="Text.Validation.ProductionBranchRequired" xml:space="preserve">Production branch name is required!!!</x:String>
+  <x:String x:Key="Text.Validation.PullBranchRequired" xml:space="preserve">Remote branch to pull is required!!!</x:String>
+  <x:String x:Key="Text.Validation.ReleasePrefixFormat" xml:space="preserve">Bad release prefix format!</x:String>
+  <x:String x:Key="Text.Validation.ReleasePrefixRequired" xml:space="preserve">Release prefix is required!!!</x:String>
+  <x:String x:Key="Text.Validation.RemoteBranchRequired" xml:space="preserve">Remote branch is required!!!</x:String>
+  <x:String x:Key="Text.Validation.RemoteNameFormat" xml:space="preserve">Bad remote name format!!!</x:String>
+  <x:String x:Key="Text.Validation.RemoteNameRequired" xml:space="preserve">Remote name is required!!!</x:String>
+  <x:String x:Key="Text.Validation.RemoteRequired" xml:space="preserve">Remote is required!!!</x:String>
+  <x:String x:Key="Text.Validation.RemoteUrlRequired" xml:space="preserve">Remote URL is required!!!</x:String>
+  <x:String x:Key="Text.Validation.RepositoryFolderRequired" xml:space="preserve">Repository folder is required</x:String>
+  <x:String x:Key="Text.Validation.SSHNameFormat" xml:space="preserve">Name can only contain letters, numbers, underscores, and hyphens.</x:String>
+  <x:String x:Key="Text.Validation.ShortDescriptionRequired" xml:space="preserve">Short description can not be empty</x:String>
+  <x:String x:Key="Text.Validation.StorageFileRequired" xml:space="preserve">Storage file is required!!!</x:String>
+  <x:String x:Key="Text.Validation.TagNameRequired" xml:space="preserve">Tag name is required!</x:String>
+  <x:String x:Key="Text.Validation.UrlRequired" xml:space="preserve">Url is required!!!</x:String>
+  <x:String x:Key="Text.Conflict.Mine" xml:space="preserve">MINE</x:String>
+  <x:String x:Key="Text.Conflict.Theirs" xml:space="preserve">THEIRS</x:String>
+  <x:String x:Key="Text.ExecuteCustomAction.Global" xml:space="preserve">GLOBAL</x:String>
+  <x:String x:Key="Text.File.Image" xml:space="preserve">IMAGE</x:String>
+  <x:String x:Key="Text.Repositories" xml:space="preserve">Repositories</x:String>
+  <x:String x:Key="Text.Unnamed" xml:space="preserve">Unnamed</x:String>
+  <x:String x:Key="Text.AI.Diagnostics.ModelFetchFailed" xml:space="preserve">Failed to fetch available models from this service. Please check your configuration and try again.</x:String>
+  <x:String x:Key="Text.AI.Diagnostics.ResponseFiltered" xml:space="preserve">Omitted content due to a content filter flag</x:String>
+  <x:String x:Key="Text.AI.Diagnostics.ResponseTruncated" xml:space="preserve">The response was cut off because it reached the maximum length. Consider increasing the max tokens limit.</x:String>
+  <x:String x:Key="Text.ConfigureWorkspace.DefaultName" xml:space="preserve">Default</x:String>
+  <x:String x:Key="Text.Diagnostics.CredentialDelete" xml:space="preserve">Failed to delete credential. Error code: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.CredentialHelperExit" xml:space="preserve">Credential helper exited with code {0}: {1}</x:String>
+  <x:String x:Key="Text.Diagnostics.CredentialHelperStart" xml:space="preserve">Failed to start credential helper: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.CredentialMissing" xml:space="preserve">Credential not found.</x:String>
+  <x:String x:Key="Text.Diagnostics.CredentialRead" xml:space="preserve">Failed to read credential. Error code: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.CredentialStore" xml:space="preserve">Failed to store credential. Error code: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.CredentialTooLong" xml:space="preserve">Password is too long. Maximum length is 2560 bytes.</x:String>
+  <x:String x:Key="Text.Diagnostics.CredentialUpdate" xml:space="preserve">Failed to update credential in keychain: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.InvalidRepositoryFile" xml:space="preserve">'{0}' is not in a valid git repository</x:String>
+  <x:String x:Key="Text.Diagnostics.NoRepositoryCommits" xml:space="preserve">{0} has no commits!</x:String>
+  <x:String x:Key="Text.Diagnostics.RepositoryFileMissing" xml:space="preserve">'{0}' does not exist in repository: '{1}'</x:String>
+  <x:String x:Key="Text.Diagnostics.SaveAndStage" xml:space="preserve">Failed to save and stage: {0}</x:String>
+  <x:String x:Key="Text.Diagnostics.SaveUnresolvedMerge" xml:space="preserve">Cannot save: there are still unresolved conflicts.</x:String>
 </ResourceDictionary>

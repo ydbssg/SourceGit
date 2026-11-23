@@ -12,7 +12,7 @@ namespace SourceGit.ViewModels
             private set;
         }
 
-        [Required(ErrorMessage = "Tag name is required!")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.TagNameRequired))]
         [CustomValidation(typeof(CreateTag), nameof(ValidateTagName))]
         public string TagName
         {
@@ -74,11 +74,11 @@ namespace SourceGit.ViewModels
             if (ctx.ObjectInstance is CreateTag creator)
             {
                 if (!Models.RefName.IsValidTagName(name))
-                    return new ValidationResult("Bad tag name format!");
+                    return new ValidationResult(App.Text("Validation.TagNameFormat"));
 
                 var found = creator._repo.Tags.Find(x => x.Name == name);
                 if (found != null)
-                    return new ValidationResult("A tag with same name already exists!");
+                    return new ValidationResult(App.Text("Validation.ExistingTag"));
             }
             return ValidationResult.Success;
         }
@@ -86,10 +86,10 @@ namespace SourceGit.ViewModels
         public override async Task<bool> Sure()
         {
             using var lockWatcher = _repo.LockWatcher();
-            ProgressDescription = "Create tag...";
+            ProgressDescription = App.Text("Progress.CreateTag");
 
             var remotes = PushToRemotes ? _repo.Remotes : null;
-            var log = _repo.CreateLog("Create Tag");
+            var log = _repo.CreateLog(App.Text("Operation.CreateTag"));
             Use(log);
 
             var cmd = new Commands.Tag(_repo.FullPath, _tagName)

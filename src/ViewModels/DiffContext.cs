@@ -54,7 +54,19 @@ namespace SourceGit.ViewModels
             _repo = repo;
             _option = option;
 
-            if (previous != null)
+            if (string.IsNullOrEmpty(_option.OrgPath) || _option.OrgPath == "/dev/null")
+                Title = _option.Path;
+            else
+                Title = $"{_option.OrgPath} → {_option.Path}";
+
+            if (_option.Path.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+            {
+                _isIgnoreWhitespaceVisible = false;
+                _content = new SpreadsheetDiff(_repo, _option);
+                return;
+            }
+
+            if (previous != null && previous._content is not (SpreadsheetDiff or ConfigTableDiff))
             {
                 _isTextDiff = previous._isTextDiff;
                 _isIgnoreWhitespaceVisible = previous._isIgnoreWhitespaceVisible;
@@ -64,11 +76,6 @@ namespace SourceGit.ViewModels
                 _unifiedLines = previous._unifiedLines;
                 _info = previous._info;
             }
-
-            if (string.IsNullOrEmpty(_option.OrgPath) || _option.OrgPath == "/dev/null")
-                Title = _option.Path;
-            else
-                Title = $"{_option.OrgPath} → {_option.Path}";
 
             LoadContent();
         }
@@ -145,7 +152,12 @@ namespace SourceGit.ViewModels
                 _info = info;
 
                 object rs = null;
-                if (latest.TextDiff is { } textDiff)
+                if (!latest.IsSubmoduleChange && Models.ConfigTableReader.GetSchemaPath(_option.Path) != null)
+                {
+                    var summary = await CreateBinaryDiffAsync().ConfigureAwait(false);
+                    rs = new ConfigTableDiff(_repo, _option, summary);
+                }
+                else if (latest.TextDiff is { } textDiff)
                 {
                     rs = textDiff;
                 }
@@ -266,47 +278,25 @@ namespace SourceGit.ViewModels
 
         private async Task<Models.BinaryDiff> CreateBinaryDiffAsync()
         {
-            var oldPath = string.IsNullOrEmpty(_option.OrgPath) ? _option.Path : _option.OrgPath;
-            var binaryDiff = new Models.BinaryDiff();
-            var fullPath = Path.Combine(_repo, _option.Path);
-
-            binaryDiff.Repository = _repo;
-            binaryDiff.FilePath = _option.Path;
-
-            if (_option.Revisions.Count == 2) // Two revisions are specified, compare them
+            return new Models.BinaryDiff
             {
-                if (_option.Revisions[0].Equals("-R", StringComparison.Ordinal)) // `-R` means the old side is the working tree
-                    binaryDiff.OldSize = File.Exists(fullPath) ? new FileInfo(fullPath).Length : 0;
-                else
-                    binaryDiff.OldSize = await new Commands.QueryFileSize(_repo, oldPath, _option.Revisions[0]).GetResultAsync().ConfigureAwait(false);
+                Repository = _repo,
+                FilePath = _option.NewFile?.Path ?? _option.Path,
+                NewRevision = _option.NewFile?.Revision,
+                OldSize = await GetBinaryFileSizeAsync(_option.OldFile).ConfigureAwait(false),
+                NewSize = await GetBinaryFileSizeAsync(_option.NewFile).ConfigureAwait(false),
+            };
+        }
 
-                if (string.IsNullOrEmpty(_option.Revisions[1])) // Empty string in the second revision means the new side is the working tree
-                {
-                    binaryDiff.NewSize = File.Exists(fullPath) ? new FileInfo(fullPath).Length : 0;
-                    binaryDiff.NewRevision = null;
-                }
-                else
-                {
-                    binaryDiff.NewSize = await new Commands.QueryFileSize(_repo, _option.Path, _option.Revisions[1]).GetResultAsync().ConfigureAwait(false);
-                    binaryDiff.NewRevision = _option.Revisions[1];
-                }
-            }
-            else if (_option.IsUnstaged) // Unstaged change compared to staged or HEAD
-            {
-                if (!oldPath.Equals("/dev/null", StringComparison.Ordinal))
-                    binaryDiff.OldSize = await new Commands.QueryFileSize(_repo, oldPath, string.Empty).GetResultAsync().ConfigureAwait(false);
+        private async Task<long> GetBinaryFileSizeAsync(Models.DiffFile? side)
+        {
+            if (side is not { } file)
+                return 0;
+            if (file.Revision != null)
+                return await new Commands.QueryFileSize(_repo, file.Path, file.Revision).GetResultAsync().ConfigureAwait(false);
 
-                binaryDiff.NewSize = File.Exists(fullPath) ? new FileInfo(fullPath).Length : 0;
-                binaryDiff.NewRevision = null;
-            }
-            else // Staged change compared to the last commit (HEAD)
-            {
-                binaryDiff.OldSize = await new Commands.QueryFileSize(_repo, oldPath, "HEAD").GetResultAsync().ConfigureAwait(false);
-                binaryDiff.NewSize = await new Commands.QueryFileSize(_repo, _option.Path, string.Empty).GetResultAsync().ConfigureAwait(false);
-                binaryDiff.NewRevision = string.Empty;
-            }
-
-            return binaryDiff;
+            var info = new FileInfo(Path.Combine(_repo, file.Path));
+            return info.Exists ? info.Length : 0;
         }
 
         private async Task<Models.SubmoduleDiff> CreateSubmoduleDiffAsync(string oldRevision, string newRevision)

@@ -4,6 +4,8 @@ using System.Text;
 
 namespace SourceGit.Models
 {
+    internal readonly record struct DiffFile(string Revision, string Path);
+
     public class DiffOption
     {
         public bool IsLocalChange => _revisions.Count == 0;
@@ -11,6 +13,8 @@ namespace SourceGit.Models
         public List<string> Revisions => _revisions;
         public string Path => _path;
         public string OrgPath => _orgPath;
+        internal DiffFile? OldFile { get; }
+        internal DiffFile? NewFile { get; }
 
         /// <summary>
         ///     Only used for working copy changes
@@ -22,6 +26,11 @@ namespace SourceGit.Models
             _isUnstaged = isUnstaged;
             _path = change.Path;
             _orgPath = change.OriginalPath;
+
+            var state = isUnstaged ? change.WorkTree : change.Index;
+            var oldPath = isUnstaged && state != ChangeState.Renamed ? _path : OriginalOrCurrentPath;
+            var oldRevision = isUnstaged ? string.Empty : change.DataForAmend?.ParentSHA ?? "HEAD";
+            (OldFile, NewFile) = GetFiles(oldRevision, oldPath, isUnstaged ? null : string.Empty, _path, state);
 
             if (isUnstaged)
             {
@@ -54,6 +63,7 @@ namespace SourceGit.Models
             _revisions.Add(commit.SHA);
             _path = change.Path;
             _orgPath = change.OriginalPath;
+            (OldFile, NewFile) = GetFiles(_revisions[0], OriginalOrCurrentPath, _revisions[1], _path, change.Index);
         }
 
         /// <summary>
@@ -76,6 +86,9 @@ namespace SourceGit.Models
                 _orgPath = ver.Change.OriginalPath;
                 _ignorePaths = true;
             }
+
+            (OldFile, NewFile) = GetFiles(ver.HasParent ? $"{ver.SHA}^" : EmptyTreeHash.Guess(ver.SHA),
+                OriginalOrCurrentPath, ver.SHA, _path, ver.Change.Index);
         }
 
         /// <summary>
@@ -85,6 +98,9 @@ namespace SourceGit.Models
         /// <param name="end"></param>
         public DiffOption(FileVersion start, FileVersion end)
         {
+            OldFile = start.Change.Index == ChangeState.Deleted ? null : new DiffFile(start.SHA, start.Path);
+            NewFile = end.Change.Index == ChangeState.Deleted ? null : new DiffFile(end.SHA, end.Path);
+
             if (start.Change.Index == ChangeState.Deleted)
             {
                 _revisions.Add(EmptyTreeHash.Guess(end.SHA));
@@ -125,6 +141,8 @@ namespace SourceGit.Models
             _revisions.Add(targetRevision);
             _path = change.Path;
             _orgPath = change.OriginalPath;
+            (OldFile, NewFile) = GetFiles(string.IsNullOrEmpty(baseRevision) ? null : baseRevision, OriginalOrCurrentPath,
+                string.IsNullOrEmpty(targetRevision) ? null : targetRevision, _path, change.Index);
         }
 
         /// <summary>
@@ -147,6 +165,21 @@ namespace SourceGit.Models
             builder.Append(_path.Quoted());
 
             return builder.ToString();
+        }
+
+        private string OriginalOrCurrentPath => string.IsNullOrEmpty(_orgPath) ? _path : _orgPath;
+
+        private static (DiffFile? Old, DiffFile? New) GetFiles(string oldRevision, string oldPath,
+            string newRevision, string newPath, ChangeState state)
+        {
+            var before = state is ChangeState.Added or ChangeState.Untracked || oldPath == "/dev/null" ||
+                (!string.IsNullOrEmpty(oldRevision) && oldRevision == EmptyTreeHash.Guess(oldRevision))
+                ? (DiffFile?)null
+                : new DiffFile(oldRevision, oldPath);
+            var after = state == ChangeState.Deleted || newPath == "/dev/null"
+                ? (DiffFile?)null
+                : new DiffFile(newRevision, newPath);
+            return (before, after);
         }
 
         private readonly bool _isUnstaged = false;

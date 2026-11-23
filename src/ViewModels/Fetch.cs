@@ -76,7 +76,7 @@ namespace SourceGit.ViewModels
 
             var notags = _repo.UIStates.FetchWithoutTags;
             var force = _repo.UIStates.EnableForceOnFetch;
-            var log = _repo.CreateLog("Fetch");
+            var log = _repo.CreateLog(App.Text("Operation.Fetch"));
             Use(log);
 
             _cancellation = new CancellationTokenSource();

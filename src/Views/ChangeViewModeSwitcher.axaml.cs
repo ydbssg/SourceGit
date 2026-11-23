@@ -41,6 +41,12 @@ namespace SourceGit.Views
             e.Handled = true;
         }
 
+        private void SwitchToFileType(object sender, RoutedEventArgs e)
+        {
+            ViewMode = Models.ChangeViewMode.FileType;
+            e.Handled = true;
+        }
+
         private Models.ChangeViewMode _viewMode = Models.ChangeViewMode.List;
     }
 }

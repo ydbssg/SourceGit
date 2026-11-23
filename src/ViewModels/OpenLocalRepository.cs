@@ -8,7 +8,7 @@ namespace SourceGit.ViewModels
 {
     public class OpenLocalRepository : Popup
     {
-        [Required(ErrorMessage = "Repository folder is required")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = nameof(ValidationMessages.RepositoryFolderRequired))]
         [CustomValidation(typeof(OpenLocalRepository), nameof(ValidateRepoPath))]
         public string RepoPath
         {
@@ -46,7 +46,7 @@ namespace SourceGit.ViewModels
         public static ValidationResult ValidateRepoPath(string folder, ValidationContext _)
         {
             if (!Directory.Exists(folder))
-                return new ValidationResult("Given path can NOT be found");
+                return new ValidationResult(App.Text("Validation.PathMissing"));
             return ValidationResult.Success;
         }
 

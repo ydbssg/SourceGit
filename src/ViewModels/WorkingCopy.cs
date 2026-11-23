@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -8,6 +9,13 @@ namespace SourceGit.ViewModels
 {
     public class WorkingCopy : ObservableObject
     {
+        public enum AfterCommit
+        {
+            None,
+            Push,
+            PullAndPush,
+        }
+
         public Repository Repository
         {
             get => _repo;
@@ -96,7 +104,7 @@ namespace SourceGit.ViewModels
                         var currentBranch = _repo.CurrentBranch;
                         if (currentBranch == null)
                         {
-                            _repo.SendNotification("No commits to amend!!!", true);
+                            _repo.SendNotification(App.Text("Diagnostics.NoAmend"), true);
                             _useAmend = false;
                             OnPropertyChanged();
                             return;
@@ -378,7 +386,7 @@ namespace SourceGit.ViewModels
 
             using var lockWatcher = _repo.LockWatcher();
 
-            var log = _repo.CreateLog("Stage");
+            var log = _repo.CreateLog(App.Text("Operation.Stage"));
             var pathSpecFile = Path.GetTempFileName();
             await using (var writer = new StreamWriter(pathSpecFile))
             {
@@ -405,7 +413,7 @@ namespace SourceGit.ViewModels
 
             using var lockWatcher = _repo.LockWatcher();
 
-            var log = _repo.CreateLog("Unstage");
+            var log = _repo.CreateLog(App.Text("Operation.Unstage"));
             if (_useAmend)
             {
                 log.AppendLine("$ git update-index --index-info ");
@@ -463,7 +471,7 @@ namespace SourceGit.ViewModels
 
             var files = new List<string>();
             var needStage = new List<string>();
-            var log = _repo.CreateLog("Use Theirs");
+            var log = _repo.CreateLog(App.Text("Operation.UseTheirs"));
 
             foreach (var change in changes)
             {
@@ -509,7 +517,7 @@ namespace SourceGit.ViewModels
 
             var files = new List<string>();
             var needStage = new List<string>();
-            var log = _repo.CreateLog("Use Mine");
+            var log = _repo.CreateLog(App.Text("Operation.UseMine"));
 
             foreach (var change in changes)
             {
@@ -570,7 +578,7 @@ namespace SourceGit.ViewModels
                 if (File.Exists(mergeMsgFile) && !string.IsNullOrWhiteSpace(_commitMessage))
                     await File.WriteAllTextAsync(mergeMsgFile, _commitMessage);
 
-                var log = _repo.CreateLog($"Continue {_inProgressContext.Name}");
+                var log = _repo.CreateLog(App.Text("Operation.Continue", _inProgressContext.Name));
                 await _inProgressContext.ContinueAsync(log);
                 log.Complete();
 
@@ -590,7 +598,7 @@ namespace SourceGit.ViewModels
                 using var lockWatcher = _repo.LockWatcher();
                 IsCommitting = true;
 
-                var log = _repo.CreateLog($"Skip {_inProgressContext.Name}");
+                var log = _repo.CreateLog(App.Text("Operation.Skip", _inProgressContext.Name));
                 await _inProgressContext.SkipAsync(log);
                 log.Complete();
 
@@ -610,7 +618,7 @@ namespace SourceGit.ViewModels
                 using var lockWatcher = _repo.LockWatcher();
                 IsCommitting = true;
 
-                var log = _repo.CreateLog($"Abort {_inProgressContext.Name}");
+                var log = _repo.CreateLog(App.Text("Operation.Abort", _inProgressContext.Name));
                 await _inProgressContext.AbortAsync(log);
                 log.Complete();
 
@@ -635,24 +643,40 @@ namespace SourceGit.ViewModels
                 _repo.UIStates.RecentCommitMessages.Clear();
         }
 
-        public async Task CommitAsync(bool autoStage, bool autoPush)
+        public async Task CommitAsync(bool autoStage, AfterCommit followUp = AfterCommit.None)
         {
             if (string.IsNullOrWhiteSpace(_commitMessage))
                 return;
 
             if (!_repo.CanCreatePopup())
             {
-                _repo.SendNotification("Repository has an unfinished job! Please wait!", true);
+                _repo.SendNotification(App.Text("Diagnostics.RepositoryBusy"), true);
                 return;
             }
 
             if (autoStage && HasUnsolvedConflicts)
             {
-                _repo.SendNotification("Repository has unsolved conflict(s). Auto-stage and commit is disabled!", true);
+                _repo.SendNotification(App.Text("Diagnostics.UnresolvedConflicts"), true);
                 return;
             }
 
-            if (_repo.CurrentBranch is { IsDetachedHead: true })
+            var localBranch = _repo.CurrentBranch;
+            Models.Branch upstream = null;
+            Models.Remote remote = null;
+            if (followUp == AfterCommit.PullAndPush)
+            {
+                if (localBranch is { IsDetachedHead: false, Upstream: { Length: > 0 } trackedRef })
+                    upstream = _repo.Branches.Find(x => !x.IsLocal && x.FullName == trackedRef);
+                if (upstream != null)
+                    remote = _repo.Remotes.Find(x => x.Name == upstream.Remote);
+                if (remote == null)
+                {
+                    _repo.SendNotification(App.Text("WorkingCopy.CommitAndPullPush.NoUpstream"), true);
+                    return;
+                }
+            }
+
+            if (localBranch is { IsDetachedHead: true })
             {
                 var msg = App.Text("WorkingCopy.ConfirmCommitWithDetachedHead");
                 var sure = await App.AskConfirmAsync(msg);
@@ -668,6 +692,7 @@ namespace SourceGit.ViewModels
                     return;
             }
 
+            List<Models.Change> changesToStage = null;
             if (!_useAmend)
             {
                 if ((!autoStage && _staged.Count == 0) || (autoStage && _cached.Count == 0))
@@ -679,30 +704,47 @@ namespace SourceGit.ViewModels
                     if (rs == Models.ConfirmEmptyCommitResult.StageAllAndCommit)
                         autoStage = true;
                     else if (rs == Models.ConfirmEmptyCommitResult.StageSelectedAndCommit)
-                        await StageChangesAsync(_selectedUnstaged.Changes, null);
+                        changesToStage = _selectedUnstaged.Changes;
                 }
             }
 
+            if (!_repo.CanCreatePopup())
+                return;
+
             using var lockWatcher = _repo.LockWatcher();
             IsCommitting = true;
-            _repo.UIStates.AddRecentCommitMessage(_commitMessage);
+            try
+            {
+                if (followUp == AfterCommit.PullAndPush &&
+                    (!await IsOnPullBranchAsync(localBranch, upstream) || GetPullAbortCommand() != null || _repo.InProgressContext != null))
+                {
+                    _repo.SendNotification(App.Text("WorkingCopy.CommitAndPullPush.RepositoryChanged"), true);
+                    return;
+                }
 
-            if (autoStage && _unstaged.Count > 0)
-                await StageChangesAsync(_unstaged, null);
+                _repo.UIStates.AddRecentCommitMessage(_commitMessage);
+                if (autoStage && _unstaged.Count > 0)
+                    await StageChangesAsync(_unstaged, null);
+                else if (changesToStage != null)
+                    await StageChangesAsync(changesToStage, null);
 
-            var log = _repo.CreateLog("Commit");
-            var succ = await new Commands.Commit(_repo.FullPath, _commitMessage, EnableSignOff, NoVerifyOnCommit, _useAmend, _resetAuthor)
+                var log = _repo.CreateLog(App.Text("Operation.Commit"));
+                var succ = await new Commands.Commit(_repo.FullPath, _commitMessage, EnableSignOff, NoVerifyOnCommit, _useAmend, _resetAuthor)
                     .Use(log)
                     .RunAsync();
+                log.Complete();
 
-            log.Complete();
+                if (!succ)
+                    return;
 
-            if (succ)
-            {
                 UseAmend = false;
                 CommitMessage = string.Empty;
 
-                if (autoPush && _repo.Remotes.Count > 0)
+                if (followUp == AfterCommit.PullAndPush)
+                {
+                    await PullAndPushAsync(localBranch, remote, upstream);
+                }
+                else if (followUp == AfterCommit.Push && _repo.Remotes.Count > 0)
                 {
                     Models.Branch pushBranch = null;
                     if (_repo.CurrentBranch == null)
@@ -711,14 +753,116 @@ namespace SourceGit.ViewModels
                         pushBranch = new Models.Branch() { Name = currentBranchName };
                     }
 
-                    if (_repo.CanCreatePopup())
+                    if (_repo.CanCreatePopup(duringCommit: true))
                         await _repo.ShowAndStartPopupAsync(new Push(_repo, pushBranch));
                 }
             }
+            finally
+            {
+                IsCommitting = false;
+                _repo.MarkBranchesDirtyManually();
+                _repo.RefreshSubmodules();
+            }
+        }
 
-            _repo.MarkBranchesDirtyManually();
-            _repo.RefreshSubmodules(); // Committing will not change submodule's HEAD (stage already changes it), So we need refresh submodules here manually.
-            IsCommitting = false;
+        private async Task PullAndPushAsync(Models.Branch local, Models.Remote remote, Models.Branch upstream)
+        {
+            var repo = _repo.FullPath;
+            var log = _repo.CreateLog(App.Text("Operation.PullPush"));
+            try
+            {
+                if (!await IsOnPullBranchAsync(local, upstream) || GetPullAbortCommand() != null)
+                {
+                    _repo.SendNotification(App.Text("WorkingCopy.CommitAndPullPush.RepositoryChanged"), true);
+                    return;
+                }
+
+                if (!await new Commands.CountLocalChanges(repo, false).IsCleanAsync())
+                {
+                    _repo.SendNotification(App.Text("WorkingCopy.CommitAndPullPush.LocalChanges"), true);
+                    return;
+                }
+
+                var pulled = await new Commands.Pull(repo, remote, upstream, _repo.UIStates.PreferRebaseInsteadOfMerge, automatic: true)
+                    .Use(log)
+                    .ExecAsync();
+
+                var abort = GetPullAbortCommand();
+                if (abort != null)
+                {
+                    var excel = await SpreadsheetPullConflict.ResolveAsync(_repo, log, CancellationToken.None);
+                    if (excel == SpreadsheetPullResult.NotApplicable)
+                    {
+                        var aborted = await new Commands.Command { Context = repo, WorkingDirectory = repo, Args = abort }
+                            .Use(log)
+                            .ExecAsync();
+                        var notice = aborted ? "WorkingCopy.CommitAndPullPush.PullAborted" : "WorkingCopy.CommitAndPullPush.AbortFailed";
+                        _repo.SendNotification(App.Text(notice), true);
+                        return;
+                    }
+
+                    if (excel == SpreadsheetPullResult.Aborted)
+                        _repo.SendNotification(App.Text("WorkingCopy.CommitAndPullPush.PullAborted"), true);
+                    if (excel != SpreadsheetPullResult.Completed)
+                        return;
+                    pulled = true;
+                }
+
+                if (!pulled)
+                    return;
+
+                if (!await IsOnPullBranchAsync(local, upstream))
+                {
+                    _repo.SendNotification(App.Text("WorkingCopy.CommitAndPullPush.RepositoryChanged"), true);
+                    return;
+                }
+
+                await new Commands.Push(repo, local, remote, upstream, false, _repo.Submodules.Count > 0, false, false, false)
+                    .Use(log)
+                    .ExecAsync();
+            }
+            finally
+            {
+                log.Complete();
+                _repo.MarkWorkingCopyDirtyManually();
+            }
+        }
+
+        private async Task<bool> IsOnPullBranchAsync(Models.Branch local, Models.Branch upstream)
+        {
+            var repo = _repo.FullPath;
+            return await new Commands.QueryCurrentBranch(repo).GetResultAsync() == local.Name &&
+                await new Commands.QueryUpstreamOfCurrentBranch(repo).GetResultAsync() == upstream.FullName;
+        }
+
+        internal async Task ResolveSpreadsheetAsync(string path)
+        {
+            if (IsCommitting || !SpreadsheetPullConflict.HasPendingOperation(_repo))
+                return;
+
+            using var watcher = _repo.LockWatcher();
+            IsCommitting = true;
+            var log = _repo.CreateLog(App.Text("Operation.ExcelMerge"));
+            try
+            {
+                await SpreadsheetPullConflict.ResolveAsync(_repo, log, CancellationToken.None, path);
+            }
+            finally
+            {
+                log.Complete();
+                IsCommitting = false;
+                _repo.MarkWorkingCopyDirtyManually();
+            }
+        }
+
+        private string GetPullAbortCommand()
+        {
+            if (Directory.Exists(Path.Combine(_repo.GitDir, "rebase-merge")) || Directory.Exists(Path.Combine(_repo.GitDir, "rebase-apply")))
+                return "rebase --abort";
+            if (File.Exists(Path.Combine(_repo.GitDir, "MERGE_HEAD")))
+                return "merge --abort";
+
+            return null;
         }
 
         private List<Models.Change> GetVisibleChanges(List<Models.Change> changes)

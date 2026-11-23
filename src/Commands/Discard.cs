@@ -33,7 +33,7 @@ namespace SourceGit.Commands
                 }
                 catch (Exception e)
                 {
-                    Models.Notification.Send(repo, $"Failed to discard changes. Reason: {e.Message}", true);
+                    Models.Notification.Send(repo, App.Text("Diagnostics.Discard", e.Message), true);
                 }
 
                 if (includeIgnored)
@@ -80,7 +80,7 @@ namespace SourceGit.Commands
             }
             catch (Exception e)
             {
-                Models.Notification.Send(repo, $"Failed to discard changes. Reason: {e.Message}", true);
+                Models.Notification.Send(repo, App.Text("Diagnostics.Discard", e.Message), true);
             }
 
             if (restores.Count > 0)
