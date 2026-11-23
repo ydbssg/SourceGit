@@ -380,6 +380,13 @@
   <x:String x:Key="Text.DeleteTag.Tag" xml:space="preserve">标签名 ：</x:String>
   <x:String x:Key="Text.DeleteTag.WithRemote" xml:space="preserve">同时删除远程仓库中的此标签</x:String>
   <x:String x:Key="Text.Diff.Binary" xml:space="preserve">二进制文件</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable" xml:space="preserve">MiniFire 二进制配置表</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.Open" xml:space="preserve">查看配置差异</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.Loading" xml:space="preserve">正在解析配置表…</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.LoadFailed" xml:space="preserve">配置表解析失败。{0}</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.NoChanges" xml:space="preserve">配置值和字段类型均无变更。</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.FieldTypes" xml:space="preserve">字段类型</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.Hex" xml:space="preserve">查看十六进制</x:String>
   <x:String x:Key="Text.Diff.Binary.ViewContentOfNew" xml:space="preserve">查看新内容</x:String>
   <x:String x:Key="Text.Diff.EmptyFile" xml:space="preserve">空文件</x:String>
   <x:String x:Key="Text.Diff.First" xml:space="preserve">首个差异</x:String>
@@ -1361,11 +1368,11 @@
   <x:String x:Key="Text.Progress.Stash" xml:space="preserve">正在贮藏变更…</x:String>
   <x:String x:Key="Text.Progress.SubmoduleBranch" xml:space="preserve">正在设置子模块分支…</x:String>
   <x:String x:Key="Text.Progress.TrustRepository" xml:space="preserve">正在将 '{0}' 加入 Git 全局安全目录（safe.directory）…</x:String>
-  <x:String x:Key="Text.SpreadsheetError.FileTooLarge" xml:space="preserve">工作簿大小超过支持上限。</x:String>
-  <x:String x:Key="Text.SpreadsheetError.GitRead" xml:space="preserve">Git 无法读取工作簿。</x:String>
-  <x:String x:Key="Text.SpreadsheetError.GitStart" xml:space="preserve">无法启动 Git。</x:String>
+  <x:String x:Key="Text.RepositoryFileError.FileTooLarge" xml:space="preserve">文件大小超过支持上限。</x:String>
+  <x:String x:Key="Text.RepositoryFileError.GitRead" xml:space="preserve">Git 无法读取文件。</x:String>
+  <x:String x:Key="Text.RepositoryFileError.GitStart" xml:space="preserve">无法启动 Git。</x:String>
   <x:String x:Key="Text.SpreadsheetError.HeaderMissing" xml:space="preserve">工作表 {0} 缺少配置表头。</x:String>
-  <x:String x:Key="Text.SpreadsheetError.IncompleteLFS" xml:space="preserve">Git LFS 返回的工作簿不完整。</x:String>
+  <x:String x:Key="Text.RepositoryFileError.IncompleteLFS" xml:space="preserve">Git LFS 返回的文件不完整。</x:String>
   <x:String x:Key="Text.SpreadsheetError.IndexChanged" xml:space="preserve">打开工作簿期间，Git 索引中的冲突记录发生了变化。</x:String>
   <x:String x:Key="Text.SpreadsheetError.InvalidColumn" xml:space="preserve">工作表包含无效的列。</x:String>
   <x:String x:Key="Text.SpreadsheetError.InvalidFields" xml:space="preserve">工作表 {0} 中存在无效 ID，或有单元格位于配置字段之外。</x:String>

@@ -30,7 +30,7 @@ namespace SourceGit.ViewModels
             while (GetOperation(repo) is { } operation)
             {
                 cancellation.ThrowIfCancellationRequested();
-                var snapshot = await Commands.ReadSpreadsheetFile.ReadUnmergedAsync(repo.FullPath, cancellation);
+                var snapshot = await Commands.ReadRepositoryFile.ReadUnmergedAsync(repo.FullPath, cancellation);
                 if (snapshot == previous)
                     break;
 
@@ -68,7 +68,7 @@ namespace SourceGit.ViewModels
                         if (approved == false)
                         {
                             if (GetOperation(repo) != operation ||
-                                await Commands.ReadSpreadsheetFile.ReadUnmergedAsync(repo.FullPath, cancellation) != snapshot)
+                                await Commands.ReadRepositoryFile.ReadUnmergedAsync(repo.FullPath, cancellation) != snapshot)
                                 return SpreadsheetPullResult.Paused;
                             return await RunGitAsync(repo, $"{operation} --abort", log)
                                 ? SpreadsheetPullResult.Aborted : SpreadsheetPullResult.Paused;
@@ -82,7 +82,7 @@ namespace SourceGit.ViewModels
                     }
 
                     if (GetOperation(repo) != operation ||
-                        await Commands.ReadSpreadsheetFile.ReadUnmergedAsync(repo.FullPath, cancellation) != snapshot)
+                        await Commands.ReadRepositoryFile.ReadUnmergedAsync(repo.FullPath, cancellation) != snapshot)
                         throw new InvalidDataException(App.Text("SpreadsheetError.IndexChanged"));
                     foreach (var file in prepared)
                     {
@@ -171,9 +171,9 @@ namespace SourceGit.ViewModels
                 throw new InvalidDataException(App.Text("SpreadsheetError.InvalidPath", path));
 
             var workingHash = await HashWorkingFileAsync(fullPath, cancellation).ConfigureAwait(false);
-            await using var baseStream = await Commands.ReadSpreadsheetFile.OpenBlobAsync(repo, baseline, cancellation).ConfigureAwait(false);
-            await using var remoteStream = await Commands.ReadSpreadsheetFile.OpenBlobAsync(repo, remote, cancellation).ConfigureAwait(false);
-            var localStream = await Commands.ReadSpreadsheetFile.OpenBlobAsync(repo, local, cancellation).ConfigureAwait(false);
+            await using var baseStream = await Commands.ReadRepositoryFile.OpenBlobAsync(repo, baseline, cancellation).ConfigureAwait(false);
+            await using var remoteStream = await Commands.ReadRepositoryFile.OpenBlobAsync(repo, remote, cancellation).ConfigureAwait(false);
+            var localStream = await Commands.ReadRepositoryFile.OpenBlobAsync(repo, local, cancellation).ConfigureAwait(false);
             try
             {
                 var plan = SpreadsheetMergePlan.Create(path, SpreadsheetReader.Read(baseStream, cancellation),

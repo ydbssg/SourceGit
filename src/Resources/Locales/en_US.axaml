@@ -375,6 +375,13 @@
   <x:String x:Key="Text.DeleteTag.Tag" xml:space="preserve">Tag:</x:String>
   <x:String x:Key="Text.DeleteTag.WithRemote" xml:space="preserve">Delete from remote repositories</x:String>
   <x:String x:Key="Text.Diff.Binary" xml:space="preserve">BINARY DIFF</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable" xml:space="preserve">MiniFire Binary Config Table</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.Open" xml:space="preserve">View Config Diff</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.Loading" xml:space="preserve">Reading config table…</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.LoadFailed" xml:space="preserve">Could not read the config table. {0}</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.NoChanges" xml:space="preserve">No config values or field types changed.</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.FieldTypes" xml:space="preserve">Field types</x:String>
+  <x:String x:Key="Text.Diff.ConfigTable.Hex" xml:space="preserve">View Hex</x:String>
   <x:String x:Key="Text.Diff.Binary.ViewContentOfNew" xml:space="preserve">VIEW NEW CONTENT</x:String>
   <x:String x:Key="Text.Diff.EmptyFile" xml:space="preserve">EMPTY FILE</x:String>
   <x:String x:Key="Text.Diff.First" xml:space="preserve">First Difference</x:String>
@@ -1356,11 +1363,11 @@ Manually add a branch/tag history filter will disable this feature automatically
   <x:String x:Key="Text.Progress.Stash" xml:space="preserve">Stash changes ...</x:String>
   <x:String x:Key="Text.Progress.SubmoduleBranch" xml:space="preserve">Set submodule's branch ...</x:String>
   <x:String x:Key="Text.Progress.TrustRepository" xml:space="preserve">Adding '{0}' into git global `safe.directory` ...</x:String>
-  <x:String x:Key="Text.SpreadsheetError.FileTooLarge" xml:space="preserve">The workbook exceeds the supported size.</x:String>
-  <x:String x:Key="Text.SpreadsheetError.GitRead" xml:space="preserve">Git could not read the workbook.</x:String>
-  <x:String x:Key="Text.SpreadsheetError.GitStart" xml:space="preserve">Git could not be started.</x:String>
+  <x:String x:Key="Text.RepositoryFileError.FileTooLarge" xml:space="preserve">The file exceeds the supported size.</x:String>
+  <x:String x:Key="Text.RepositoryFileError.GitRead" xml:space="preserve">Git could not read the file.</x:String>
+  <x:String x:Key="Text.RepositoryFileError.GitStart" xml:space="preserve">Git could not be started.</x:String>
   <x:String x:Key="Text.SpreadsheetError.HeaderMissing" xml:space="preserve">Worksheet {0} has no configuration header.</x:String>
-  <x:String x:Key="Text.SpreadsheetError.IncompleteLFS" xml:space="preserve">Git LFS did not return the complete workbook.</x:String>
+  <x:String x:Key="Text.RepositoryFileError.IncompleteLFS" xml:space="preserve">Git LFS did not return the complete file.</x:String>
   <x:String x:Key="Text.SpreadsheetError.IndexChanged" xml:space="preserve">The conflict index changed while the workbook was open.</x:String>
   <x:String x:Key="Text.SpreadsheetError.InvalidColumn" xml:space="preserve">The worksheet contains an invalid column.</x:String>
   <x:String x:Key="Text.SpreadsheetError.InvalidFields" xml:space="preserve">Worksheet {0} has an invalid ID or a cell outside the configuration fields.</x:String>

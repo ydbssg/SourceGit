@@ -189,7 +189,7 @@ namespace SourceGit.ViewModels
             if (file == null)
                 return [];
 
-            await using var stream = await Commands.ReadSpreadsheetFile.OpenAsync(repo, file.Value, cancellation).ConfigureAwait(false);
+            await using var stream = await Commands.ReadRepositoryFile.OpenAsync(repo, file.Value, cancellation).ConfigureAwait(false);
             return Models.SpreadsheetReader.Read(stream, cancellation);
         }
 

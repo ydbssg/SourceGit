@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SourceGit.Commands
 {
-    internal static class ReadSpreadsheetFile
+    internal static class ReadRepositoryFile
     {
         public static async Task<Stream> OpenAsync(string repo, Models.DiffFile file, CancellationToken cancellation)
         {
@@ -61,7 +61,7 @@ namespace SourceGit.Commands
         private static async Task<Stream> OpenLFSAsync(string repo, Models.LFSObject pointer, string text, CancellationToken cancellation)
         {
             if (pointer.Size > MaxFileBytes)
-                throw new InvalidDataException(App.Text("SpreadsheetError.FileTooLarge"));
+                throw new InvalidDataException(App.Text("RepositoryFileError.FileTooLarge"));
 
             var dir = await new QueryGitCommonDir(repo).GetResultAsync().ConfigureAwait(false);
             cancellation.ThrowIfCancellationRequested();
@@ -76,7 +76,7 @@ namespace SourceGit.Commands
             if (stream.Length != pointer.Size)
             {
                 await stream.DisposeAsync().ConfigureAwait(false);
-                throw new InvalidDataException(App.Text("SpreadsheetError.IncompleteLFS"));
+                throw new InvalidDataException(App.Text("RepositoryFileError.IncompleteLFS"));
             }
 
             return stream;
@@ -91,7 +91,7 @@ namespace SourceGit.Commands
                 return stream;
 
             stream.Dispose();
-            throw new InvalidDataException(App.Text("SpreadsheetError.FileTooLarge"));
+            throw new InvalidDataException(App.Text("RepositoryFileError.FileTooLarge"));
         }
 
         private static async Task<Stream> ReadGitOutputAsync(string repo, string[] args, string input, CancellationToken cancellation)
@@ -111,7 +111,7 @@ namespace SourceGit.Commands
             foreach (var arg in args)
                 start.ArgumentList.Add(arg);
 
-            using var process = Process.Start(start) ?? throw new IOException(App.Text("SpreadsheetError.GitStart"));
+            using var process = Process.Start(start) ?? throw new IOException(App.Text("RepositoryFileError.GitStart"));
             var errors = process.StandardError.ReadToEndAsync(cancellation);
             var stream = new MemoryStream();
             try
@@ -128,7 +128,7 @@ namespace SourceGit.Commands
                 while ((count = await output.ReadAsync(buffer, cancellation).ConfigureAwait(false)) > 0)
                 {
                     if (stream.Length + count > MaxFileBytes)
-                        throw new InvalidDataException(App.Text("SpreadsheetError.FileTooLarge"));
+                        throw new InvalidDataException(App.Text("RepositoryFileError.FileTooLarge"));
                     stream.Write(buffer, 0, count);
                 }
 
@@ -136,7 +136,7 @@ namespace SourceGit.Commands
                 await process.WaitForExitAsync(cancellation).ConfigureAwait(false);
                 if (process.ExitCode != 0)
                     throw new IOException(string.IsNullOrEmpty(message)
-                        ? App.Text("SpreadsheetError.GitRead")
+                        ? App.Text("RepositoryFileError.GitRead")
                         : Models.GitOutputText.TranslateMessage(message));
 
                 stream.Position = 0;

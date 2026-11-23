@@ -231,6 +231,10 @@
             <v:SpreadsheetDiffView/>
           </DataTemplate>
 
+          <DataTemplate DataType="vm:ConfigTableDiff">
+            <v:ConfigTableDiffView/>
+          </DataTemplate>
+
           <!-- Binary Diff -->
           <DataTemplate DataType="m:BinaryDiff">
             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
