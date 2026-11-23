@@ -4,7 +4,6 @@ using System.IO;
 
 using Avalonia;
 using Avalonia.Platform;
-using Avalonia.Styling;
 
 using AvaloniaEdit;
 using AvaloniaEdit.TextMate;
@@ -127,7 +126,7 @@ namespace SourceGit.Models
     {
         public static TextMate.Installation CreateForEditor(TextEditor editor)
         {
-            return editor.InstallTextMate(Application.Current?.ActualThemeVariant == ThemeVariant.Dark ?
+            return editor.InstallTextMate(AppTheme.IsDark(Application.Current?.ActualThemeVariant) ?
                 new RegistryOptionsWrapper(ThemeName.DarkPlus) :
                 new RegistryOptionsWrapper(ThemeName.LightPlus));
         }
@@ -136,7 +135,7 @@ namespace SourceGit.Models
         {
             if (installation is { RegistryOptions: RegistryOptionsWrapper reg })
             {
-                var isDark = Application.Current?.ActualThemeVariant == ThemeVariant.Dark;
+                var isDark = AppTheme.IsDark(Application.Current?.ActualThemeVariant);
                 installation.SetTheme(reg.LoadTheme(isDark ? ThemeName.DarkPlus : ThemeName.LightPlus));
             }
         }

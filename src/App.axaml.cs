@@ -12,7 +12,6 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using Avalonia.Media.Fonts;
 using Avalonia.Platform;
-using Avalonia.Styling;
 using Avalonia.Threading;
 
 namespace SourceGit
@@ -125,12 +124,7 @@ namespace SourceGit
             if (Current is not App app)
                 return;
 
-            if (theme.Equals("Light", StringComparison.OrdinalIgnoreCase))
-                app.RequestedThemeVariant = ThemeVariant.Light;
-            else if (theme.Equals("Dark", StringComparison.OrdinalIgnoreCase))
-                app.RequestedThemeVariant = ThemeVariant.Dark;
-            else
-                app.RequestedThemeVariant = ThemeVariant.Default;
+            app.RequestedThemeVariant = Models.AppTheme.FromKey(theme);
 
             if (app._themeOverrides != null)
             {
@@ -554,7 +548,7 @@ namespace SourceGit
             menu.Items.Add(preferences);
             menu.Items.Add(quit);
 
-            var icon = new TrayIcon() { Icon = main.Icon, ToolTipText = "SourceGit", Menu = menu };
+            var icon = new TrayIcon() { Icon = main.Icon, ToolTipText = "SparkSourceGit", Menu = menu };
             icon.Clicked += (_, _) => main.BringToTop();
             TrayIcon.SetIcons(this, new TrayIcons { icon });
 

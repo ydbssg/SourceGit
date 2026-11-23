@@ -553,7 +553,7 @@ namespace SourceGit.Views
 
             var extentHeight = ExtentHeight;
             var width = extentHeight > Bounds.Height ? Bounds.Width - 12 : Bounds.Width;
-            var color = (Color)this.FindResource("SystemAccentColor")!;
+            var color = (Color)this.FindResource(ActualThemeVariant, "SystemAccentColor")!;
             var brush = new SolidColorBrush(color, 0.1);
             var pen = new Pen(color.ToUInt32());
             var rect = new Rect(0, chunk.Y, width, chunk.Height);

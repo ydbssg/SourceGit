@@ -255,7 +255,7 @@ namespace SourceGit.Views
                 if (string.IsNullOrEmpty(highlight))
                     return;
 
-                var color = (Color)_owner.FindResource("SystemAccentColor")!;
+                var color = (Color)_owner.FindResource(_owner.ActualThemeVariant, "SystemAccentColor")!;
                 var brush = new SolidColorBrush(color, 0.2);
                 var lines = _owner.BlameData.LineInfos;
 

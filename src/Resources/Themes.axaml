@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:m="using:SourceGit.Models">
   <ResourceDictionary.ThemeDictionaries>
     <ResourceDictionary x:Key="Light">
       <Color x:Key="Color.Window">#FFF4F4F4</Color>
@@ -67,6 +68,48 @@
       <Color x:Key="Color.InlineCode">#FF383838</Color>
       <Color x:Key="Color.InlineCodeFG">#FFF0F0F0</Color>
       <Color x:Key="Color.SubPanel">#FF272727</Color>
+    </ResourceDictionary>
+
+    <ResourceDictionary x:Key="{x:Static m:AppTheme.CodexDark}">
+      <Color x:Key="Color.Window">#FF19191B</Color>
+      <Color x:Key="Color.WindowBorder">#FF49494F</Color>
+      <Color x:Key="Color.TitleBar">#FF171719</Color>
+      <Color x:Key="Color.ToolBar">#FF1C1C1F</Color>
+      <Color x:Key="Color.Popup">#FF27272B</Color>
+      <Color x:Key="Color.PopupBorder">#FF3D3D45</Color>
+      <Color x:Key="Color.Contents">#FF202023</Color>
+      <Color x:Key="Color.Badge">#FF363640</Color>
+      <Color x:Key="Color.BadgeFG">#FFE3E3EB</Color>
+      <Color x:Key="Color.Conflict">#FFE4BC78</Color>
+      <Color x:Key="Color.Conflict.Foreground">#FF242022</Color>
+      <Color x:Key="Color.Conflict.MineBG">#554E75B9</Color>
+      <Color x:Key="Color.Conflict.TheirsBG">#55AA7538</Color>
+      <Color x:Key="Color.Border0">#FF303035</Color>
+      <Color x:Key="Color.Border1">#FF73737F</Color>
+      <Color x:Key="Color.Border2">#FF3B3B43</Color>
+      <Color x:Key="Color.FlatButton.Background">#FF29292E</Color>
+      <Color x:Key="Color.FlatButton.BackgroundHovered">#FF34343B</Color>
+      <Color x:Key="Color.FlatButton.FloatingBorder">#FF494953</Color>
+      <Color x:Key="Color.FG1">#FFF0F0F3</Color>
+      <Color x:Key="Color.FG2">#FFA9A9B3</Color>
+      <Color x:Key="Color.Diff.EmptyBG">#48000000</Color>
+      <Color x:Key="Color.Diff.AddedBG">#B02C503E</Color>
+      <Color x:Key="Color.Diff.DeletedBG">#B05D373E</Color>
+      <Color x:Key="Color.Diff.AddedHighlight">#B03C7656</Color>
+      <Color x:Key="Color.Diff.DeletedHighlight">#B08D4852</Color>
+      <Color x:Key="Color.Diff.BlockBorderHighlight">#FF7897DD</Color>
+      <Color x:Key="Color.Link">#FFA1B5F5</Color>
+      <Color x:Key="Color.InlineCode">#FF303039</Color>
+      <Color x:Key="Color.InlineCodeFG">#FFE5E5ED</Color>
+      <Color x:Key="Color.SubPanel">#FF232327</Color>
+      <Color x:Key="SystemAccentColor">#FF8298E2</Color>
+      <Color x:Key="SystemListLowColor">#FF373842</Color>
+      <SolidColorBrush x:Key="AccentButtonBackground">#FF455788</SolidColorBrush>
+      <SolidColorBrush x:Key="AccentButtonBackgroundPointerOver">#FF53679B</SolidColorBrush>
+      <SolidColorBrush x:Key="AccentButtonBackgroundPressed">#FF3A486F</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected">#FF363F5A</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPointerOver">#FF414C68</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPressed">#FF4A5674</SolidColorBrush>
     </ResourceDictionary>
   </ResourceDictionary.ThemeDictionaries>
 
