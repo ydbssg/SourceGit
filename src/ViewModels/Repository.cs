@@ -1052,6 +1052,16 @@ namespace SourceGit.ViewModels
                 OnPropertyChanged(nameof(FocusOnCurrentBranch));
             }
 
+            if (!clearExists && mode != Models.FilterMode.Included &&
+                node.Backend is Models.Branch { IsLocal: false } &&
+                _uiStates.IsRemoteBranchHiddenByFolder(node.Path))
+            {
+                var exceptionMode = mode == Models.FilterMode.VisibleInHiddenFolder ? mode : Models.FilterMode.None;
+                if (_uiStates.UpdateHistoryFilters(node.Path, Models.FilterType.RemoteBranch, exceptionMode))
+                    RefreshHistoryFilters(refresh);
+                return;
+            }
+
             var isLocal = node.Path.StartsWith("refs/heads/", StringComparison.Ordinal);
             var tree = isLocal ? _localBranchTrees : _remoteBranchTrees;
 
@@ -1276,6 +1286,7 @@ namespace SourceGit.ViewModels
                     .Append(Preferences.Instance.MaxHistoryCommits)
                     .Append(' ');
 
+                Predicate<Models.Decorator> hideDecoration = null;
                 if (_uiStates.FocusOnCurrentBranch)
                 {
                     var upstream = await new Commands.QueryUpstreamOfCurrentBranch(FullPath)
@@ -1285,7 +1296,18 @@ namespace SourceGit.ViewModels
                 }
                 else
                 {
-                    builder.Append(_uiStates.BuildHistoryParams_NormalMode(GitDir));
+                    var captured = await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        var parameters = _uiStates.BuildHistoryParams_NormalMode(GitDir, out var hide);
+                        return (parameters, hide);
+                    });
+                    hideDecoration = captured.hide;
+                    builder.Clear();
+                    builder
+                        .Append('-')
+                        .Append(Preferences.Instance.MaxHistoryCommits)
+                        .Append(' ')
+                        .Append(captured.parameters);
                 }
 
                 var commits = await new Commands.QueryCommits(FullPath, builder.ToString())
@@ -1295,6 +1317,9 @@ namespace SourceGit.ViewModels
                 var merged = new HashSet<string>();
                 foreach (var c in commits)
                 {
+                    if (hideDecoration != null)
+                        c.Decorators.RemoveAll(hideDecoration);
+
                     if (merged.Remove(c.SHA))
                         c.IsMerged = true;
 
@@ -1826,6 +1851,7 @@ namespace SourceGit.ViewModels
 
         private void RefreshHistoryFilters(bool refresh)
         {
+            _uiStates.RemoveOrphanedVisibilityExceptions();
             HistoryFilterMode = _uiStates.GetHistoryFilterMode();
             if (!refresh)
                 return;

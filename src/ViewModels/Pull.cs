@@ -51,6 +51,12 @@ namespace SourceGit.ViewModels
             set;
         }
 
+        public bool OnlySelectedRemoteBranch
+        {
+            get => _repo.UIStates.PullOnlySelectedRemoteBranch;
+            set => _repo.UIStates.PullOnlySelectedRemoteBranch = value;
+        }
+
         public bool UseRebase
         {
             get => _repo.UIStates.PreferRebaseInsteadOfMerge;
@@ -114,6 +120,18 @@ namespace SourceGit.ViewModels
 
         public override async Task<bool> Sure()
         {
+            if (SelectedRemote is not { } remote || SelectedBranch is not { } branch)
+                return false;
+
+            var onlySelectedRemoteBranch = OnlySelectedRemoteBranch;
+            var pull = new Commands.Pull(
+                _repo.FullPath,
+                remote,
+                branch,
+                Current.Upstream,
+                UseRebase,
+                onlySelectedRemoteBranch);
+
             using var lockWatcher = _repo.LockWatcher();
 
             var log = _repo.CreateLog(App.Text("Operation.Pull"));
@@ -121,6 +139,19 @@ namespace SourceGit.ViewModels
 
             _cancellation = new CancellationTokenSource();
             var token = _cancellation.Token;
+
+            // With an explicit branch, Git only fetches that ref during pull. Refresh the
+            // remote list first so the subsequent pull still integrates the chosen branch.
+            if (!onlySelectedRemoteBranch && branch.FullName != Current.Upstream)
+            {
+                var fetch = new Commands.Fetch(_repo.FullPath, remote, prune: true) { RaiseError = true };
+                if (!await fetch.WithCancellation(token).Use(log).ExecAsync() || token.IsCancellationRequested)
+                {
+                    log.Complete();
+                    _cancellation = null;
+                    return false;
+                }
+            }
 
             var changes = await new Commands.CountLocalChanges(_repo.FullPath, false).GetResultAsync();
             var needPopStash = false;
@@ -154,15 +185,7 @@ namespace SourceGit.ViewModels
             if (!token.IsCancellationRequested)
             {
                 var alreadyInProgress = SpreadsheetPullConflict.HasPendingOperation(_repo);
-                var target = _selectedBranch;
-                if (!string.IsNullOrEmpty(Current.Upstream) && target.FullName.Equals(Current.Upstream, StringComparison.Ordinal))
-                    target = null;
-
-                rs = await new Commands.Pull(
-                    _repo.FullPath,
-                    _selectedRemote,
-                    target,
-                    UseRebase).WithCancellation(token).Use(log).ExecAsync();
+                rs = await pull.WithCancellation(token).Use(log).ExecAsync();
 
                 if (!rs && !token.IsCancellationRequested && !alreadyInProgress)
                 {

@@ -20,6 +20,7 @@ namespace SourceGit.ViewModels
                     return _instance;
 
                 _instance = Load();
+                _instance.LoadAuthorBoxes();
                 _instance._isLoading = false;
 
                 _instance.PrepareGit();
@@ -473,6 +474,79 @@ namespace SourceGit.ViewModels
             set => SetProperty(ref _lastCheckUpdateTime, value);
         }
 
+        public Dictionary<string, string> AuthorBoxes
+        {
+            get => _authorBoxes;
+            set => _authorBoxes = value ?? new Dictionary<string, string>(StringComparer.Ordinal);
+        }
+
+        public static event Action AuthorBoxesChanged;
+
+        public string GetAuthorBoxColor(string authorName)
+        {
+            if (string.IsNullOrEmpty(authorName) || _authorBoxes == null)
+                return null;
+
+            return _authorBoxes.TryGetValue(authorName, out var color) ? color : null;
+        }
+
+        public void SetAuthorBox(string authorName, string color)
+        {
+            if (string.IsNullOrEmpty(authorName) || string.IsNullOrEmpty(color))
+                return;
+
+            _authorBoxes ??= new Dictionary<string, string>(StringComparer.Ordinal);
+            if (_authorBoxes.TryGetValue(authorName, out var current) && current == color)
+                return;
+
+            _authorBoxes[authorName] = color;
+            AuthorBoxesChanged?.Invoke();
+            WriteAuthorBoxes();
+            Save();
+        }
+
+        public void RemoveAuthorBox(string authorName)
+        {
+            if (string.IsNullOrEmpty(authorName) || _authorBoxes == null)
+                return;
+
+            if (!_authorBoxes.Remove(authorName))
+                return;
+
+            AuthorBoxesChanged?.Invoke();
+            WriteAuthorBoxes();
+            Save();
+        }
+
+        private void LoadAuthorBoxes()
+        {
+            try
+            {
+                var path = AuthorBoxFile();
+                if (!File.Exists(path))
+                    return;
+
+                var loaded = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(path));
+                if (loaded != null)
+                    _authorBoxes = loaded;
+            }
+            catch
+            {
+                // Keep the default map when the file cannot be read.
+            }
+        }
+
+        private void WriteAuthorBoxes()
+        {
+            var path = AuthorBoxFile();
+            File.WriteAllText(path, JsonSerializer.Serialize(_authorBoxes));
+        }
+
+        private static string AuthorBoxFile()
+        {
+            return Path.Combine(Native.OS.BasicDirectories.ConfigDir, "author-boxes.json");
+        }
+
         public void SetCanModify()
         {
             _isReadonly = false;
@@ -827,5 +901,6 @@ namespace SourceGit.ViewModels
 
         private string _gitDefaultCloneDir = string.Empty;
         private int _shellOrTerminalType = -1;
+        private Dictionary<string, string> _authorBoxes = new(StringComparer.Ordinal);
     }
 }

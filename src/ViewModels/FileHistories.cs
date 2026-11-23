@@ -232,8 +232,31 @@ namespace SourceGit.ViewModels
         public List<Models.FileVersion> Revisions
         {
             get => _revisions;
-            set => SetProperty(ref _revisions, value);
+            private set => SetProperty(ref _revisions, value);
         }
+
+        public DateTime? StartDate
+        {
+            get => _startDate;
+            set
+            {
+                if (SetProperty(ref _startDate, value?.Date))
+                    _ = RefreshHistoryAsync();
+            }
+        }
+
+        public DateTime? EndDate
+        {
+            get => _endDate;
+            set
+            {
+                if (SetProperty(ref _endDate, value?.Date))
+                    _ = RefreshHistoryAsync();
+            }
+        }
+
+        public bool IsDateRangeInvalid => StartDate > EndDate;
+        public bool HasNoRevisions => !IsLoading && !IsDateRangeInvalid && Revisions.Count == 0;
 
         public List<Models.FileVersion> SelectedRevisions
         {
@@ -259,19 +282,61 @@ namespace SourceGit.ViewModels
                 Title = file;
 
             _repo = repo;
+            _file = file;
+            _commit = commit;
+            _endDate = DateTime.Today;
+            _startDate = _endDate.Value.AddMonths(-2);
 
-            Task.Run(async () =>
+            _ = RefreshHistoryAsync();
+        }
+
+        private bool HasHistoryForStartDate =>
+            _allRevisions != null && (_loadedStartDate == null || StartDate >= _loadedStartDate);
+
+        private async Task RefreshHistoryAsync()
+        {
+            if (IsDateRangeInvalid || IsLoading || HasHistoryForStartDate)
             {
-                var revisions = await new Commands.QueryFileHistory(_repo, file, commit)
-                    .GetResultAsync()
-                    .ConfigureAwait(false);
+                RefreshRevisions();
+                return;
+            }
 
-                Dispatcher.UIThread.Post(() =>
+            IsLoading = true;
+            RefreshRevisions();
+            do
+            {
+                _loadedStartDate = StartDate;
+                // Let Git follow renames through revisions later than the selected end date.
+                _allRevisions = await new Commands.QueryFileHistory(_repo, _file, _commit, _loadedStartDate).GetResultAsync();
+            }
+            while (!IsDateRangeInvalid && !HasHistoryForStartDate);
+
+            IsLoading = false;
+            RefreshRevisions();
+        }
+
+        private void RefreshRevisions()
+        {
+            OnPropertyChanged(nameof(IsDateRangeInvalid));
+            if (IsDateRangeInvalid || _allRevisions == null)
+            {
+                Revisions = [];
+            }
+            else
+            {
+                var start = StartDate ?? DateTime.MinValue;
+                var end = EndDate ?? DateTime.MaxValue;
+                Revisions = _allRevisions.FindAll(revision =>
                 {
-                    IsLoading = false;
-                    Revisions = revisions;
+                    var date = DateTime.UnixEpoch.AddSeconds(revision.CommitterTime).ToLocalTime().Date;
+                    return date >= start && date <= end;
                 });
-            });
+            }
+
+            if (Revisions.Count == 0)
+                SelectedRevisions = [];
+
+            OnPropertyChanged(nameof(HasNoRevisions));
         }
 
         public void NavigateToCommit(Models.FileVersion revision)
@@ -326,9 +391,15 @@ namespace SourceGit.ViewModels
         }
 
         private readonly string _repo = null;
-        private bool _isLoading = true;
+        private readonly string _file;
+        private readonly string _commit;
+        private bool _isLoading;
         private FileHistoriesSingleRevisionViewMode _viewMode = new();
-        private List<Models.FileVersion> _revisions = null;
+        private DateTime? _startDate;
+        private DateTime? _endDate;
+        private DateTime? _loadedStartDate;
+        private List<Models.FileVersion> _allRevisions;
+        private List<Models.FileVersion> _revisions = [];
         private List<Models.FileVersion> _selectedRevisions = [];
         private Dictionary<string, string> _fullCommitMessages = new();
         private object _viewContent = null;

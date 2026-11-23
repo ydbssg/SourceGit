@@ -10,7 +10,7 @@ namespace SourceGit.Converters
             {
                 return v switch
                 {
-                    Models.FilterMode.Included => Brushes.Green,
+                    Models.FilterMode.Included or Models.FilterMode.VisibleInHiddenFolder => Brushes.Green,
                     Models.FilterMode.Excluded => Brushes.Red,
                     _ => Brushes.Transparent,
                 };

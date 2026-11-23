@@ -553,6 +553,17 @@
   <x:String x:Key="Text.GitLFS.TrackByExtension" xml:space="preserve">Track all *{0} files</x:String>
   <x:String x:Key="Text.GotoRevisionSelector" xml:space="preserve">Select Commit</x:String>
   <x:String x:Key="Text.Histories.AdvancedOptions" xml:space="preserve">Advanced Options</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Add" xml:space="preserve">Add box</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.ChangeColor" xml:space="preserve">Change box color</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Remove" xml:space="preserve">Remove box</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Orange" xml:space="preserve">Orange</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Blue" xml:space="preserve">Blue</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Green" xml:space="preserve">Green</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Red" xml:space="preserve">Red</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Purple" xml:space="preserve">Purple</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Gold" xml:space="preserve">Gold</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Pink" xml:space="preserve">Pink</x:String>
+  <x:String x:Key="Text.Histories.AuthorBox.Color.Cyan" xml:space="preserve">Cyan</x:String>
   <x:String x:Key="Text.Histories.Header.Author" xml:space="preserve">AUTHOR</x:String>
   <x:String x:Key="Text.Histories.Header.AuthorTime" xml:space="preserve">AUTHOR TIME</x:String>
   <x:String x:Key="Text.Histories.Header.CommitTime" xml:space="preserve">COMMIT TIME</x:String>
@@ -783,6 +794,7 @@
   <x:String x:Key="Text.Pull.Into" xml:space="preserve">Into:</x:String>
   <x:String x:Key="Text.Pull.LocalChanges" xml:space="preserve">Local Changes:</x:String>
   <x:String x:Key="Text.Pull.Remote" xml:space="preserve">Remote:</x:String>
+  <x:String x:Key="Text.Pull.OnlySelectedRemoteBranch" xml:space="preserve">Fetch only the selected remote branch</x:String>
   <x:String x:Key="Text.Pull.Title" xml:space="preserve">Pull (Fetch &amp; Merge)</x:String>
   <x:String x:Key="Text.Pull.UseRebase" xml:space="preserve">Use rebase instead of merge</x:String>
   <x:String x:Key="Text.Push" xml:space="preserve">Push</x:String>

@@ -1,3 +1,29 @@
+# SourceGit（ydbssg）
+
+这是一份可以克隆使用的 SourceGit。基线是上游 [sourcegit](https://github.com/sourcegit-scm/sourcegit) v2026.24，并带有作者名方框，以及从 SparkSourceGit 移植的功能：GitLab 合并请求、表格差异和拉取冲突合并、MiniFire 配置表差异、Git 输出中文、提交后拉取再推送、托盘图标、Codex Dark 主题。
+
+## 直接运行 Windows 压缩包
+
+1. 打开 [Releases](https://github.com/ydbssg/SourceGit/releases)，下载最新的 `SourceGit-win-x64.zip`。
+2. 解压后运行 `SourceGit.exe`。
+3. 电脑上需要已经安装 Git for Windows 2.25.1 或更高版本。
+
+## 从源码构建
+
+需要安装 .NET 10 SDK。
+
+```bat
+git clone --recurse-submodules https://github.com/ydbssg/SourceGit.git
+cd SourceGit
+dotnet publish src\SourceGit.csproj -c Release -r win-x64 --self-contained true -p:DisableAOT=true -p:PublishAot=false -o publish
+```
+
+构建完成后运行 `publish\SourceGit.exe`。
+
+---
+
+下面是上游项目的说明。
+
 # SourceGit - Opensource Git GUI client.
 
 [![stars](https://img.shields.io/github/stars/sourcegit-scm/sourcegit.svg)](https://github.com/sourcegit-scm/sourcegit/stargazers)

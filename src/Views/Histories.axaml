@@ -172,12 +172,15 @@
                             Opacity="{Binding IsMerged, Converter={x:Static c:BoolConverters.IsMergedToOpacity}}"
                             IsHitTestVisible="False"/>
 
-                  <Border Grid.Column="1" Padding="8,0" ClipToBounds="True">
-                    <TextBlock Text="{Binding Author.Name}"
-                               FontWeight="{Binding IsCurrentHead, Converter={x:Static c:BoolConverters.IsBoldToFontWeight}}"
-                               Opacity="{Binding IsMerged, Converter={x:Static c:BoolConverters.IsMergedToOpacity}}"
-                               HorizontalAlignment="Left"/>
-                  </Border>
+                  <Grid Grid.Column="1" Background="Transparent" ContextRequested="OnAuthorCellContextRequested">
+                    <v:AuthorNameBox Margin="8,1,4,1"
+                                     HorizontalAlignment="Left"
+                                     VerticalAlignment="Center"
+                                     IsHitTestVisible="False"
+                                     AuthorName="{Binding Author.Name}"
+                                     IsCurrentHead="{Binding IsCurrentHead}"
+                                     Opacity="{Binding IsMerged, Converter={x:Static c:BoolConverters.IsMergedToOpacity}}"/>
+                  </Grid>
                 </Grid>
               </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>

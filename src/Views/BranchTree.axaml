@@ -31,6 +31,9 @@
       <Style Selector="ListBoxItem:pointerover v|FilterModeSwitchButton">
         <Setter Property="IsHoverParent" Value="True"/>
       </Style>
+      <Style Selector="ListBoxItem:focus-within v|FilterModeSwitchButton">
+        <Setter Property="IsHoverParent" Value="True"/>
+      </Style>
     </ListBox.Styles>
 
     <ListBox.ItemTemplate>
